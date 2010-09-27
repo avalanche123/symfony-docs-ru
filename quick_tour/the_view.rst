@@ -23,8 +23,7 @@
 
     Hello <?php echo $name ?>!
 
-Нотация ``HelloBundle::layout`` звучит знакомо, не так ли? It is the same
-notation as for referencing a template. Часть ``::`` просто обозначает, что контроллер не указан, и, следовательно, соответствующий файл хранится напрямую во ``views/``.
+Нотация ``HelloBundle::layout`` звучит знакомо, не так ли? Это такая же нотация, как и для привязки шаблона. Часть ``::`` просто обозначает, что контроллер не указан, и, следовательно, соответствующий файл хранится напрямую во ``views/``.
 
 Сейчас, давайте взглянем на файл ``layout.php``:
 
@@ -37,11 +36,7 @@ notation as for referencing a template. Часть ``::`` просто обоз�
 
     <?php $view['slots']->output('_content') ?>
 
-The layout is itself decorated by another layout (``::layout``). Symfony
-supports multiple decoration levels: a layout can itself be decorated by
-another one. When the bundle part of the template name is empty, views are
-looked for in the ``app/views/`` directory. This directory store global views
-for your entire project:
+Макет - это он сам, декорированный другим макетом (``::layout``). Symfony поддерживает сложные уровни декорирования: макет может декорировать себя другим макетом. Когда часть с названием бандла в имени шаблона пуста, виды будут браться из директории ``app/views/``. В этой директории содержатся глобальные виды всего вашего проекта:
 
 .. code-block:: html+php
 
@@ -57,24 +52,18 @@ for your entire project:
         </body>
     </html>
 
-For both layouts, the ``$view['slots']->output('_content')`` expression is
-replaced by the content of the child template, ``index.php`` and
-``layout.php`` respectively (more on slots in the next section).
+Для обоих макетов, выражение ``$view['slots']->output('_content')`` заменяется содержимым дочернего шаблона, ``index.php`` и ``layout.php`` соответственно (больше о слотах в следующей секции).
 
-As you can see, Symfony provides methods on a mysterious ``$view`` object. In a
-template, the ``$view`` variable is always available and refers to a special
-object that provides a bunch of methods and properties that make the template
-engine tick.
+Как вы можете видеть, Symfony предоставляет метод загадочного объекта ``$view``. В шаблоне, переменная ``$view`` всегда доступна и ссылается на специальный объект, который предоставляет группу методов и свойств которые заставляют механизм шаблонов "тикать как часы".
 
 .. index::
-   single: Templating; Slot
-   single: Slot
+   single: Шаблон; Слот
+   single: Слот
 
-Slots
+Слоты
 -----
 
-A slot is a snippet of code, defined in a template, and reusable in any layout
-decorating the template. In the index template, define a ``title`` slot:
+Слот – это кусочек кода, определенный в шаблоне, который может быть использован в любом макете, декорирующем шаблон. Определим слот ``title`` в шаблоне index:
 
 .. code-block:: html+php
 
@@ -85,7 +74,7 @@ decorating the template. In the index template, define a ``title`` slot:
 
     Hello <?php echo $name ?>!
 
-The base layout already have the code to output the title in the header:
+Базовый макет уже содержит код для вывода в title:
 
 .. code-block:: html+php
 
@@ -95,11 +84,9 @@ The base layout already have the code to output the title in the header:
         <title><?php $view['slots']->output('title', 'Hello Application') ?></title>
     </head>
 
-The ``output()`` method inserts the content of a slot and optionally takes a
-default value if the slot is not defined. And ``_content`` is just a special
-slot that contains the rendered child template.
+Метод ``output()`` вставляет содержимое слота и может принимать значение по умолчанию, если слот не установлен. А ``_content`` представляет собой специальный слот, который содержит обработанный дочерний шаблон.
 
-For large slots, there is also an extended syntax:
+Для больших слотов, также существует расширенный синтаксис:
 
 .. code-block:: html+php
 
@@ -108,22 +95,20 @@ For large slots, there is also an extended syntax:
     <?php $view['slots']->stop() ?>
 
 .. index::
-   single: Templating; Include
+   single: Шаблон; Включать
 
-Include other Templates
+Включение сторонних шаблонов
 -----------------------
+Лучшим способом, для того чтобы кусочек кода можно было использовать во многих различных шаблонах, будет определить шаблон, который может быть включен в любой другой шаблон.
 
-The best way to share a snippet of code between several distinct templates is
-to define a template that can then be included into another one.
-
-Create a ``hello.php`` template:
+Создайте шаблон ``hello.php``:
 
 .. code-block:: html+php
 
     <!-- src/Application/HelloBundle/Resources/views/Hello/hello.php -->
     Hello <?php echo $name ?>!
 
-And change the ``index.php`` template to include it:
+И измените шаблон ``index.php`` чтобы подключить его:
 
 .. code-block:: html+php
 
@@ -132,13 +117,12 @@ And change the ``index.php`` template to include it:
 
     <?php echo $view->render('HelloBundle:Hello:hello', array('name' => $name)) ?>
 
-The ``render()`` method evaluates and returns the content of another template
-(this is the exact same method as the one used in the controller).
+Метод ``render()`` вычисляет и возвращает содержимое другого шаблона (это точно такой же метод, который используется в контроллере).
 
 .. index::
-   single: Templating; Embedding Pages
+   single: Шаблон; Встроенные Страницы
 
-Embed other Actions
+Встраивание других Действий
 -------------------
 
 And what if you want to embed the result of another action in a template?
