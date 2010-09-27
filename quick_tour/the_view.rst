@@ -23,12 +23,10 @@
 
     Hello <?php echo $name ?>!
 
-The ``HelloBundle::layout`` notation sounds familiar, doesn't it? It is the same
-notation as for referencing a template. The ``::`` part simply means that the
-controller element is empty, so the corresponding file is directly stored under
-``views/``.
+Нотация ``HelloBundle::layout`` звучит знакомо, не так ли? It is the same
+notation as for referencing a template. Часть ``::`` просто обозначает, что контроллер не указан, и, следовательно, соответствующий файл хранится напрямую во ``views/``.
 
-Now, let's have a look at the ``layout.php`` file:
+Сейчас, давайте взглянем на файл ``layout.php``:
 
 .. code-block:: html+php
 
