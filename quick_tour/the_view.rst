@@ -125,20 +125,17 @@
 Встраивание других Действий
 -------------------
 
-And what if you want to embed the result of another action in a template?
-That's very useful when working with Ajax, or when the embedded template needs
-some variable not available in the main template.
+Что если вы хотите включить результат других действий в шаблон?
+Это очень удобно работая с Ajax, или когда включаемый шаблон обращается к некоторой переменной, которая недоступна в главном шаблоне.
 
-If you create a ``fancy`` action, and want to include it into the ``index``
-template, simply use the following code:
+Если вы создаете действие ``fancy``, и хотите включить его в шаблон ``index``, просто используйте следующий код:
 
 .. code-block:: html+php
 
     <!-- src/Application/HelloBundle/Resources/views/Hello/index.php -->
     <?php $view['actions']->output('HelloBundle:Hello:fancy', array('name' => $name, 'color' => 'green')) ?>
 
-Here, the ``HelloBundle:Hello:fancy`` string refers to the ``fancy`` action of the
-``Hello`` controller::
+Здесь, строка ``HelloBundle:Hello:fancy`` соответствует действию ``fancy`` контроллера ``Hello``::
 
     // src/Application/HelloBundle/Controller/HelloController.php
 
@@ -155,27 +152,20 @@ Here, the ``HelloBundle:Hello:fancy`` string refers to the ``fancy`` action of t
         // ...
     }
 
-But where is the ``$view['actions']`` array element defined? Like
-``$view['slots']``, it's called a template helper, and the next section tells
-you more about those.
+Но где объявлен элемент массива ``$view['actions']``? Подобно ``$view['slots']``, он называется хелпером шаблона, и следующая секция расскажет вам о них больше.
 
 .. index::
-   single: Templating; Helpers
+   single: Шаблон; Хелперы
 
-Template Helpers
+Хелперы Шаблонов
 ----------------
 
-The Symfony templating system can be easily extended via helpers. Helpers are
-PHP objects that provide features useful in a template context. ``actions`` and
-``slots`` are two of the built-in Symfony helpers.
+Система шаблонов Symfony может быстро и просто быть расширена через хелперы. Хелперы это PHP объекты, которые предоставляют полезные особенности в контексте шаблона. Действия ``actions`` и слоты ``slots`` - это два встроенных в Symfony хелпера.
 
-Links between Pages
-~~~~~~~~~~~~~~~~~~~
+Связи между Страницами
+~~~~~~~~~~~~~~~~~~~~~~
 
-Speaking of web applications, creating links between different pages is a
-must. Instead of hardcoding URLs in templates, the ``router`` helper knows how
-to generate URLs based on the routing configuration. That way, all your URLs
-can be easily updated by changing the configuration:
+Говоря о веб приложениях, создание ссылок меджу страницами - это необходимость. Вместо того, чтобы жестко прописывать URL в шаблоне, хелпер маршрутов ``router`` знает как генерировать URL-ы базируясь на конфигурации маршрутов. Таким образом, все ваши URL-ы могут бытьлегко обновлены через изменение конфигурации:
 
 .. code-block:: html+php
 
@@ -183,9 +173,7 @@ can be easily updated by changing the configuration:
         Greet Thomas!
     </a>
 
-The ``generate()`` method takes the route name and an array of values as
-arguments. The route name is the main key under which routes are referenced
-and the values are the route pattern placeholder values:
+Метод ``generate()`` принимает имя маршрута и массив аргументов. Имя маршрута это основной ключ, по которому маршруты упоминаются и аргументы это значения меток-заполнителей описания маршрута	:
 
 .. code-block:: yaml
 
@@ -194,12 +182,12 @@ and the values are the route pattern placeholder values:
         pattern:  /hello/:name
         defaults: { _bundle: HelloBundle, _controller: Hello, _action: index }
 
-Using Assets: images, JavaScripts, and stylesheets
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Использование Ассетов: изображений, JavaScript, и таблиц стилей
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-What would the Internet be without images, JavaScripts, and stylesheets?
-Symfony provides three helpers to deal with them easily: ``assets``,
-``javascripts``, and ``stylesheets``:
+Каким бы был интернет без изображений, скриптов и стилей?
+Symfony предлагает три хелпера для упрощения работы с ними: ``assets``,
+``javascripts``, и ``stylesheets``:
 
 .. code-block:: html+php
 
@@ -207,40 +195,32 @@ Symfony provides three helpers to deal with them easily: ``assets``,
 
     <img src="<?php echo $view['assets']->getUrl('images/logo.png') ?>" />
 
-The ``assets`` helper's main purpose is to make your application more portable.
-Thanks to this helper, you can move the application root directory anywhere under your
-web root directory without changing anything in your templates' code.
+Главное назначение хелпера ``assets`` - сделать ваше приложение более переносимым.
+Благодаря этому хелперу, вы можете переносить корень приложения куда вам угодно в рамках корневой директории web сервера без изменений в коде ваших шаблонов.
 
-Similarly, you can manage your stylesheets and JavaScripts with the
-``stylesheets`` and ``JavaScripts`` helpers:
+Таким же образом вы можете управлять стилями и яваскриптами при помощи хелперов ``stylesheets`` и ``JavaScripts``:
 
 .. code-block:: html+php
 
     <?php $view['javascripts']->add('js/product.js') ?>
     <?php $view['stylesheets']->add('css/product.css') ?>
 
-The ``add()`` method defines dependencies. To actually output these assets, you
-need to also add the following code in your main layout:
+Метод ``add()`` определяет зависимости. Для вывода ассетов, вам также необходимо добавить следующий код в ваш основной шаблон:
 
 .. code-block:: html+php
 
     <?php echo $view['javascripts'] ?>
     <?php echo $view['stylesheets'] ?>
 
-Final Thoughts
---------------
+Заключительное Слово
+--------------------
 
-The Symfony templating system is simple yet powerful. Thanks to layouts,
-slots, templating and action inclusions, it is very easy to organize your
-templates in a logical and extensible way.
+Система шаблонов Symfony простая, но очень эффективная. Благодаря layout'ам,
+slot'ам, шаблонам и включению действий, очень легко можно организовать ваши шаблоны логично и гибко.
 
-You have only been working with Symfony for about 20 minutes, and you can
-already do pretty amazing stuff with it. That's the power of Symfony. Learning
-the basics is easy, and you will soon learn that this simplicity is hidden
-under a very flexible architecture.
+Вы работаете с Symfony всего приблизительно 20 минут, и вы уже можете проделывать с ней удивительные вещи. Это сила Symfony. Изучить основы легко, но скоро вы поймете, что эта простота скрывает очень гибкую архитектуру.
 
-But I get ahead of myself. First, you need to learn more about the controller
-and that's exactly the topic of the next part of this tutorial. Ready for
-another 10 minutes with Symfony?
+Но не будем забегать вперед. Для начала вам нужно изучить немного больше о контроллере и это будет темой следующей части данного руководства. Готовы выделить еще 10 минут для Symfony?
+
 
 .. _Twig: http://www.twig-project.org/
