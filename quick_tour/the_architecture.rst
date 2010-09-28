@@ -1,33 +1,26 @@
-﻿The Architecture
+﻿Архитектура
 ================
 
-You are my hero! Who would have thought that you would still be here after the
-first three parts? Your efforts will be well rewarded soon. The first three
-parts don't have a deep look at the architecture of the framework. As it makes
-Symfony2 stand apart from the framework crowd, let's dive into it now.
+Вы мой герой! Кто бы мог подумать что вы все еще будете здесь после первых трех частей? Ваши усилия скоро будут вознаграждены. В первых трех частях мы глубоко не вникали в архитектуру фреймворка. Так как она выделяет Symfony2 из толпы фреймворков, давайте сейчас же в нее погрузимся.
 
 .. index::
-   single: Directory Structure
+   single: Структура Директорий
 
-The Directory Structure
+Структура Директорий
 -----------------------
 
-The directory structure of a Symfony :term:`application` is rather flexible
-but the directory structure of a sandbox reflects the typical and recommended
-structure of a Symfony application:
+Структура директорий приложения :term:`application` на Symfony довольно гибкая но структура директорий песочницы отражает типовую и рекомендованную структуру приложения Symfony:
 
-* ``app/``: This directory contains the application configuration;
+* ``app/``: В этой категории содержится конфигурация приложения;
 
-* ``src/``: All the PHP code is stored under this directory;
+* ``src/``: Весь PHP код содержится в этой директории;
 
-* ``web/``: This should be the web root directory.
+* ``web/``: Это корневая web директория проекта.
 
-The Web Directory
+Web Директория
 ~~~~~~~~~~~~~~~~~
 
-The web root directory is the home of all public and static files like images,
-stylesheets, and JavaScript files. It is also where the front controllers
-live:
+Корневая web директория - это домашняя директория для всех публичных и статических файлов типа изображений, стилей и javascript-файлов. Она также содержит боевые фронт-контроллеры:
 
 .. code-block:: html+php
 
@@ -39,46 +32,37 @@ live:
     $kernel = new AppKernel('prod', false);
     $kernel->handle()->send();
 
-Like any front controller, ``index.php`` uses a Kernel Class, ``AppKernel``,
-to bootstrap the application.
+Как любой фронт-контроллер, ``index.php`` использует Kernel Class, ``AppKernel``, для запуска приложения.
 
 .. index::
-   single: Kernel
+   single: Ядро
 
-The Application Directory
+Директория Приложения
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``AppKernel`` class is the main entry point of the application
-configuration and as such, it is stored in the ``app/`` directory.
+Класс ``AppKernel`` это главная входная точка конфигурации приложения как такового, и содержится в директории ``app/``.
 
-This class must implement four methods:
+Этот класс должен реализовывать четыре метода:
 
-* ``registerRootDir()``: Returns the configuration root directory;
+* ``registerRootDir()``: Возвращает корневую директорию;
 
-* ``registerBundles()``: Returns an array of all bundles needed to run the
-  application (notice the reference to
-  ``Application\HelloBundle\HelloBundle``);
+* ``registerBundles()``: Возвращает массив всех бандлов, необходимых для запуска приложения (обратите внимание на ``Application\HelloBundle\HelloBundle``);
 
-* ``registerBundleDirs()``: Returns an array associating namespaces and their
-  home directories;
+* ``registerBundleDirs()``: Возвращает массив ассоциаций пространств имен и их домашних директорий;
 
-* ``registerContainerConfiguration()``: Returns the main configuration object
-  (more on this later);
+* ``registerContainerConfiguration()``: RВозвращает главный объект конфигурации (об этом подробнее ниже);
 
-Have a look at the default implementation of these methods to better
-understand the flexibility of the framework.
+Обратите внимание на реализацию этих методов по умолчанию для того чтобы лучше понять гибкость фреймворка.
 
-To make things work together, the kernel requires one file from the ``src/``
-directory::
+Для того чтобы это все работало, ядру необходим один файл из директории ``src/``::
 
     // app/AppKernel.php
     require_once __DIR__.'/../src/autoload.php';
 
-The Source Directory
+Директория Исходных Кодов
 ~~~~~~~~~~~~~~~~~~~~
 
-The ``src/autoload.php`` file is responsible for autoloading all the files
-stored in the ``src/`` directory::
+Файл ``src/autoload.php`` ответственный за автозагрузку всех файлов из директории ``src/``::
 
     // src/autoload.php
     $vendorDir = __DIR__.'/vendor';
@@ -107,15 +91,12 @@ stored in the ``src/`` directory::
 
 The ``UniversalClassLoader`` from Symfony is used to autoload files that
 respect either the technical interoperability `standards`_ for PHP 5.3
-namespaces or the PEAR naming `convention`_ for classes. As you can see
-here, all dependencies are stored under the ``vendor/`` directory, but this is
-just a convention. You can store them wherever you want, globally on your
-server or locally in your projects.
+namespaces or the PEAR naming `convention`_ for classes. Как вы можете видеть, все зависимости хранятся в директории ``vendor/``, но это только соглашение. Вы можете хранить их где захотите, глобально на вашем сервере или локально в ваших проектах.
 
 .. index::
-   single: Bundles
+   single: Бандлы
 
-The Bundle System
+Система Бандлов
 -----------------
 
 This section starts to scratch the surface of one of the greatest and more
