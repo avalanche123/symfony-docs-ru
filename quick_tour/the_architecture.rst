@@ -102,7 +102,7 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
 Бандл чем-то похож на плагин в других программах. Но почему тогда его назвали бандл вместо плагин? Потому что все в Symfony это бандлы, начиная от функционала ядра до кода, который вы пишете для своего приложения.
 Бандлы - это главные структурные кирпичики в Symfony. Это наделяет вас гибкостью использовать функционал встроенный в сторонние бандлы или же распостранять ваши собственные бандлы. Это позволяет с легкостью вибирать и включать в приложение только нужный функционал, оптимизируя его на свой вкус.
 
-An application is made up of bundles as defined in the ``registerBundles()`` method of the ``AppKernel`` class::
+Приложение состоит из бандлов, которые объявлены в методе ``registerBundles()`` класса ``AppKernel``::
 
     // app/AppKernel.php
     public function registerBundles()
@@ -130,13 +130,10 @@ An application is made up of bundles as defined in the ``registerBundles()`` met
         return $bundles;
     }
 
-Along side the ``HelloBundle`` we have already talked about, notice that the
-kernel also enables ``FrameworkBundle``, ``DoctrineBundle``,
-``SwiftmailerBundle``, and ``ZendBundle``. They are all part of the core
-framework.
+Отметьте, что вместе с ``HelloBundle``, о котором мы уже говорили, что ядро также подключает ``FrameworkBundle``, ``DoctrineBundle``,
+``SwiftmailerBundle``, и ``ZendBundle``. Они входят в состав ядра фреймворка.
 
-Each bundle can be customized via configuration files written in YAML, XML, or
-PHP. Have a look at the default configuration:
+Каждый бандл может быть настроен при помощи конфигурационных файлов, написанных на YAML, XML, или PHP. Взгляните на конфигурацию по умолчанию:
 
 .. configuration-block::
 
@@ -265,10 +262,9 @@ PHP. Have a look at the default configuration:
         ));
         */
 
-Each entry like ``app.config`` defines the configuration for a bundle.
+Каждая запись наподобие ``app.config`` определяет конфигурацию бандла.
 
-Each :term:`environment` can override the default configuration by providing a
-specific configuration file:
+Каждое окружение :term:`environment` может перекрывать конфигурацию по умолчанию путем создания специфичного конфигурационного файла:
 
 .. configuration-block::
 
@@ -334,11 +330,7 @@ specific configuration file:
             ),
         ));
 
-As we have seen in the previous part, an application is made of bundles as
-defined in the ``registerBundles()`` method but how does Symfony know where to
-look for bundles? Symfony is quite flexible in this regard. The
-``registerBundleDirs()`` method must return an associative array that maps
-namespaces to any valid directory (local or global ones)::
+Как мы видели в предыдущей части, приложение состоит из бандлов объявленных в методе ``registerBundles()``, но откуда Symfony знает где искать бандлы? Symfony очень гибкий в этом плане. Метод ``registerBundleDirs()`` возвращает ассоциативный массив, который отображает пространство имен для любого допустимого каталога (локального или глобального)::
 
     public function registerBundleDirs()
     {
@@ -349,16 +341,14 @@ namespaces to any valid directory (local or global ones)::
         );
     }
 
-So, when you reference the ``HelloBundle`` in a controller name or in a template
-name, Symfony will look for it under the given directories.
+Таким образом, когда вы ссылаетесь в имени контроллера или шаблона на ``HelloBundle``, Symfony будет искать их в данных директориях.
 
-Do you understand now why Symfony is so flexible? Share your bundles between
-applications, store them locally or globally, your choice.
+Теперь вы понимаете Symfony такой гибкий? Делитесь вашими бандлами между приложениями, храните их локально или глобально, на ваше усмотрение.
 
 .. index::
-   single: Vendors
+   single: Вендоры
 
-Vendors
+Вендоры
 -------
 
 Odds are your application will depend on third-party libraries. Those should
