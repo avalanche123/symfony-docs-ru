@@ -351,66 +351,46 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
 Вендоры
 -------
 
-Odds are your application will depend on third-party libraries. Those should
-be stored in the ``src/vendor/`` directory. It already contains the Symfony
-libraries, the SwiftMailer library, the Doctrine ORM, the Propel ORM, the Twig
-templating system, and a selection of the Zend Framework classes.
+Скорее всего ваше приложение будет зависеть от сторонних библиотек. Они должны храниться в директории ``src/vendor/``. Она уже содержит библиотеки Symfony, библиотеку SwiftMailer, Doctrine ORM, Propel ORM, систему шаблонов Twig и избранное из классов Zend Framework.
 
 .. index::
    single: Cache
    single: Logs
 
-Cache and Logs
+Кеширование и Логи
 --------------
 
-Symfony is probably one of the fastest full-stack frameworks around. But how
-can it be so fast if it parses and interprets tens of YAML and XML files for
-each request? This is partly due to its cache system. The application
-configuration is only parsed for the very first request and then compiled down
-to plain PHP code stored in the ``cache/`` application directory. In the
-development environment, Symfony is smart enough to flush the cache when you
-change a file. But in the production one, it is your responsibility to clear
-the cache when you update your code or change its configuration.
+Symfony, вероятно, это один из самых быстрых фреймворков. Но как он может быть таким быстрым, если он постоянно должен парсить и интерпретировать десятки YAML и XML файлов при каждом запросе? Частично это обязанность системы кеширования. Конфигурация приложения парсится только для первого запроса и после этого компилируется в обычный PHP код, который хранится в директории приложения ``cache/``. В окружении для разработки, Symfony сбрасывает кэш когда вы изменяете файл. Но в главном окружении, это уже ваша обязанность чистить кэш, когда вы обновляете ваш код или конфигурацию.
 
-When developing a web application, things can go wrong in many ways. The log
-files in the ``logs/`` application directory tell you everything about the
-requests and helps you fix the problem in no time.
+Пр разработке web приложения, вещи могут пойти не так, как надо разными способами. Файлы логов в директории приложения ``logs/`` раскажут вам все про запросы и помогут быстро устранить проблемы.
 
 .. index::
    single: CLI
-   single: Command Line
+   single: Командная строка
 
-The Command Line Interface
+Интерфейс Командной Строки
 --------------------------
 
-Each application comes with a command line interface tool (``console``) that
-helps you maintain your application. It provides commands that boost your
-productivity by automating tedious and repetitive tasks.
+В состав каждого приложения входит интерфейс командной строки (``консоль``), который помогает вам обслуживать ваше приложение. Консоль предоставляет команды, которые увеличивают вашу продуктивность, автоматизируя частые и повторяющиеся задачи.
 
-Run it without any arguments to learn more about its capabilities:
+Запустите консоль без агрументов, для того чтобы получить представление о ее возможностях:
 
 .. code-block:: bash
 
     $ php app/console
 
-The ``--help`` option helps you discover the usage of a command:
+Опция ``--help`` поможет вам уточнить способ использования любой команды:
 
 .. code-block:: bash
 
     $ php app/console router:debug --help
 
-Final Thoughts
---------------
+Заключительное Слово
+--------------------
 
-Call me crazy, but after reading this part, you should be comfortable with
-moving things around and making Symfony work for you. Everything is done in
-Symfony to stand out of your way. So, feel free to rename and move directories
-around as you see fit.
+Называйте меня сумасшедшим, но после прочтения этой части, вы должны уметь заставить работать Symfony на вас быстро и комфортно. В Symfony все сделано так, чтобы вы могли настроить его на ваше усмотрение. Так что, перемещайте директории как вам угодно, не стесняйтесь.
 
-And that's all for the quick tour. From testing to sending emails, you still
-need to learn of lot to become a Symfony master. Ready to dig into these
-topics now? Look no further, go to the official `guides`_ page and pick any
-topic you want.
+И это все для быстрого тура. От тестирования до отправки электронной почты, вам все еще многое предстоит узнать чтобы стать мастером Symfony. Готовы погрузиться в изучение этих тем сейчас? Не откладывайте на потом, переходите к официальным страницам `руководств` страницам и выбирайте любую интересующую вас тему.
 
 .. _standards:  http://groups.google.com/group/php-standards/web/psr-0-final-proposal
 .. _convention: http://pear.php.net/
