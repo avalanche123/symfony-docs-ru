@@ -1,13 +1,9 @@
 ﻿Общая картина
 ===============
 
-So, you want to try out Symfony2 but only have 10 minutes or so? This first
-part of this tutorial has been written for you. It explains how to get started
-fast with Symfony2 by showing you the structure of a simple ready-made
-project.
+Вы хотите попробовать Symfony2 но на это у вас есть всего около 10 минут? Эта первая часть учебника была написана именно для вас. В ней объясняется, как начать работу с Symfony2 и показывает структуру простого проекта.
 
-If you have ever used a web framework before, you should feel right at home
-with Symfony2.
+Если вы когда-нибудь использовали какой-либо веб-фреймворк прежде, вы будете чувствовать себя в Symfony2 как дома.
 
 .. index::
    pair: Песочница; Загрузка
@@ -15,21 +11,14 @@ with Symfony2.
 Загрузка и Установка
 --------------------
 
-First, check that you have at least PHP 5.3.2 installed and correctly
-configured to work with a web server like Apache.
+В первую очередь, убедитесь что у вас установлен как минимум PHP 5.3.2 и корректно настроен для работы с web сервером, таким как Apache.
 
-Ready? Let's start by downloading Symfony. To get started even faster, we are
-going to use the "Symfony sandbox". It is a Symfony project where all the
-required libraries and some simple controllers are already included; the basic
-configuration is also already done. The great advantage of the sandbox over
-other types of installation is that you can start experimenting with Symfony
-immediately.
+Готовы? Давайте начнем с загрузки Symfony. Для быстрого старта мы будем использовать "песочницу Symfony". Это Symfony, который содержит все необходимые библиотеки и несколько простых контроллеров; также включена базовая конфигурация. Наибольшее преимущество песочницы перед другими типами инсталляции в том, что вы можете сразу же начать экспериментировать с Symfony.
 
-Download the `sandbox`_, and unpack it in your root web directory. You
-should now have a ``sandbox/`` directory::
+Загрузите `sandbox`_, и распакуйте ее в корневую директорию web сервера. Сейчас у вас должна быть директория ``sandbox/``::
 
-    www/ <- your web root directory
-        sandbox/ <- the unpacked archive
+    www/ <- ваша корневая web директория
+        sandbox/ <- распакованый архив
             app/
                 cache/
                 config/
@@ -44,25 +33,24 @@ should now have a ``sandbox/`` directory::
             web/
 
 .. index::
-   single: Installation; Check
+   single: Инсталляция; Проверка
 
-Check the Configuration
+Проверка Конфигурации
 -----------------------
 
-To avoid some headaches further down the line, check that your configuration
-can run a Symfony project smoothly by requesting the following URL:
+Для того чтобы избежать головной боли в последствии, проверьте, может ли быть запущен Symfony проект у вас – для этого откройте следующий URL:
 
     http://localhost/sandbox/web/check.php
 
-Read the script output carefully and fix any problem that it finds.
+Внимательно прочитайте вывод скрипта и исправьте все проблемы которые он найдет.
 
-Now, request your first "real" Symfony webpage:
+Теперь запросите вашу первую "реальную" страничку на Symfony:
 
     http://localhost/sandbox/web/index_dev.php/
 
-Symfony should congratulate you for your hard work so far!
+Symfony должен поблагодарить за ваши затраченные усилия!
 
-Your first Application
+Ваше Первое Приложение
 ----------------------
 
 The sandbox comes with a simple Hello World ":term:`application`" and that's
