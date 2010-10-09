@@ -1,5 +1,5 @@
 ﻿Общая картина
-===============
+=============
 
 Вы хотите попробовать Symfony2 но на это у вас есть всего около 10 минут? Эта первая часть учебника была написана именно для вас. В ней объясняется, как начать работу с Symfony2 и показывает структуру простого проекта.
 
@@ -36,7 +36,7 @@
    single: Инсталляция; Проверка
 
 Проверка Конфигурации
------------------------
+---------------------
 
 Для того чтобы избежать головной боли в последствии, проверьте, может ли быть запущен Symfony проект у вас – для этого откройте следующий URL:
 
@@ -53,53 +53,43 @@ Symfony должен поблагодарить за ваши затраченн
 Ваше Первое Приложение
 ----------------------
 
-The sandbox comes with a simple Hello World ":term:`application`" and that's
-the application we will use to learn more about Symfony. Go to the following
-URL to be greeted by Symfony (replace Fabien with your first name):
+Песочница содержит простое ":term:`приложение`" Hello world и мы будем использовать его для того чтобы узнать побольше о Symfony. Откройте следующий URL для того чтобы Symfony мог поприветствовать вас (замените Fabien на ваше имя):
 
     http://localhost/sandbox/web/index_dev.php/hello/Fabien
 
-What's going on here? Let's dissect the URL:
+Что происходит в этом месте? Давайте разберем URL:
 
-.. index:: Front Controller
+.. index:: Front Контроллер
 
-* ``index_dev.php``: This is a "front controller". It is the unique entry
-  point of the application and it responds to all user requests;
+* ``index_dev.php``: Это "front контроллер". Это единая точка входа для приложения – она обрабатывает все запросы пользователя;
 
-* ``/hello/Fabien``: This is the "virtual" path to the resource the user wants
-  to access.
+* ``/hello/Fabien``: это виртуальный путь к ресурсу, который хочет получить пользователь.
 
-Your responsibility as a developer is to write the code that maps the user
-request (``/hello/Fabien``) to the resource associated with it (``Hello
+Ваша обязанность как разработчика - написать код, который отражает запрос (``/hello/Fabien``) с соответствующим ресурсом (``Hello
 Fabien!``).
 
 .. index::
-   single: Configuration
+   single: Конфигурация
 
-Configuration
-~~~~~~~~~~~~~
+Конфигурация
+~~~~~~~~~~~~
 
-But how does Symfony route the request to your code? Simply by reading some
-configuration file.
+Но как Symfony связывает запрос с вашим кодом? Просто считывая некоторый конфигурационный файл.
 
-All Symfony2 configuration files can be written in either PHP, XML, or `YAML`_
-(YAML is a simple format that makes the description of configuration settings
-very easy).
+Все конфигурационные файлы Symfony2 могут быть написаны на PHP, XML, или `YAML`_
+(YAML это простой формат, который очень упрощает описание конфигурационных настроек).
 
 .. tip::
-   The sandbox defaults to YAML, but you can easily switch to XML or PHP by
-   editing the ``app/AppKernel.php`` file. You can switch now by looking at the
-   bottom of ``app/AppKernel.php`` for instructions (the tutorials show the
-   configuration for all supported formats).
+   По умолчанию в песочнице выбран формат YAML, но вы можете легко переключить его на XML или PHP отредактировав файл ``app/AppKernel.php``. Вы можете переключить формат следуя инструкциям внизу файла ``app/AppKernel.php`` (в руководстве конфигурация показана во всех поддерживаемых форматах).
 
 .. index::
-   single: Routing
-   pair: Configuration; Routing
+   single: Маршрутизация
+   pair: Конфигурация; Маршрутизация
 
-Routing
-~~~~~~~
+Маршрутизация
+~~~~~~~~~~~~~
 
-So, Symfony routes the request by reading the routing configuration file:
+Symfony проводит маршрутизацию запроса анализируя файл конфигурации маршрутов:
 
 .. configuration-block::
 
@@ -143,9 +133,7 @@ So, Symfony routes the request by reading the routing configuration file:
 
         return $collection;
 
-The first few lines of the routing configuration file define which code to
-call when the user requests the "``/``" resource. More interesting is the last
-part, which imports another routing configuration file that reads as follows:
+Первые несколько линий файла конфигурации маршрутов определяют, какой код будет вызван, когда пользователь запросит ресурс "``/``". Более интересно выглядит последняя часть, которая импортирует другой конфигурационный файл, который выглядит следующим образом:
 
 .. configuration-block::
 
@@ -183,19 +171,16 @@ part, which imports another routing configuration file that reads as follows:
 
         return $collection;
 
-Here we go! As you can see, the "``/hello/:name``" resource pattern (a string
-beginning with a colon like ``:name`` is a placeholder) is mapped to a
-controller, referenced by the ``_controller`` value.
+Here we go! Как вы можете видеть, шаблон "``/hello/:name``" (строка которая начинается с двоеточия как ``:name`` это метка, плэйсхолдер) отображается на контроллер, который определен через значение ``_controller``.
 
 .. index::
-   single: Controller
-   single: MVC; Controller
+   single: Контроллер
+   single: MVC; Контроллер
 
-Controllers
+Контроллеры
 ~~~~~~~~~~~
 
-The controller is responsible for returning a representation of the resource
-(most of the time an HTML one) and it is defined as a PHP class:
+Контроллер ответственный за возврат представления ресурса (как правило HTML) и определен как PHP класс:
 
 .. code-block:: php
    :linenos:
@@ -214,39 +199,25 @@ The controller is responsible for returning a representation of the resource
         }
     }
 
-The code is pretty straightforward but let's explain this code line by line:
+Код довольно простой, но давайте разберем его по строкам:
 
-* *line 3*: Symfony takes advantage of new PHP 5.3 features and as such, all
-  controllers are properly namespaced (the namespace is the first part of the
-  ``_controller`` routing value: ``HelloBundle``).
+* *строка 3*: Symfony использует все преимущества PHP 5.3, все контроллеры находятся в пространствах имен (пространство имен - это первая часть значения переменной маршрутизации ``_controller``: ``HelloBundle``).
 
-* *line 7*: The controller name is the concatenation of the second part of the
-  ``_controller`` routing value (``Hello``) and ``Controller``. It extends the
-  built-in ``Controller`` class, which provides useful shortcuts (as we will
-  see later in this tutorial).
+* *строка 7*: Имя контроллера - это конкатенация второй части значения ``_controller`` переменной маршрутизации (``Hello``) и слова ``Controller``. Он расширяет встроенный класс ``Controller``, который предоставляет полезные сокращения (как мы далее убедимся в этом руководстве).
 
-* *line 9*: Each controller is made of several actions. As per the
+* *строка 9*: Each controller is made of several actions. As per the
   configuration, the hello page is handled by the ``index`` action (the third
   part of the ``_controller`` routing value). This method receives the
   resource placeholder values as arguments (``$name`` in our case).
 
-* *line 11*: The ``render()`` method loads and renders a template
-  (``HelloBundle:Hello:index``) with the variables passed as a second
-  argument.
+* *строка  11*: Метод ``render()`` загружает и интерпретирует шаблон (``HelloBundle:Hello:index``) с переменными, передаваемыми в качестве второго аргумента.
 
-But what is a :term:`bundle`? All the code you write in a Symfony project is
-organized in bundles. In Symfony speak, a bundle is a structured set of files
-(PHP files, stylesheets, JavaScripts, images, ...) that implements a single
-feature (a blog, a forum, ...) and which can be easily shared with other
-developers. In our example, we only have one bundle, ``HelloBundle``.
+Но что такое :term:`бандл`? Весь код, который вы пишите в Symfony проекте организован в банлах. В понимании Symfony, бандл - это структурированный набор файлов (PHP файлы, таблицы стилей, JavaScript-ы, изображения, ...) которые реализуют отдельную функциональность (блог, форум, ...) которой легко можно поделиться с другими разработчиками. В нашем примере, у нас есть один бандл, ``HelloBundle``.
 
-Templates
-~~~~~~~~~
+Шаблоны
+~~~~~~~
 
-So, the controller renders the ``HelloBundle:Hello:index.php`` template. But
-what's in a template name? ``HelloBundle`` is the bundle name, ``Hello`` is
-the controller, and ``index.php`` the template file name. The template itself
-is made of HTML and simple PHP expressions:
+Итак, контроллер отображает шаблон ``HelloBundle:Hello:index.php``. Но что скрыто в имени шаблона? ``HelloBundle`` это имя бандла, ``Hello`` это контроллер, и ``index.php`` имя файла шаблона. Шаблон по сути состоит из HTML или простых PHP выражений:
 
 .. code-block:: html+php
 
@@ -255,16 +226,14 @@ is made of HTML and simple PHP expressions:
 
     Hello <?php echo $name ?>!
 
-Congratulations! You have looked at your first Symfony piece of code. That was
-not so hard, was it? Symfony makes it really easy to implement web sites
-better and faster.
+Поздравляем! Вы разобрались в первом кусочке Symfony кода. Не так уж и сложно, правда? Symfony делает web-разработку более быстрой и приятной.
 
 .. index::
-   single: Environment
-   single: Configuration; Environment
+   single: Окружение
+   single: Конфигурация; Окружение
 
-Environments
-------------
+Окружения
+---------
 
 Now that you have a better understanding on how Symfony works, have a closer
 look at the bottom of the page; you will notice a small bar with the Symfony
