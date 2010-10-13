@@ -205,10 +205,7 @@ Here we go! Как вы можете видеть, шаблон "``/hello/:name`
 
 * *строка 7*: Имя контроллера - это конкатенация второй части значения ``_controller`` переменной маршрутизации (``Hello``) и слова ``Controller``. Он расширяет встроенный класс ``Controller``, который предоставляет полезные сокращения (как мы далее убедимся в этом руководстве).
 
-* *строка 9*: Each controller is made of several actions. As per the
-  configuration, the hello page is handled by the ``index`` action (the third
-  part of the ``_controller`` routing value). This method receives the
-  resource placeholder values as arguments (``$name`` in our case).
+* *строка 9*: Каждый контроллер состоит из нескольких действий. Следуя конфигурации, страница hello обрабатывается действием ``index`` (третья часть значения переменной машрутизации``_controller``). Этот метод получает имена подстановок в качестве аргументов (в нашем случае ``$name``).
 
 * *строка  11*: Метод ``render()`` загружает и интерпретирует шаблон (``HelloBundle:Hello:index``) с переменными, передаваемыми в качестве второго аргумента.
 
@@ -235,40 +232,24 @@ Here we go! Как вы можете видеть, шаблон "``/hello/:name`
 Окружения
 ---------
 
-Now that you have a better understanding on how Symfony works, have a closer
-look at the bottom of the page; you will notice a small bar with the Symfony
-and PHP logos. It is called the "Web Debug Toolbar" and it is the developer's
-best friend. Of course, such a tool must not be displayed when you deploy your
-application to your production servers. That's why you will find another front
-controller in the ``web/`` directory (``index.php``), optimized for the production
-environment:
+Теперь, когда вы уже лучше понимаете как работает Symfony, давайте поближе посмотрим на нижнюю часть страницы; Вы увидите небольшую панель с логотипами Symfony и PHP. Она называется "Web Debug Toolbar" и является лучшим другом web-разработчика. Конечно же, этот инструмент не должен отображаться пользователю в финальной версии. Поэтому мы предусмотрели другой фронт-контроллер (``index.php``) в директории ``web/``, оптимизированный для окружения финального продукта:
 
     http://localhost/sandbox/web/index.php/hello/Fabien
 
-And if you have ``mod_rewrite`` installed, you can even omit the ``index.php``
-part of the URL:
+Если у вас установлен ``mod_rewrite``, вы можете опустить ``index.php`` в URL:
 
     http://localhost/sandbox/web/hello/Fabien
 
-Last but not least, on the production servers, you should point your web root
-directory to the ``web/`` directory to secure your installation and have an even
-better looking URL:
+Последнее, но не в последнюю очередь, на серверах с финальной версией, вам следует сделать корневой директорией web сервера директорию ``web/`` из соображений безопасности, а также улучшения отображения URL:
 
     http://localhost/hello/Fabien
 
-To make the production environment as fast as possible, Symfony maintains a
-cache under the ``app/cache/`` directory. When you make changes, you need to
-manually remove the cached files. That's why you should always use the
-development front controller (``index_dev.php``) when working on a project.
+Для того, чтобы окружение финальной версии было настолько быстрым насколько возможно, Symfony использует кэш, который хранится в директории ``app/cache/``. Когда вы делаете изменения, вам нужно вручную удалить файлы кэша. Вот почему вы должны всегда при разработке использовать фронт контроллер для разработки (``index_dev.php``).
 
-Final Thoughts
+Заключительное Слово
 --------------
 
-The 10 minutes are over. By now, you should be able to create your own simple
-routes, controllers, and templates. As an exercise, try to build something
-more useful than the Hello application! But if you are eager to learn more
-about Symfony, you can read the next part of this tutorial right away, where
-we dive more into the templating system.
+10 минут прошли. Теперь вы можете создавать свои собственные простые маршруты, контроллеры и шаблоны. В качестве упражнения, попытайтесь построить что-либо более полезное чем приложение Hello! Но если вы желаете знать больше о Symfony, вы можете сейчас же приступить к изучению следующей части руководства, где мы углубимся в изучение системы шаблонов.
 
 .. _sandbox: http://symfony-reloaded.org/code#sandbox
 .. _YAML:    http://www.yaml.org/
