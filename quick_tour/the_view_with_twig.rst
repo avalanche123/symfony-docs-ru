@@ -1,8 +1,7 @@
 ﻿Вид с использованием Twig
 ==================
 
-So, you want to learn Symfony2 with Twig templates. Хороший выбор! Twig makes
-your templates more concise and more friendly for web designers.
+Итак, вы хотите изучить Symfony2 с использованием шаблонов Twig. Хороший выбор! Twig делает ваши шаблоны более выразительными и более дружественными для веб дизайнеров.
 
 .. include:: /guides/Templating/Twig.rst
    :start-line: 7
@@ -10,11 +9,6 @@ your templates more concise and more friendly for web designers.
 Заключительное Слово
 --------------
 
-You have only been working with Symfony for about 20 minutes, and you can
-already do pretty amazing stuff with it. That's the power of Symfony. Learning
-the basics is easy, and you will soon learn that this simplicity is hidden
-under a very flexible architecture.
+Вы работаете с Symfony всего приблизительно 20 минут, и вы уже можете проделывать с ней удивительные вещи. Это сила Symfony. Изучить основы легко, но скоро вы поймете, что эта простота скрывает очень гибкую архитектуру.
 
-But I get ahead of myself. First, you need to learn more about the controller
-and that's exactly the topic of the next part of this tutorial. Ready for
-another 10 minutes with Symfony?
+Но не будем забегать вперед. Для начала вам нужно изучить немного больше о контроллере и это будет темой следующей части данного руководства. Готовы выделить еще 10 минут для Symfony?
