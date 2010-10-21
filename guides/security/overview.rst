@@ -1,23 +1,18 @@
-Security
+﻿Безопасность
 ========
 
-Symfony2 comes with a built-in security layer. It secures your application by
-providing authentication and authorization.
+В состав Symfony2 входит встроенный слой безопасности. Он защищает ваше приложение путем обеспечения механизмов аутентификации и авторизации.
 
-*Authentication* ensures that the user is who he claims to be. *Authorization*
-refers to the process of deciding whether a user is allowed to perform an
-action or not (authorization comes after authentication.)
+*Аутентификация* обеспечивает, что пользователь действительно тот, за кого он себя выдает. *Авторизация* связана с процесом решения, может ли пользователь выполнить действие или нет (авторизация проходит после аутентификации).
 
-This document is a quick overview of these main concepts, but the real power
-is distilled in three other documents: :doc:`Users </guides/security/users>`,
-:doc:`Authentication </guides/security/authentication>`, and
+Этот документ является быстрым обзором этих концепций, но настоящая мощь содержится в следующих трех частях: :doc:`Users </guides/security/users>`,
+:doc:`Authentication </guides/security/authentication>`, и
 :doc:`Authorization </guides/security/authorization>`.
 
-Configuration
+Конфигурация
 -------------
 
-For most common use cases, the Symfony2 security can be easily configured from
-your main configuration file; here is a typical configuration:
+Для большинства случаев, безопасность в Symfony2 может быть легко сконфигурирована в вашем главном конфигурационном файле; вот типичная конфигурация:
 
 .. configuration-block::
 
@@ -76,9 +71,7 @@ your main configuration file; here is a typical configuration:
             ),
         ));
 
-Most of the time, it is more convenient to outsource all security related
-configuration into an external file. If you use XML, the external file can use
-the security namespace as the default one to make it more readable:
+Часто, предпочтительнее вынести всю конфигурацию касающуюся безопасности во внешний файл. Если вы используете XML, внешний файл может использовать пространство имен безопасности как значение по улолчанию, чтобы сделать его более читабельным:
 
 .. code-block:: xml
 
@@ -106,18 +99,15 @@ the security namespace as the default one to make it more readable:
 
 .. note::
 
-    All examples in the documentation assume that you are using an external
-    file with the default security namespace as above.
+    Во всех примерах документации предполагается, что вы используете внешний файл с значением пространства имен безопасности по умолчанию как сказано выше.
 
-As you can see, the configuration has three sections:
+Как вы можете видеть, конфигурация состоит из трех секций:
 
-* *provider*: A provider knows how to create users;
+* *provider*: Поставщик знает как создавать пользователей;
 
-* *firewall*: A firewall defines the authentication mechanisms for the whole
-  application or for just a part of it;
+* *firewall*: A firewall defines the authentication mechanisms for the whole application or for just a part of it;
 
-* *access-control*: Access control rules secure parts of your application with
-  roles.
+* *access-control*: правила control rules secure parts of вашего приложения вместе с ролями.
 
 To sum up the workflow, the firewall authenticates the client based on the
 submitted credentials and the user created by the provider, and the access
