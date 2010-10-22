@@ -208,9 +208,8 @@ AdvancedAccountInterface
 
 Вхождение ``entity`` конфигурирует класс Entity для использования для пользователя, а ``property`` - это название колонки PHP, где хранится имя пользователя.
 
-If retrieving the user is more complex than a simple ``findOneBy()`` call,
-remove the ``property`` setting and make your Entity Repository class
-implement :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
+Если получение пользователя сложнее, чем просто вызов ``findOneBy()``,
+удалите установку ``property`` и сделайте чтобы класс Entity Repository реализовывал интерфейс :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
 
     /**
      * @Entity(repositoryClass="SecurityBundle:UserRepository")
@@ -231,50 +230,40 @@ implement :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
         }
     }
 
-.. tip::
+.. примечание::
 
-    If you use the
+    Если вы используете интерфейс 
     :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
-    interface, don't check the various flags (locked, expired, enabled, ...)
-    when retrieving the user from the database as this will be managed by the
-    authentication system automatically (and proper exceptions will be thrown
-    if needed). If you have special flags, override the default
+    не проверяйте различные флаги (закрыт, устарел, включен, ...)
+    когда получаете пользователя с базы данных так как проверки будут сделаны системой аутентификации автоматически (и соответствующие исключения будут выброшены при необходимости). Если у вас установлены специальные флаги, переопределите реализацию интерфейса
     :class:`Symfony\\Component\\Security\\User\\AccountCheckerInterface`
-    implementation.
+    по умолчанию.
 
-Retrieving the User
--------------------
+Извлечение Пользователя
+-----------------------
 
-After authentication, the user is accessed via the security context::
+После аутентификации, пользователь доступен через безопасный контекст::
 
     $user = $container->get('security.context')->getUser();
 
-You can also check if the user is authenticated with the ``isAuthenticated()``
-method.
+Вы также можете проверить, аутентифицирован ли пользователь при помощи метода ``isAuthenticated()``.
 
-Roles
------
+Роли
+----
 
-A User can have as many roles as needed. Roles are usually defined as strings,
-but they can be any object implementing
-:class:`Symfony\\Component\\Security\\Role\\RoleInterface` (roles are always
-objects internally.) Roles defined as strings should begin with the ``ROLE_``
-prefix to be automatically managed by Symfony2.
+У пользователя может быть столько ролей, сколько необходимо. Роли обычно определяются как строки,
+но они могут быть любым объектом, реализующим интерфейс :class:`Symfony\\Component\\Security\\Role\\RoleInterface` (роли во внутреннем представлении всегда объекты). Роли, определяемые строкой, должны начинаться префиксом ``ROLE_``, чтобы автоматически обрабатываться Symfony2.
 
-The roles are used by the access decision manager to secure resources. Read
-the :doc:`Authorization </guides/security/authorization>` document to learn
-more about access control, roles, and voters.
+Роли используются менеджером принятия решений по контролю доступа для защиты ресурсов. Прочитайте секцию :doc:`Authorization </guides/security/authorization>`, чтобы узнать больше о контроле доступа, ролях и голосующих.
 
-.. tip::
+.. примечание::
 
-    If you define your own roles with a dedicated Role class, don't use the
-    ``ROLE_`` prefix.
+    Если вы определили ваши собственные роли при помощи внешнего класса ролей, не используйте префикс ``ROLE_``.
 
-Hierarchical Roles
+Иерархические Роли
 ~~~~~~~~~~~~~~~~~~
 
-Instead of associating many roles to users, you can define role inheritance
-rules by creating a role hierarchy:
+Вместо того, чтобы ассоциировать пользователям множество ролей, вы можете определить правила наследования ролей путем создания иерархии ролей:
 
 .. configuration-block::
 
@@ -306,5 +295,4 @@ rules by creating a role hierarchy:
             ),
         ));
 
-In the above configuration, users with 'ROLE_ADMIN' role will also have the
-'ROLE_USER' role. The 'ROLE_SUPER_ADMIN' role has multiple inheritance.
+В конфигурации сверху, у пользователи с ролью 'ROLE_ADMIN' также будет роль 'ROLE_USER'. Роль 'ROLE_SUPER_ADMIN' обладает множественным наследованием.
