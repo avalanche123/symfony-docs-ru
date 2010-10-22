@@ -1,40 +1,28 @@
-Users
-=====
+Пользователи
+============
 
-Security only makes sense because your application is accessed by clients you
-cannot trust. A client can be a human behind a browser, but also a device, a
-web service, or even a bot.
+Безопасность имеет сенс только в случае, когда с вашим приложением работают пользователи, которым вы не можете доверять. Пользователем может быть человек, работающий через браузер, некоторое устройство, web сервис, или же это бот.
 
-Defining the Users
-------------------
+Определение пользователей
+-------------------------
 
-During authentication, Symfony2 tries to retrieve a user matching the client
-credentials (most of the time a username and a password). As Symfony2 makes no
-assumption about the client/user PHP representation, it's up to the
-application to define a user class and hook it up with Symfony2 via a user
-provider class.
+Во время аутентификации, Symfony2 пытается найти соответствующего пользователя сравнивая клиентские учетные данные (чаще всего это имя пользователя и пароль). Та как Symfony2 не строит никаких догадок по поводу PHP представления клиента/пользователя, приложение должно определить класс пользователя и подключить его к Symfony2 через класс поставщика пользователей.
 
 UserProviderInterface
 ~~~~~~~~~~~~~~~~~~~~~
 
-The user provider must implement
-:class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
+Провайдер пользователей должен реализовывать интерфейс :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
 
     interface UserProviderInterface
     {
          function loadUserByUsername($username);
     }
 
-The ``loadUserByUsername()`` method receives the username and must return the
-User object. If the user cannot be found, it must throw a
-:class:`Symfony\\Component\\Security\\Exception\\UsernameNotFoundException`
-exception.
+Метод ``loadUserByUsername()`` получает имя пользователя и должен возвратить объект пользователя User. Если пользователь не может быть найден, он должен выбросить исключение :class:`Symfony\\Component\\Security\\Exception\\UsernameNotFoundException`.
 
-.. tip::
+.. примечание::
 
-    Most of the time, you don't need to define a user provider yourself as
-    Symfony2 comes with the most common ones. See the next section for more
-    information.
+    Чаще всего, вам нет надобности определять провайдер пользователя самим, так как в состав Symfony2 входят наиболее общие варианты. Смотрите следующую секцию для более детальной информации.
 
 AccountInterface
 ~~~~~~~~~~~~~~~~
