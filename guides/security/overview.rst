@@ -1,16 +1,16 @@
 ﻿Безопасность
-========
+============
 
 В состав Symfony2 входит встроенный слой безопасности. Он защищает ваше приложение путем обеспечения механизмов аутентификации и авторизации.
 
-*Аутентификация* обеспечивает, что пользователь действительно тот, за кого он себя выдает. *Авторизация* связана с процесом решения, может ли пользователь выполнить действие или нет (авторизация проходит после аутентификации).
+*Аутентификация* обеспечивает, что пользователь действительно тот, за кого он себя выдает. *Авторизация* связана с процессом решения, может ли пользователь выполнить действие или нет (авторизация проходит после аутентификации).
 
 Этот документ является быстрым обзором этих концепций, но настоящая мощь содержится в следующих трех частях: :doc:`Users </guides/security/users>`,
 :doc:`Authentication </guides/security/authentication>`, и
 :doc:`Authorization </guides/security/authorization>`.
 
 Конфигурация
--------------
+------------
 
 Для большинства случаев, безопасность в Symfony2 может быть легко сконфигурирована в вашем главном конфигурационном файле; вот типичная конфигурация:
 
@@ -71,7 +71,7 @@
             ),
         ));
 
-Часто, предпочтительнее вынести всю конфигурацию касающуюся безопасности во внешний файл. Если вы используете XML, внешний файл может использовать пространство имен безопасности как значение по улолчанию, чтобы сделать его более читабельным:
+Часто, предпочтительнее вынести всю конфигурацию касающуюся безопасности во внешний файл. Если вы используете XML, внешний файл может использовать пространство имен безопасности как значение по умолчанию, чтобы сделать его более читабельным:
 
 .. code-block:: xml
 
@@ -99,32 +99,29 @@
 
 .. note::
 
-    Во всех примерах документации предполагается, что вы используете внешний файл с значением пространства имен безопасности по умолчанию как сказано выше.
+    Во всех примерах документации предполагается, что вы используете внешний файл со значением пространства имен безопасности по умолчанию как сказано выше.
 
 Как вы можете видеть, конфигурация состоит из трех секций:
 
 * *provider*: Поставщик знает как создавать пользователей;
 
-* *firewall*: A firewall defines the authentication mechanisms for the whole application or for just a part of it;
+* *firewall*: Брандмауэр определяет механизмы аутентификации для приложения в целом или его части;
 
-* *access-control*: правила control rules secure parts of вашего приложения вместе с ролями.
+* *access-control*: Правила контроля доступа для защищенных частей вашего приложения вместе с ролями.
 
-To sum up the workflow, the firewall authenticates the client based on the
-submitted credentials and the user created by the provider, and the access
-control authorizes access to the resource.
+Подводя итоги рабочего процесса, брандмауэр проводит аутентификацию пользователя на основе установленных правил, пользователи создаются посредством поставщика, а контроль доступа контролирует доступ к ресурсам.
 
-Authentication
+Аутентификация
 --------------
 
-Symfony2 supports many different authentication mechanisms out of the box, and
-more can be easily added if needed; main ones are:
+В Symfony2 есть поддержка различных внешних механизмов аутентификации, которые могут быть легко добавлены при надобности; главными из них являются:
 
 * HTTP Basic;
 * HTTP Digest;
-* Form based authentication;
-* X.509 certificates.
+* аутентификация, базирующаяся на форме;
+* сертификаты X.509.
 
-Here is how you can secure your application with HTTP basic authentication:
+Здесь показано, как вы можете защитить ваше приложение при помощи базовой HTTP аутентификации:
 
 .. configuration-block::
 
@@ -154,8 +151,7 @@ Here is how you can secure your application with HTTP basic authentication:
             ),
         ));
 
-Several firewalls can also be defined if you need different authentication
-mechanisms for different parts of the application:
+Можно определить несколько брандмауэров если вам необходимо использование различных механизмов аутентификаци в различных частях приложения:
 
 .. configuration-block::
 
@@ -192,21 +188,16 @@ mechanisms for different parts of the application:
             ),
         ));
 
-.. tip::
+.. примечание::
 
-    Using HTTP basic is the easiest, but read the :doc:`Authentication
-    </guides/security/authentication>` document to learn how to configure
-    other authentication mechanisms, how to configure a stateless
-    authentication, how you can impersonate another user, how you can enforce
-    https, and much more.
+    Проще всего использовать базовую HTTP аутентификацию, но прочитайте часть :doc:`Authentication
+    </guides/security/authentication>` для того чтобы узнать, как настраивать другие механизмы аутентификации, как настраивать аутентификацию без состояний, как вы можете имитировать другого пользователя, как включить https, и многое другое.
 
-Users
------
+Пользователи
+------------
 
-During authentication, Symfony2 asks a user provider to create the user object
-matching the client request (via credentials like a username and a password).
-To get started fast, you can define an in-memory provider directly in your
-configuration:
+Во время аутентификации, Symfony2 опрашивает поставщика пользователей для создания объекта пользователя, отвечающего клиентскому запросу (с помощью учетных данных, как имя пользователя и пароль).
+Для быстрого старта, вы можете определить поставщика "в памяти" прямо в конфигурации:
 
 .. configuration-block::
 
@@ -239,26 +230,18 @@ configuration:
             ),
         ));
 
-The above configuration defines a 'foo' user with a 'foo' password. After
-authentication, you can access the authenticated user via the security context
-(the user is an instance of
-:class:`Symfony\\Component\\Security\\User\\User`)::
+Конфигурация сверху определяет пользователя 'foo' с паролем 'foo'. После аутентификации, вы можете получить доступ к аутентифицированному пользователю через безопасный контекст (пользователь является экземпляром класса :class:`Symfony\\Component\\Security\\User\\User`)::
 
     $user = $container->get('security.context')->getUser();
 
-.. tip::
+.. примечание::
 
-    Using the in-memory provider is a great way to easily secure your personal
-    website backend, to create a prototype, or to provide fixtures for your
-    tests. Read the :doc:`Users </guides/security/users>` document to learn
-    how to avoid the password to be in clear, how to use a Doctrine Entity as
-    a user provider, how to define several providers, and much more.
+    Использование поставщика "в памяти" - это отличный вариант легко защитить серверную часть вашего персонального сайта, создать прототип, или создать макет для тестов. Прочитайте часть :doc:`Users </guides/security/users>` для того чтобы изучить, как избежать ненадежных паролей, как использовать Doctrine Entity в качестве пользовательского поставщика, как определить несколько поставщиков, и многое другое.
 
-Authorization
--------------
+Авторизация
+-----------
 
-Authorization is optional but gives you a powerful way to restrict access to
-your application resources based user roles:
+Авторизация является необязательной, но позволяет мощно ограничивать доступ к ресурсам вашего приложения на основе пользовательских ролей:
 
 .. configuration-block::
 
@@ -301,13 +284,8 @@ your application resources based user roles:
             ),
         ));
 
-The above configuration defines a 'foo' user with the 'ROLE_USER' and
-'ROLE_ADMIN' roles and it restricts access to the whole application to users
-having the 'ROLE_USER' role.
+Конфигурация сверху определяет пользователя 'foo' с ролями 'ROLE_USER' и 'ROLE_ADMIN' и она ограничивает доступ к приложению в целом для пользователей с ролью 'ROLE_USER'.
 
-.. tip::
+.. примечание::
 
-    Read the :doc:`Authorization </guides/security/authorization>` document to
-    learn how to define a role hierarchy, how to customize your template based
-    on roles, how to define access control rules based on request attributes,
-    and much more.
+    Прочитайте часть :doc:`Authorization </guides/security/authorization>` для того, чтобы узнать, как определять иерархию ролей, как настроить ваш шаблон базируясь на ролях, как определить правила контроля доступа базируясь на атрибутах запроса, и многое другое.
