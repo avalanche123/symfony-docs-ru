@@ -27,8 +27,7 @@ UserProviderInterface
 AccountInterface
 ~~~~~~~~~~~~~~~~
 
-The user provider must return objects that implement
-:class:`Symfony\\Component\\Security\\User\\AccountInterface`::
+Провайдер пользователя должен возвращать объекты, реализующие интерфейс :class:`Symfony\\Component\\Security\\User\\AccountInterface`::
 
     interface AccountInterface
     {
@@ -40,20 +39,17 @@ The user provider must return objects that implement
         function eraseCredentials();
     }
 
-* ``__toString()``: Returns a string representation for the user;
-* ``getRoles()``: Returns the roles granted to the user;
-* ``getPassword()``: Returns the password used to authenticate the user;
-* ``getSalt()``: Returns the salt;
-* ``getUsername()``: Returns the username used to authenticate the user;
-* ``eraseCredentials()``: Removes sensitive data from the user.
+* ``__toString()``: Возвращает строковое представление пользователя;
+* ``getRoles()``: Возвращает роли, сопоставленные пользователю;
+* ``getPassword()``: Возвращает пароль, используемое для аутентификации пользователя;
+* ``getSalt()``: Возвращает соль;
+* ``getUsername()``: Возвращает имя пользователя, используемое для аутентификации пользователя;
+* ``eraseCredentials()``: Удаляет чувствительные данные из объекта пользователя.
 
-Encoding Passwords
-~~~~~~~~~~~~~~~~~~
+Кодирование Паролей
+~~~~~~~~~~~~~~~~~~~
 
-Instead of storing passwords in clear, you can encode them. When doing so, you
-should use a
-:class:`Symfony\\Component\\Security\\Encoder\\PasswordEncoderInterface`
-object::
+Вместо хранения паролей в чистом виде, вы можете закодировать их. Для этого вам следует использовать объект :class:`Symfony\\Component\\Security\\Encoder\\PasswordEncoderInterface`::
 
     interface PasswordEncoderInterface
     {
@@ -61,13 +57,13 @@ object::
         function isPasswordValid($encoded, $raw, $salt);
     }
 
-.. note::
+.. примечание::
 
-    During authentication, Symfony2 will use the ``isPasswordValid()`` method
-    to check the user password; read the next section to learn how to make
-    your authentication provider aware of the encoder to use.
+    Во время аутентификации, Symfony2 будет использовать метод ``isPasswordValid()``
+    для проверки пароля пользователя; прочитайте следующую секцию, чтобы узнать, как уведомить ваш провайдер
+    аутентификации использовать кодирование.
 
-For most use case, use
+В большинстве случаев, используйте
 :class:`Symfony\\Component\\Security\\Encoder\\MessageDigestPasswordEncoder`::
 
     $user = new User();
@@ -76,18 +72,13 @@ For most use case, use
     $password = $encoder->encodePassword('MyPass', $user->getSalt());
     $user->setPassword($password);
 
-When encoding your passwords, it's best to also define a unique salt per user
-(the ``getSalt()`` method can return the primary key if users are persisted in
-a database for instance.)
+Когда кодируете ваши пароли, очень хорошо будет определить уникальную "соль" для каждого пользователя (метод ``getSalt()`` может возвращать первичный ключ если пользователи хранятся, например, в базе данных).
 
 AdvancedAccountInterface
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before and after authentication, Symfony2 can check various flags on the user.
-If your user class implements
-:class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface` instead
-of :class:`Symfony\\Component\\Security\\User\\AccountInterface`, Symfony2
-will make the associated checks automatically::
+Перед и после аутентификацией, Symfony2 может проверить различные флаги для пользователя.
+Если ваш класс пользователя реализует интерфейс :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface` вместо :class:`Symfony\\Component\\Security\\User\\AccountInterface`, Symfony2 сделает сопутствующие проверки автоматически::
 
     interface AdvancedAccountInterface extends AccountInterface
     {
@@ -97,32 +88,27 @@ will make the associated checks automatically::
         function isEnabled();
     }
 
-* ``isAccountNonExpired()``: Returns ``true`` when the user's account has expired;
-* ``isAccountNonLocked()``: Returns ``true`` when the user is locked;
-* ``isCredentialsNonExpired()``: Returns ``true`` when the user's credentials
-  (password) has expired;
-* ``isEnabled()``: Returns ``true`` when the user is enabled.
+* ``isAccountNonExpired()``: Возвращает ``true`` если аккаунт пользователя истек;
+* ``isAccountNonLocked()``: Возвращает ``true`` когда пользователь заблокирован;
+* ``isCredentialsNonExpired()``: Возвращает ``true`` пользовательские учетные данные (пароль) устарели;
+* ``isEnabled()``: Возвращает ``true`` когда пользователь включен.
 
-.. note::
+.. примечание::
 
-    The :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
-    relies on an
+    Интерфейс :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
+    зависит от объекта
     :class:`Symfony\\Component\\Security\\User\\AccountCheckerInterface`
-    object to do the pre-authentication and post-authentication checks.
+    для того чтобы выполнить пре-аутентификационные и пост-аутентификационные проверки.
 
-Defining a Provider
--------------------
+Определение Провайдера
+----------------------
 
-As we have seen in the previous section, a provider implements
-:class:`Symfony\\Component\\Security\\User\\UserProviderInterface`. Symfony2
-comes with provider for in-memory users, Doctrine Entity, and defines a base
-class for any DAO provider you might want to create.
+Как мы видели в предыдущей секции, провайдер реализует интерфейс :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`. В состав Symfony2 входит провайдер для пользователей "в памяти", Doctrine Entity, и базовый класс для любого DAO провайдера, который вы, возможно, захотите создать.
 
-In-memory Provider
-~~~~~~~~~~~~~~~~~~
+Провайдер "в памяти"
+~~~~~~~~~~~~~~~~~~~~
 
-The in-memory provider is a great provider to secure a personal website
-backend or a prototype. It is also the best provider when writing unit tests:
+Провайдер "в памяти" это отличный провайдер для защиты серверной части вашего персонального web сайта или прототипа. Это также лучший провайдер когда вы пишите unit тесты:
 
 .. configuration-block::
 
@@ -170,13 +156,12 @@ backend or a prototype. It is also the best provider when writing unit tests:
             ),
         ));
 
-The above configuration defines two in-memory providers. As you can see, the
-second one uses 'sha1' to encode the user passwords.
+Конфигурация сверху определяет два провайдера "в памяти". Как вы можете видеть, второй из них использует 'sha1' для кодировки пользовательских паролей.
 
-Doctrine Entity Provider
-~~~~~~~~~~~~~~~~~~~~~~~~
+Провайдер Doctrine Entity
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Most of the time, users are described by a Doctrine Entity::
+В большинстве случаев, пользователи описываются через Doctrine Entity::
 
     /**
      * @Entity
@@ -186,8 +171,7 @@ Most of the time, users are described by a Doctrine Entity::
         // ...
     }
 
-In such a case, you can use the default Doctrine provider without creating one
-yourself:
+В этом случае, вы можете использовать провайдер Doctrine по умолчанию без его самостоятельного создания:
 
 .. configuration-block::
 
@@ -222,8 +206,7 @@ yourself:
             ),
         ));
 
-The ``entity`` entry configures the Entity class to use for the user, and
-``property`` the PHP column name where the username is stored.
+Вхождение ``entity`` конфигурирует класс Entity для использования для пользователя, а ``property`` - это название колонки PHP, где хранится имя пользователя.
 
 If retrieving the user is more complex than a simple ``findOneBy()`` call,
 remove the ``property`` setting and make your Entity Repository class
