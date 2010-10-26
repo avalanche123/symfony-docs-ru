@@ -1,25 +1,22 @@
-Authentication
+Аутентификация
 ==============
 
-Authentication in Symfony2 is managed by the Firewall system. It is made of
+Аутентификация в Symfony2 регулируется системой Firewall. It is made of
 listeners that enforce security and redirect the user if his credentials are
 not available, not sufficient, or just wrong.
 
-.. note::
+.. примечание::
 
-    The Firewall is implemented via a ``core.security`` event, notified just
-    after the ``core.request`` one. All features described in this document
-    are implemented as listeners to this event.
+    Firewall реализован через событие ``core.security``, которое вызывается сразу после события
+    ``core.request``. Вся функциональность, о которой пойдет речь в этой части, реализована через
+    обработчики этого события.
 
-The Firewall Map
-----------------
+Карта Firewall
+--------------
 
-The Firewall can be configured to secure your application as a whole, or to
-use different authentication strategies for different parts of the application.
+Firewall может быть настроен для защиты всего приложения, или может использовать различные стратегии аутентификации для различных частей приложения.
 
-Typically, a website can open the public part to all, secure the backend via a
-form based authentication, and secure the public API/Web Service via an HTTP
-basic authentication:
+Часто, web сайт может открыть публичную часть для всех, при этом защищая панель управления при помощи формы аутентификации, и защищая публичные API/Web Сервисы через базовую HTTP аутентификацию:
 
 .. configuration-block::
 
@@ -65,19 +62,16 @@ basic authentication:
             ),
         ));
 
-Each firewall configuration is activated when the incoming request matches the
-regular expression defined by the ``pattern`` setting. This pattern must match
-the request path info (``preg_match('#^'.PATTERN_VALUE.'$#',
-$request->getPathInfo())``.)
+Каждая конфигурация firewall-а будет активирована когда входящий запрос совпадет с регулярным выражением, определенным в настройке ``pattern``. Этот шаблон должен совпадать с информацией о пути, содержащейся в запросе (``preg_match('#^'.PATTERN_VALUE.'$#', $request->getPathInfo())``.)
 
-.. tip::
+.. примечание::
 
     The definition order of firewall configurations is significant as Symfony2
     will use the first configuration for which the pattern matches the request
     (so you need to define more specific configurations first).
 
-Authentication Mechanisms
--------------------------
+Механизмы аутентификации
+------------------------
 
 Out of the box, Symfony2 supports the following authentication mechanisms:
 
