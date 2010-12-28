@@ -5,7 +5,7 @@
 listeners that enforce security and redirect the user if his credentials are
 not available, not sufficient, or just wrong.
 
-.. примечание::
+.. совет::
 
     Firewall реализован через событие ``core.security``, которое вызывается сразу после события
     ``core.request``. Вся функциональность, о которой пойдет речь в этой части, реализована через
