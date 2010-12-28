@@ -1,35 +1,27 @@
-The Big Picture
-===============
+﻿Общая картина
+=============
 
 So, you want to try out Symfony2 but only have 10 minutes or so? This first
 part of this tutorial has been written for you. It explains how to get started
 fast with Symfony2 by showing you the structure of a simple ready-made
 project.
 
-If you have ever used a web framework before, you should feel right at home
-with Symfony2.
+Если вы когда-нибудь использовали какой-либо веб-фреймворк прежде, вы будете чувствовать себя в Symfony2 как дома.
 
 .. index::
    pair: Sandbox; Download
 
-Downloading and Installing Symfony2
------------------------------------
+Загрузка и Установка
+--------------------
 
-First, check that you have at least PHP 5.3.2 installed and correctly
-configured to work with a web server like Apache.
+В первую очередь, убедитесь что у вас установлен как минимум PHP 5.3.2 и корректно настроен для работы с web сервером, таким как Apache.
 
-Ready? Let's start by downloading Symfony2. To get started even faster, we are
-going to use the "Symfony2 sandbox". It is a Symfony2 project where all the
-required libraries and some simple controllers are already included; the basic
-configuration is also already done. The great advantage of the sandbox over
-other types of installation is that you can start experimenting with Symfony2
-immediately.
+Готовы? Давайте начнем с загрузки Symfony. Для быстрого старта мы будем использовать "песочницу Symfony". Это Symfony, который содержит все необходимые библиотеки и несколько простых контроллеров; также включена базовая конфигурация. Наибольшее преимущество песочницы перед другими типами инсталляции в том, что вы можете сразу же начать экспериментировать с Symfony.
 
-Download the `sandbox`_, and unpack it in your root web directory. You
-should now have a ``sandbox/`` directory::
+Загрузите `sandbox`_, и распакуйте ее в корневую директорию web сервера. Сейчас у вас должна быть директория ``sandbox/``::
 
-    www/ <- your web root directory
-        sandbox/ <- the unpacked archive
+    www/ <- ваша корневая web директория
+        sandbox/ <- распакованый архив
             app/
                 cache/
                 config/
@@ -46,24 +38,23 @@ should now have a ``sandbox/`` directory::
 .. index::
    single: Installation; Check
 
-Checking the Configuration
---------------------------
+Проверка Конфигурации
+---------------------
 
-To avoid some headaches further down the line, check that your configuration
-can run a Symfony2 project smoothly by requesting the following URL:
+Для того чтобы избежать головной боли в последствии, проверьте, может ли быть запущен Symfony проект у вас – для этого откройте следующий URL:
 
     http://localhost/sandbox/web/check.php
 
-Read the script output carefully and fix any problem that it finds.
+Внимательно прочитайте вывод скрипта и исправьте все проблемы которые он найдет.
 
-Now, request your first "real" Symfony2 webpage:
+Теперь запросите вашу первую "реальную" страничку на Symfony:
 
     http://localhost/sandbox/web/app_dev.php/
 
-Symfony2 should congratulate you for your hard work so far!
+Symfony должен поблагодарить за ваши затраченные усилия!
 
-Creating your first Application
--------------------------------
+Ваше Первое Приложение
+----------------------
 
 The sandbox comes with a simple Hello World ":term:`application`" and that's
 the application we will use to learn more about Symfony2. Go to the following
@@ -71,7 +62,7 @@ URL to be greeted by Symfony2 (replace Fabien with your first name):
 
     http://localhost/sandbox/web/app_dev.php/hello/Fabien
 
-What's going on here? Let's dissect the URL:
+Что происходит в этом месте? Давайте разберем URL:
 
 .. index:: Front Controller
 
@@ -88,15 +79,13 @@ Fabien!``).
 .. index::
    single: Configuration
 
-Configuration
-~~~~~~~~~~~~~
+Конфигурация
+~~~~~~~~~~~~
 
-But how does Symfony2 route the request to your code? Simply by reading some
-configuration file.
+Но как Symfony связывает запрос с вашим кодом? Просто считывая некоторый конфигурационный файл.
 
-All Symfony2 configuration files can be written in either PHP, XML, or `YAML`_
-(YAML is a simple format that makes the description of configuration settings
-very easy).
+Все конфигурационные файлы Symfony2 могут быть написаны на PHP, XML, или `YAML`_
+(YAML это простой формат, который очень упрощает описание конфигурационных настроек).
 
 .. tip::
 
@@ -109,10 +98,10 @@ very easy).
    single: Routing
    pair: Configuration; Routing
 
-Routing
-~~~~~~~
+Маршрутизация
+~~~~~~~~~~~~~
 
-So, Symfony2 routes the request by reading the routing configuration file:
+Symfony проводит маршрутизацию запроса анализируя файл конфигурации маршрутов:
 
 .. configuration-block::
 
@@ -204,7 +193,7 @@ controller, referenced by the ``_controller`` value.
    single: Controller
    single: MVC; Controller
 
-Controllers
+Контроллеры
 ~~~~~~~~~~~
 
 The controller is responsible for returning a representation of the resource
@@ -230,7 +219,7 @@ The controller is responsible for returning a representation of the resource
         }
     }
 
-The code is pretty straightforward but let's explain this code line by line:
+Код довольно простой, но давайте разберем его по строкам:
 
 * *line 3*: Symfony2 takes advantage of new PHP 5.3 features and as such, all
   controllers are properly namespaced (the namespace is the first part of the
@@ -256,8 +245,8 @@ organized in bundles. In Symfony2 speak, a bundle is a structured set of files
 feature (a blog, a forum, ...) and which can be easily shared with other
 developers. In our example, we only have one bundle, ``HelloBundle``.
 
-Templates
-~~~~~~~~~
+Шаблоны
+~~~~~~~
 
 So, the controller renders the ``HelloBundle:Hello:index.twig`` template. But
 what's in a template name? ``HelloBundle`` is the bundle name, ``Hello`` is
@@ -311,7 +300,7 @@ configuration, you need to manually remove the cached files. That's why you
 should always use the development front controller (``app_dev.php``) when
 working on a project.
 
-Final Thoughts
+Заключительное Слово
 --------------
 
 The 10 minutes are over. By now, you should be able to create your own simple

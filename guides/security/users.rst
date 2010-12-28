@@ -87,11 +87,11 @@ object::
 
 .. note::
 
-    During authentication, Symfony2 will use the ``isPasswordValid()`` method
-    to check the user password; read the next section to learn how to make
-    your authentication provider aware of the encoder to use.
+    Во время аутентификации, Symfony2 будет использовать метод ``isPasswordValid()``
+    для проверки пароля пользователя; прочитайте следующую секцию, чтобы узнать, как уведомить ваш провайдер
+    аутентификации использовать кодирование.
 
-For most use case, use
+В большинстве случаев, используйте
 :class:`Symfony\\Component\\Security\\Encoder\\MessageDigestPasswordEncoder`::
 
     $user = new User();
@@ -133,10 +133,10 @@ will make the associated checks automatically::
 
 .. note::
 
-    The :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
-    relies on an
+    Интерфейс :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
+    зависит от объекта
     :class:`Symfony\\Component\\Security\\User\\AccountCheckerInterface`
-    object to do the pre-authentication and post-authentication checks.
+    для того чтобы выполнить пре-аутентификационные и пост-аутентификационные проверки.
 
 .. index::
    single: Security; User Providers
@@ -289,7 +289,7 @@ implement :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
 
 .. tip::
 
-    If you use the
+    Если вы используете интерфейс 
     :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
     interface, don't check the various flags (locked, expired, enabled, ...)
     when retrieving the user from the database as this will be managed by the
@@ -395,8 +395,7 @@ After authentication, the user is accessed via the security context::
 
     $user = $container->get('security.context')->getUser();
 
-You can also check if the user is authenticated with the ``isAuthenticated()``
-method::
+Вы также можете проверить, аутентифицирован ли пользователь при помощи метода ``isAuthenticated()``.
 
     $container->get('security.context')->isAuthenticated();
 
@@ -434,8 +433,7 @@ more about access control, roles, and voters.
 Hierarchical Roles
 ~~~~~~~~~~~~~~~~~~
 
-Instead of associating many roles to users, you can define role inheritance
-rules by creating a role hierarchy:
+Вместо того, чтобы ассоциировать пользователям множество ролей, вы можете определить правила наследования ролей путем создания иерархии ролей:
 
 .. configuration-block::
 

@@ -82,9 +82,7 @@ your main configuration file; here is a typical configuration:
             ),
         ));
 
-Most of the time, it is more convenient to outsource all security related
-configuration into an external file. If you use XML, the external file can use
-the security namespace as the default one to make it more readable:
+Часто, предпочтительнее вынести всю конфигурацию касающуюся безопасности во внешний файл. Если вы используете XML, внешний файл может использовать пространство имен безопасности как значение по умолчанию, чтобы сделать его более читабельным:
 
 .. code-block:: xml
 
@@ -112,15 +110,13 @@ the security namespace as the default one to make it more readable:
 
 .. note::
 
-    All examples in the documentation assume that you are using an external
-    file with the default security namespace as above.
+    Во всех примерах документации предполагается, что вы используете внешний файл со значением пространства имен безопасности по умолчанию как сказано выше.
 
-As you can see, the configuration has three sections:
+Как вы можете видеть, конфигурация состоит из трех секций:
 
-* *provider*: A provider knows how to create users;
+* *provider*: Поставщик знает как создавать пользователей;
 
-* *firewall*: A firewall defines the authentication mechanisms for the whole
-  application or for just a part of it;
+* *firewall*: Брандмауэр определяет механизмы аутентификации для приложения в целом или его части;
 
 * *access-control*: Access control rules secure parts of your application with
   roles.
@@ -129,18 +125,17 @@ To sum up the workflow, the firewall authenticates the client based on the
 submitted credentials and the user created by the provider, and the access
 control authorizes access to the resource.
 
-Authentication
+Аутентификация
 --------------
 
-Symfony2 supports many different authentication mechanisms out of the box, and
-more can be easily added if needed; main ones are:
+В Symfony2 есть поддержка различных внешних механизмов аутентификации, которые могут быть легко добавлены при надобности; главными из них являются:
 
 * HTTP Basic;
 * HTTP Digest;
-* Form based authentication;
-* X.509 certificates.
+* аутентификация, базирующаяся на форме;
+* сертификаты X.509.
 
-Here is how you can secure your application with HTTP basic authentication:
+Здесь показано, как вы можете защитить ваше приложение при помощи базовой HTTP аутентификации:
 
 .. configuration-block::
 
@@ -170,8 +165,7 @@ Here is how you can secure your application with HTTP basic authentication:
             ),
         ));
 
-Several firewalls can also be defined if you need different authentication
-mechanisms for different parts of the application:
+Можно определить несколько брандмауэров если вам необходимо использование различных механизмов аутентификаци в различных частях приложения:
 
 .. configuration-block::
 
@@ -216,8 +210,8 @@ mechanisms for different parts of the application:
     authentication, how you can impersonate another user, how you can enforce
     https, and much more.
 
-Users
------
+Пользователи
+------------
 
 During authentication, Symfony2 asks a user provider to create the user object
 matching the client request (via credentials like a username and a password).
@@ -269,8 +263,8 @@ authentication, you can access the authenticated user via the security context
     how to avoid the password to be in clear, how to use a Doctrine Entity as
     a user provider, how to define several providers, and much more.
 
-Authorization
--------------
+Авторизация
+-----------
 
 Authorization is optional but gives you a powerful way to restrict access to
 your application resources based user roles:

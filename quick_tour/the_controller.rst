@@ -2,11 +2,10 @@
    single: Controller
    single: MVC; Controller
 
-The Controller
-==============
+Контроллер
+==========
 
-Still with us after the first two parts? You are already becoming a Symfony2
-addict! Without further ado, let's discover what controllers can do for you.
+Вы все еще с нами после первых двух частей? Вы уже становитесь ярым приверженцем Symfony2! Без лишней суеты, давайте узнаем что контроллеры могут для вас сделать.
 
 .. index::
    single: Formats
@@ -106,7 +105,7 @@ you will get a 404 HTTP error, as it does not match the ``_format`` requirement.
 The Response Object
 -------------------
 
-Now, let's get back to the ``Hello`` controller::
+Теперь, давайте вернемся к контроллеру ``Hello``::
 
     // src/Application/HelloBundle/Controller/HelloController.php
 
@@ -127,22 +126,20 @@ change the default ``Content-Type``::
         return $response;
     }
 
-For simple templates, you can even create a ``Response`` object by hand and save
-some milliseconds::
+Для простейших шаблонов, вы даже можете создать объект ``Response`` вручную и сэкономить этим несколько миллисекунд::
 
     public function indexAction($name)
     {
         return $this->createResponse('Hello '.$name);
     }
 
-This is really useful when a controller needs to send back a JSON response for
-an Ajax request.
+Это действительно полезно, когда контроллер должен отправить JSON ответ на Ajax запрос.
 
 .. index::
    single: Exceptions
 
-Managing Errors
----------------
+Управление Ошибками
+-------------------
 
 When things are not found, you should play well with the HTTP protocol and
 return a 404 response. This is easily done by throwing a built-in HTTP
@@ -167,10 +164,10 @@ browser.
    single: Controller; Redirect
    single: Controller; Forward
 
-Redirecting and Forwarding
---------------------------
+Перемещения и Перенаправления
+-----------------------------
 
-If you want to redirect the user to another page, use the ``redirect()`` method::
+Если вы хотите переместить пользователя на другую страницу, используйте метод ``redirect()``::
 
     $this->redirect($this->generateUrl('hello', array('name' => 'Lucas')));
 
@@ -213,7 +210,7 @@ helper:
 
     <?php echo $view['request']->getParameter('page') ?>
 
-The Session
+Сессия
 -----------
 
 Even if the HTTP protocol is stateless, Symfony2 provides a nice session object
@@ -244,10 +241,7 @@ next request::
     // display the message back in the next request (in a template)
     <?php echo $view['session']->getFlash('notice') ?>
 
-Final Thoughts
---------------
+Заключительное Слово
+--------------------
 
-That's all there is to it, and I'm not even sure we have spent the allocated
-10 minutes. In the previous part, we saw how to extend the templating system
-with helpers. But everything can be extended or replaced in Symfony2 with
-bundles. That's the topic of the next part of this tutorial.
+Вот и все что хотелось рассказать, и я даже не уверен, что мы использовали все отведенные 10 минут. В предыдущей части мы видели, как расширить систему шаблонов при помощи хелперов. Но в Symfony2 все может быть расширено или заменено при помощи бандлов. Это и есть тема следующей части данного руководства.

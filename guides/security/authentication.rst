@@ -4,15 +4,15 @@
 Authentication
 ==============
 
-Authentication in Symfony2 is managed by the Firewall system. It is made of
+Аутентификация в Symfony2 регулируется системой Firewall. It is made of
 listeners that enforce security and redirect the user if his credentials are
 not available, not sufficient, or just wrong.
 
 .. note::
 
-    The Firewall is implemented via a ``core.security`` event, notified just
-    after the ``core.request`` one. All features described in this document
-    are implemented as listeners to this event.
+    Firewall реализован через событие ``core.security``, которое вызывается сразу после события
+    ``core.request``. Вся функциональность, о которой пойдет речь в этой части, реализована через
+    обработчики этого события.
 
 .. index::
    single: Security; Firewall
@@ -72,10 +72,7 @@ basic authentication:
             ),
         ));
 
-Each firewall configuration is activated when the incoming request matches the
-regular expression defined by the ``pattern`` setting. This pattern must match
-the request path info (``preg_match('#^'.PATTERN_VALUE.'$#',
-$request->getPathInfo())``).
+Каждая конфигурация firewall-а будет активирована когда входящий запрос совпадет с регулярным выражением, определенным в настройке ``pattern``. Этот шаблон должен совпадать с информацией о пути, содержащейся в запросе (``preg_match('#^'.PATTERN_VALUE.'$#', $request->getPathInfo())``.)
 
 .. tip::
 

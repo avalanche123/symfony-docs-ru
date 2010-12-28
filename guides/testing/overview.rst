@@ -1,12 +1,11 @@
 .. index::
    single: Tests
 
-Testing
+Тестирование
 =======
 
-Whenever you write a new line of code, you also potentially add new bugs.
-Automated tests should have you covered and this tutorial shows you how to
-write unit and functional tests for your Symfony2 application.
+Как только вы пишете новую строку кода, вы также потенциально добавляете новые ошибки.
+Вам следует покрывать код автоматическими тестами, и это руководство покажет вам как писать unit и функциональные тесты для вашего Symfony2 приложения.
 
 Testing Framework
 -----------------
