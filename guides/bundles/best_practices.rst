@@ -24,11 +24,7 @@ A bundle is also a PHP namespace, composed of several segments:
   bundles;
 * The **bundle name**.
 
-.. caution::
-   The vendor namespace and the category namespaces are only possible as of
-   Symfony2 PR3.
-
-The bundle name must follow the following rules:
+The bundle name must follow these simple rules:
 
 * Use only alphanumeric characters and underscores;
 * Use a CamelCased name;
@@ -76,8 +72,9 @@ The following files are mandatory:
 * ``Resources/doc/index.rst``: The root file for the Bundle documentation.
 
 .. note::
-   These conventions ensure that automated tools can rely on this default
-   structure to work.
+
+    These conventions ensure that automated tools can rely on this default
+    structure to work.
 
 The depth of sub-directories should be kept to the minimal for most used
 classes and files (2 levels at a maximum). More levels can be defined for
@@ -155,6 +152,22 @@ Extensive documentation should also be provided in the :doc:`reStructuredText
 </contributing/documentation/format>` format, under the ``Resources/doc/``
 directory; the ``Resources/doc/index.rst`` file is the only mandatory file.
 
+Controllers
+-----------
+
+Controllers in a bundle must not extend
+:class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\Controller`. They can
+implement
+:class:`Symfony\\Foundation\\DependencyInjection\\ContainerAwareInterface` or
+extend :class:`Symfony\\Foundation\\DependencyInjection\\ContainerAware`
+instead.
+
+.. note::
+
+    If you have a look at
+    :class:`Symfony\\Bundle\\FrameworkBundle\\Controller\\Controller` methods,
+    you will see that they are only nice shortcuts to ease the learning curve.
+
 Templates
 ---------
 
@@ -163,8 +176,9 @@ must not provide a main layout, but extend a default ``base`` template (which
 must provide two slots: ``content`` and ``head``).
 
 .. note::
-   The only other template engine supported is Twig, but only for specific
-   cases.
+
+    The only other template engine supported is Twig, but only for specific
+    cases.
 
 Translation Files
 -----------------

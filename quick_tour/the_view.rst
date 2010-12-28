@@ -1,141 +1,206 @@
-﻿Вид
-===
+The View
+========
 
-После прочтения первой части данного руководства, вы решили что стоит потратить на Symfony2 еще 10 минут. Отлично. Во второй части вы больше узнаете о системе шаблонов в Symfony2. Как вы могли видеть ранее, Symfony2 использует PHP в качестве шаблонного движка по-умолчанию, но добавляет некоторые высокоуровневые особенности, что делает его более мощным.
+After reading the first part of this tutorial, you have decided that Symfony2
+was worth another 10 minutes. Good for you. In this second part, you will
+learn more about the Symfony2 template engine, `Twig`_. Twig is a flexible,
+fast, and secure template engine for PHP. It makes your templates more
+readable and concise; it also makes them more friendly for web designers.
 
-Вместо PHP, вы также можете использовать `Twig`_ (он делает ваши шаблоны более выразительными и более дружественными для веб дизайнеров). Если вы предпочитаете использовать `Twig`, прочитайте альтернативную главу :doc:`View with Twig <the_view_with_twig>`.
+.. note::
+
+    Instead of Twig, you can also use :doc:`PHP </guides/templating/PHP>` for
+    your templates. Both template engines are supported by Symfony2 and have
+    the same level of support.
 
 .. index::
-  single: Шаблон; Макет
-  single: Макет
+   single: Twig
+   single: View; Twig
 
-Декорирование Шаблонов
+Twig, a Quick Overview
 ----------------------
 
-Довольно часто, шаблоны в проектах используют общие элементы, такие, как всем известные header и footer. В Symfony, мы подходим к этому вопросы по-другому: шаблон может быть декорирован другим шаблоном.
+.. tip::
 
-Шаблон ``index`` декорирован шаблоном ``layout.php``, благодаря вызову ``extend()``:
+    If you want to learn Twig, we highly recommend to read the official
+    `documentation`_. This section is just a quick overview of the main concepts
+    to get you started.
 
-.. code-block:: html+php
+A Twig template is simply a text file that can generate any text-based format
+(HTML, XML, CSV, LaTeX, ...). Twig defines two kinds of delimiters:
 
-    <!-- src/Application/HelloBundle/Resources/views/Hello/index.php -->
-    <?php $view->extend('HelloBundle::layout') ?>
+* ``{{ ... }}``: Prints a variable or the result of an expression to the
+  template;
 
-    Hello <?php echo $name ?>!
+* ``{% ... %}``: A tag that controls the logic of the template; it is used to
+  execute statements such as for-loops for instance.
 
-Нотация ``HelloBundle::layout`` звучит знакомо, не так ли? Это такая же нотация, как и для привязки шаблона. Часть ``::`` просто обозначает, что контроллер не указан, и, следовательно, соответствующий файл хранится напрямую во ``views/``.
+Below is a minimal template that illustrates a few basics:
 
-Сейчас, давайте взглянем на файл ``layout.php``:
+.. code-block:: jinja
 
-.. code-block:: html+php
-
-    <!-- src/Application/HelloBundle/Resources/views/layout.php -->
-    <?php $view->extend('::layout') ?>
-
-    <h1>Hello Application</h1>
-
-    <?php $view['slots']->output('_content') ?>
-
-Макет - это он сам, декорированный другим макетом (``::layout``). Symfony поддерживает сложные уровни декорирования: макет может декорировать себя другим макетом. Когда часть с названием бандла в имени шаблона пуста, виды будут браться из директории ``app/views/``. В этой директории содержатся глобальные виды всего вашего проекта:
-
-.. code-block:: html+php
-
-    <!-- app/views/layout.php -->
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <!DOCTYPE html>
     <html>
         <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <title><?php $view['slots']->output('title', 'Hello Application') ?></title>
+            <title>My Webpage</title>
         </head>
         <body>
-            <?php $view['slots']->output('_content') ?>
+            <h1>{{ page_title }}</h1>
+
+            <ul id="navigation">
+                {% for item in navigation %}
+                    <li><a href="{{ item.href }}">{{ item.caption }}</a></li>
+                {% endfor %}
+            </ul>
         </body>
     </html>
 
-Для обоих макетов, выражение ``$view['slots']->output('_content')`` заменяется содержимым дочернего шаблона, ``index.php`` и ``layout.php`` соответственно (больше о слотах в следующей секции).
+Variables passed to the templates can be strings, arrays, or even objects.
+Twig abstracts the difference between them and let's you access "attributes"
+of a variable with the dot (``.``) notation:
 
-Как вы можете видеть, Symfony предоставляет метод загадочного объекта ``$view``. В шаблоне, переменная ``$view`` всегда доступна и ссылается на специальный объект, который предоставляет группу методов и свойств которые заставляют механизм шаблонов "тикать как часы".
+.. code-block:: jinja
 
-.. index::
-   single: Шаблон; Слот
-   single: Слот
+    {# array('name' => 'Fabien') #}
+    {{ name }}
 
-Слоты
------
+    {# array('user' => array('name' => 'Fabien')) #}
+    {{ user.name }}
 
-Слот – это кусочек кода, определенный в шаблоне, который может быть использован в любом макете, декорирующем шаблон. Определим слот ``title`` в шаблоне index:
+    {# force array lookup #}
+    {{ user['name'] }}
 
-.. code-block:: html+php
+    {# array('user' => new User('Fabien')) #}
+    {{ user.name }}
+    {{ user.getName }}
 
-    <!-- src/Application/HelloBundle/Resources/views/Hello/index.php -->
-    <?php $view->extend('HelloBundle::layout') ?>
+    {# force method name lookup #}
+    {{ user.name() }}
+    {{ user.getName() }}
 
-    <?php $view['slots']->set('title', 'Hello World app') ?>
+    {# pass arguments to a method #}
+    {{ user.date('Y-m-d') }}
 
-    Hello <?php echo $name ?>!
+.. note::
 
-Базовый макет уже содержит код для вывода в title:
+    It's important to know that the curly braces are not part of the variable
+    but the print statement. If you access variables inside tags don't put the
+    braces around.
 
-.. code-block:: html+php
+Decorating Templates
+--------------------
 
-    <!-- app/views/layout.php -->
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title><?php $view['slots']->output('title', 'Hello Application') ?></title>
-    </head>
+More often than not, templates in a project share common elements, like the
+well-known header and footer. In Symfony2, we like to think about this problem
+differently: a template can be decorated by another one. This works exactly
+the same as PHP classes: template inheritance allows you to build a base
+"layout" template that contains all the common elements of your site and
+defines "blocks" that child templates can override.
 
-Метод ``output()`` вставляет содержимое слота и может принимать значение по умолчанию, если слот не установлен. А ``_content`` представляет собой специальный слот, который содержит обработанный дочерний шаблон.
+The ``index.twig`` template inherits from ``layout.twig``, thanks to the
+``extends`` tag:
 
-Для больших слотов, также существует расширенный синтаксис:
+.. code-block:: jinja
 
-.. code-block:: html+php
+    {# src/Application/HelloBundle/Resources/views/Hello/index.twig #}
+    {% extends "HelloBundle::layout.twig" %}
 
-    <?php $view['slots']->start('title') ?>
-        Some large amount of HTML
-    <?php $view['slots']->stop() ?>
+    {% block content %}
+        Hello {{ name }}!
+    {% endblock %}
 
-.. index::
-   single: Шаблон; Включать
+The ``HelloBundle::layout.twig`` notation sounds familiar, doesn't it? It is
+the same notation as for referencing a template. The ``::`` part simply means
+that the controller element is empty, so the corresponding file is directly
+stored under ``views/``.
 
-Включение сторонних шаблонов
------------------------
-Лучшим способом, для того чтобы кусочек кода можно было использовать во многих различных шаблонах, будет определить шаблон, который может быть включен в любой другой шаблон.
+Now, let's have a look at the ``layout.twig`` file:
 
-Создайте шаблон ``hello.php``:
+.. code-block:: jinja
 
-.. code-block:: html+php
+    {% extends "::layout.twig" %}
 
-    <!-- src/Application/HelloBundle/Resources/views/Hello/hello.php -->
-    Hello <?php echo $name ?>!
+    {% block body %}
+        <h1>Hello Application</h1>
 
-И измените шаблон ``index.php`` чтобы подключить его:
+        {% block content %}{% endblock %}
+    {% endblock %}
 
-.. code-block:: html+php
+The ``{% block %}`` tags define two blocks (``body`` and ``content``) that
+child templates can fill in. All the block tag does is to tell the template
+engine that a child template may override those portions of the template. The
+``index.twig`` template overrides the ``content`` block. The other one is
+defined in a base layout as our layout is itself decorated by another one.
 
-    <!-- src/Application/HelloBundle/Resources/views/Hello/index.php -->
-    <?php $view->extend('HelloBundle::layout') ?>
+Twig supports multiple decoration levels: a layout can itself be decorated by
+another one. When the bundle part of the template name is empty
+(``::layout.twig``), views are looked for in the ``app/views/`` directory.
+This directory store global views for your entire project:
 
-    <?php echo $view->render('HelloBundle:Hello:hello', array('name' => $name)) ?>
+.. code-block:: jinja
 
-Метод ``render()`` вычисляет и возвращает содержимое другого шаблона (это точно такой же метод, который используется в контроллере).
+    {# app/views/layout.twig #}
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <title>{% block title %}Hello Application{% endblock %}</title>
+        </head>
+        <body>
+            {% block body '' %}
+        </body>
+    </html>
 
-.. index::
-   single: Шаблон; Встроенные Страницы
+Specific Tags and Filters
+-------------------------
 
-Встраивание других Действий
--------------------
+One of the best feature of Twig is its extensibility via new tags and filters;
+Symfony2 comes bundled with many specialized tags and filters that ease the
+web designer work.
 
-Что если вы хотите включить результат других действий в шаблон?
-Это очень удобно работая с Ajax, или когда включаемый шаблон обращается к некоторой переменной, которая недоступна в главном шаблоне.
+Including other Templates
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Если вы создаете действие ``fancy``, и хотите включить его в шаблон ``index``, просто используйте следующий код:
+The best way to share a snippet of code between several distinct templates is
+to define a template that can then be included into another one.
 
-.. code-block:: html+php
+Create a ``hello.twig`` template:
 
-    <!-- src/Application/HelloBundle/Resources/views/Hello/index.php -->
-    <?php $view['actions']->output('HelloBundle:Hello:fancy', array('name' => $name, 'color' => 'green')) ?>
+.. code-block:: jinja
 
-Здесь, строка ``HelloBundle:Hello:fancy`` соответствует действию ``fancy`` контроллера ``Hello``::
+    {# src/Application/HelloBundle/Resources/views/Hello/hello.twig #}
+    Hello {{ name }}
+
+And change the ``index.twig`` template to include it:
+
+.. code-block:: jinja
+
+    {# src/Application/HelloBundle/Resources/views/Hello/index.twig #}
+    {% extends "HelloBundle::layout.twig" %}
+
+    {# override the body block from index.twig #}
+    {% block body %}
+        {% include "HelloBundle:Hello:hello.twig" %}
+    {% endblock %}
+
+Embedding other Controllers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+And what if you want to embed the result of another controller in a template?
+That's very useful when working with Ajax, or when the embedded template needs
+some variable not available in the main template.
+
+If you create a ``fancy`` action, and want to include it into the ``index``
+template, use the ``render`` tag:
+
+.. code-block:: jinja
+
+    {# src/Application/HelloBundle/Resources/views/Hello/index.twig #}
+    {% render "HelloBundle:Hello:fancy" with { 'name': name, 'color': 'green' } %}
+
+Here, the ``HelloBundle:Hello:fancy`` string refers to the ``fancy`` action of
+the ``Hello`` controller, and the argument is used as simulated request path
+values::
 
     // src/Application/HelloBundle/Controller/HelloController.php
 
@@ -146,81 +211,79 @@
             // create some object, based on the $color variable
             $object = ...;
 
-            return $this->render('HelloBundle:Hello:fancy', array('name' => $name, 'object' => $object));
+            return $this->render('HelloBundle:Hello:fancy.twig', array('name' => $name, 'object' => $object));
         }
 
         // ...
     }
 
-Но где объявлен элемент массива ``$view['actions']``? Подобно ``$view['slots']``, он называется хелпером шаблона, и следующая секция расскажет вам о них больше.
+Creating Links between Pages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. index::
-   single: Шаблон; Хелперы
+Speaking of web applications, creating links between pages is a must. Instead
+of hardcoding URLs in templates, the ``path`` tag knows how to generate URLs
+based on the routing configuration. That way, all your URLs can be easily
+updated by changing the configuration:
 
-Хелперы Шаблонов
-----------------
+.. code-block:: jinja
 
-Система шаблонов Symfony может быстро и просто быть расширена через хелперы. Хелперы это PHP объекты, которые предоставляют полезные особенности в контексте шаблона. Действия ``actions`` и слоты ``slots`` - это два встроенных в Symfony хелпера.
+    <a href="{% path 'hello' with { 'name': 'Thomas' } %}">Greet Thomas!</a>
 
-Связи между Страницами
-~~~~~~~~~~~~~~~~~~~~~~
-
-Говоря о веб приложениях, создание ссылок меджу страницами - это необходимость. Вместо того, чтобы жестко прописывать URL в шаблоне, хелпер маршрутов ``router`` знает как генерировать URL-ы базируясь на конфигурации маршрутов. Таким образом, все ваши URL-ы могут бытьлегко обновлены через изменение конфигурации:
-
-.. code-block:: html+php
-
-    <a href="<?php echo $view['router']->generate('hello', array('name' => 'Thomas')) ?>">
-        Greet Thomas!
-    </a>
-
-Метод ``generate()`` принимает имя маршрута и массив аргументов. Имя маршрута это основной ключ, по которому маршруты упоминаются и аргументы это значения меток-заполнителей описания маршрута	:
+The ``path`` tag takes the route name and an array of parameters as arguments.
+The route name is the main key under which routes are referenced and the
+parameters are the values of the placeholders defined in the route pattern:
 
 .. code-block:: yaml
 
     # src/Application/HelloBundle/Resources/config/routing.yml
     hello: # The route name
         pattern:  /hello/:name
-        defaults: { _bundle: HelloBundle, _controller: Hello, _action: index }
+        defaults: { _controller: HelloBundle:Hello:index }
 
-Использование Ассетов: изображений, JavaScript, и таблиц стилей
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. tip::
 
-Каким бы был интернет без изображений, скриптов и стилей?
-Symfony предлагает три хелпера для упрощения работы с ними: ``assets``,
-``javascripts``, и ``stylesheets``:
+    You can also generate absolute URLs with the ``url`` tag: ``{% url 'hello'
+    with { 'name': 'Thomas' } %}``.
 
-.. code-block:: html+php
+Using Assets: images, JavaScripts, and stylesheets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    <link href="<?php echo $view['assets']->getUrl('css/blog.css') ?>" rel="stylesheet" type="text/css" />
+What would the Internet be without images, JavaScripts, and stylesheets?
+Symfony2 provides three helpers to deal with them easily: ``assets``,
+``javascripts``, and ``stylesheets``:
 
-    <img src="<?php echo $view['assets']->getUrl('images/logo.png') ?>" />
+.. code-block:: jinja
 
-Главное назначение хелпера ``assets`` - сделать ваше приложение более переносимым.
-Благодаря этому хелперу, вы можете переносить корень приложения куда вам угодно в рамках корневой директории web сервера без изменений в коде ваших шаблонов.
+    <link href="{% asset 'css/blog.css' %}" rel="stylesheet" type="text/css" />
 
-Таким же образом вы можете управлять стилями и яваскриптами при помощи хелперов ``stylesheets`` и ``JavaScripts``:
+    <img src="{% asset 'images/logo.png' %}" />
 
-.. code-block:: html+php
+The ``asset`` tag main purpose is to make your application more portable.
+Thanks to this tag, you can move the application root directory anywhere under
+your web root directory without changing anything in your template's code.
 
-    <?php $view['javascripts']->add('js/product.js') ?>
-    <?php $view['stylesheets']->add('css/product.css') ?>
+Output Escaping
+---------------
 
-Метод ``add()`` определяет зависимости. Для вывода ассетов, вам также необходимо добавить следующий код в ваш основной шаблон:
+Twig is configured to automatically escapes all output by default. Read Twig
+`documentation`_ to learn more about output escaping and the Escaper
+extension.
 
-.. code-block:: html+php
+Final Thoughts
+--------------
 
-    <?php echo $view['javascripts'] ?>
-    <?php echo $view['stylesheets'] ?>
+Twig is simple yet powerful. Thanks to layouts, blocks, templates and action
+inclusions, it is very easy to organize your templates in a logical and
+extensible way.
 
-Заключительное Слово
---------------------
+You have only been working with Symfony2 for about 20 minutes, and you can
+already do pretty amazing stuff with it. That's the power of Symfony2. Learning
+the basics is easy, and you will soon learn that this simplicity is hidden
+under a very flexible architecture.
 
-Система шаблонов Symfony простая, но очень эффективная. Благодаря layout'ам,
-slot'ам, шаблонам и включению действий, очень легко можно организовать ваши шаблоны логично и гибко.
+But I get ahead of myself. First, you need to learn more about the controller
+and that's exactly the topic of the next part of this tutorial. Ready for
+another 10 minutes with Symfony2?
 
-Вы работаете с Symfony всего приблизительно 20 минут, и вы уже можете проделывать с ней удивительные вещи. Это сила Symfony. Изучить основы легко, но скоро вы поймете, что эта простота скрывает очень гибкую архитектуру.
-
-Но не будем забегать вперед. Для начала вам нужно изучить немного больше о контроллере и это будет темой следующей части данного руководства. Готовы выделить еще 10 минут для Symfony?
-
-
-.. _Twig: http://www.twig-project.org/
+.. _Twig:          http://www.twig-project.org/
+.. _documentation: http://www.twig-project.org/documentation

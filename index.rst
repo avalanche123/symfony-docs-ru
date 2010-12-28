@@ -1,15 +1,10 @@
-﻿Документация Symfony2
-=====================
+Symfony2 Documentation
+======================
 
-Краткий Обзор
--------------
+Quick Tour
+----------
 
-Быстрый старт с Symfony2 :doc:`Краткий Обзор <quick_tour/index>`:
-
-.. toctree::
-    :hidden:
-
-    quick_tour/index_twig
+Get started fast with the Symfony2 :doc:`Quick Tour <quick_tour/index>`:
 
 .. toctree::
     :hidden:
@@ -21,10 +16,10 @@
 * :doc:`quick_tour/the_controller` >
 * :doc:`quick_tour/the_architecture`
 
-Руководства
------------
+Guides
+------
 
-Погрузитесь в мир Symfony2 с помощью актуальных руководств:
+Dive into Symfony2 with the topical guides:
 
 .. toctree::
     :hidden:
@@ -33,10 +28,10 @@
 
 .. include:: guides/map.rst.inc
 
-Участие в проекте
------------------
+Contributing
+------------
 
-Примите участие в развитии Symfony2:
+Contribute to Symfony2:
 
 .. toctree::
     :hidden:

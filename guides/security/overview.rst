@@ -1,18 +1,29 @@
-﻿Безопасность
-============
+.. index::
+   single: Security
 
-В состав Symfony2 входит встроенный слой безопасности. Он защищает ваше приложение путем обеспечения механизмов аутентификации и авторизации.
+Security
+========
 
-*Аутентификация* обеспечивает, что пользователь действительно тот, за кого он себя выдает. *Авторизация* связана с процессом решения, может ли пользователь выполнить действие или нет (авторизация проходит после аутентификации).
+Symfony2 comes with a built-in security layer. It secures your application by
+providing authentication and authorization.
 
-Этот документ является быстрым обзором этих концепций, но настоящая мощь содержится в следующих трех частях: :doc:`Users </guides/security/users>`,
-:doc:`Authentication </guides/security/authentication>`, и
+*Authentication* ensures that the user is who he claims to be. *Authorization*
+refers to the process of deciding whether a user is allowed to perform an
+action or not (authorization comes after authentication).
+
+This document is a quick overview of these main concepts, but the real power
+is distilled in three other documents: :doc:`Users </guides/security/users>`,
+:doc:`Authentication </guides/security/authentication>`, and
 :doc:`Authorization </guides/security/authorization>`.
 
-Конфигурация
-------------
+.. index::
+   pair: Security; Configuration
 
-Для большинства случаев, безопасность в Symfony2 может быть легко сконфигурирована в вашем главном конфигурационном файле; вот типичная конфигурация:
+Configuration
+-------------
+
+For most common use cases, the Symfony2 security can be easily configured from
+your main configuration file; here is a typical configuration:
 
 .. configuration-block::
 
@@ -71,7 +82,9 @@
             ),
         ));
 
-Часто, предпочтительнее вынести всю конфигурацию касающуюся безопасности во внешний файл. Если вы используете XML, внешний файл может использовать пространство имен безопасности как значение по умолчанию, чтобы сделать его более читабельным:
+Most of the time, it is more convenient to outsource all security related
+configuration into an external file. If you use XML, the external file can use
+the security namespace as the default one to make it more readable:
 
 .. code-block:: xml
 
@@ -99,35 +112,41 @@
 
 .. note::
 
-    Во всех примерах документации предполагается, что вы используете внешний файл со значением пространства имен безопасности по умолчанию как сказано выше.
+    All examples in the documentation assume that you are using an external
+    file with the default security namespace as above.
 
-Как вы можете видеть, конфигурация состоит из трех секций:
+As you can see, the configuration has three sections:
 
-* *provider*: Поставщик знает как создавать пользователей;
+* *provider*: A provider knows how to create users;
 
-* *firewall*: Брандмауэр определяет механизмы аутентификации для приложения в целом или его части;
+* *firewall*: A firewall defines the authentication mechanisms for the whole
+  application or for just a part of it;
 
-* *access-control*: Правила контроля доступа для защищенных частей вашего приложения вместе с ролями.
+* *access-control*: Access control rules secure parts of your application with
+  roles.
 
-Подводя итоги рабочего процесса, брандмауэр проводит аутентификацию пользователя на основе установленных правил, пользователи создаются посредством поставщика, а контроль доступа контролирует доступ к ресурсам.
+To sum up the workflow, the firewall authenticates the client based on the
+submitted credentials and the user created by the provider, and the access
+control authorizes access to the resource.
 
-Аутентификация
+Authentication
 --------------
 
-В Symfony2 есть поддержка различных внешних механизмов аутентификации, которые могут быть легко добавлены при надобности; главными из них являются:
+Symfony2 supports many different authentication mechanisms out of the box, and
+more can be easily added if needed; main ones are:
 
 * HTTP Basic;
 * HTTP Digest;
-* аутентификация, базирующаяся на форме;
-* сертификаты X.509.
+* Form based authentication;
+* X.509 certificates.
 
-Здесь показано, как вы можете защитить ваше приложение при помощи базовой HTTP аутентификации:
+Here is how you can secure your application with HTTP basic authentication:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -135,7 +154,7 @@
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <http-basic />
@@ -144,20 +163,21 @@
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main' => array('http-basic' => true),
             ),
         ));
 
-Можно определить несколько брандмауэров если вам необходимо использование различных механизмов аутентификаци в различных частях приложения:
+Several firewalls can also be defined if you need different authentication
+mechanisms for different parts of the application:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 backend:
@@ -169,7 +189,7 @@
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall pattern="/admin/.*">
                 <http-basic />
@@ -180,7 +200,7 @@
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'backend' => array('pattern' => '/admin/.*', 'http-basic' => true),
@@ -188,22 +208,27 @@
             ),
         ));
 
-.. примечание::
+.. tip::
 
-    Проще всего использовать базовую HTTP аутентификацию, но прочитайте часть :doc:`Authentication
-    </guides/security/authentication>` для того чтобы узнать, как настраивать другие механизмы аутентификации, как настраивать аутентификацию без состояний, как вы можете имитировать другого пользователя, как включить https, и многое другое.
+    Using HTTP basic is the easiest, but read the :doc:`Authentication
+    </guides/security/authentication>` document to learn how to configure
+    other authentication mechanisms, how to configure a stateless
+    authentication, how you can impersonate another user, how you can enforce
+    https, and much more.
 
-Пользователи
-------------
+Users
+-----
 
-Во время аутентификации, Symfony2 опрашивает поставщика пользователей для создания объекта пользователя, отвечающего клиентскому запросу (с помощью учетных данных, как имя пользователя и пароль).
-Для быстрого старта, вы можете определить поставщика "в памяти" прямо в конфигурации:
+During authentication, Symfony2 asks a user provider to create the user object
+matching the client request (via credentials like a username and a password).
+To get started fast, you can define an in-memory provider directly in your
+configuration:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             providers:
                 main:
@@ -212,7 +237,7 @@
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <provider>
                 <user name="foo" password="foo" />
@@ -221,7 +246,7 @@
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'provider' => array(
                 'main' => array('users' => array(
@@ -230,24 +255,31 @@
             ),
         ));
 
-Конфигурация сверху определяет пользователя 'foo' с паролем 'foo'. После аутентификации, вы можете получить доступ к аутентифицированному пользователю через безопасный контекст (пользователь является экземпляром класса :class:`Symfony\\Component\\Security\\User\\User`)::
+The above configuration defines a 'foo' user with a 'foo' password. After
+authentication, you can access the authenticated user via the security context
+(the user is an instance of :class:`Symfony\\Component\\Security\\User\\User`)::
 
     $user = $container->get('security.context')->getUser();
 
-.. примечание::
+.. tip::
 
-    Использование поставщика "в памяти" - это отличный вариант легко защитить серверную часть вашего персонального сайта, создать прототип, или создать макет для тестов. Прочитайте часть :doc:`Users </guides/security/users>` для того чтобы изучить, как избежать ненадежных паролей, как использовать Doctrine Entity в качестве пользовательского поставщика, как определить несколько поставщиков, и многое другое.
+    Using the in-memory provider is a great way to easily secure your personal
+    website backend, to create a prototype, or to provide fixtures for your
+    tests. Read the :doc:`Users </guides/security/users>` document to learn
+    how to avoid the password to be in clear, how to use a Doctrine Entity as
+    a user provider, how to define several providers, and much more.
 
-Авторизация
------------
+Authorization
+-------------
 
-Авторизация является необязательной, но позволяет мощно ограничивать доступ к ресурсам вашего приложения на основе пользовательских ролей:
+Authorization is optional but gives you a powerful way to restrict access to
+your application resources based user roles:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             providers:
                 main:
@@ -258,7 +290,7 @@
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <provider>
                 <user name="foo" password="foo" roles="ROLE_USER,ROLE_ADMIN" />
@@ -271,7 +303,7 @@
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'provider' => array(
                 'main' => array('users' => array(
@@ -284,8 +316,13 @@
             ),
         ));
 
-Конфигурация сверху определяет пользователя 'foo' с ролями 'ROLE_USER' и 'ROLE_ADMIN' и она ограничивает доступ к приложению в целом для пользователей с ролью 'ROLE_USER'.
+The above configuration defines a 'foo' user with the 'ROLE_USER' and
+'ROLE_ADMIN' roles and it restricts access to the whole application to users
+having the 'ROLE_USER' role.
 
-.. примечание::
+.. tip::
 
-    Прочитайте часть :doc:`Authorization </guides/security/authorization>` для того, чтобы узнать, как определять иерархию ролей, как настроить ваш шаблон базируясь на ролях, как определить правила контроля доступа базируясь на атрибутах запроса, и многое другое.
+    Read the :doc:`Authorization </guides/security/authorization>` document to
+    learn how to define a role hierarchy, how to customize your template based
+    on roles, how to define access control rules based on request attributes,
+    and much more.

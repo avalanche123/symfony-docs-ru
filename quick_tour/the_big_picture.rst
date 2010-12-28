@@ -1,24 +1,35 @@
-﻿Общая картина
-=============
+The Big Picture
+===============
 
-Вы хотите попробовать Symfony2 но на это у вас есть всего около 10 минут? Эта первая часть учебника была написана именно для вас. В ней объясняется, как начать работу с Symfony2 и показывает структуру простого проекта.
+So, you want to try out Symfony2 but only have 10 minutes or so? This first
+part of this tutorial has been written for you. It explains how to get started
+fast with Symfony2 by showing you the structure of a simple ready-made
+project.
 
-Если вы когда-нибудь использовали какой-либо веб-фреймворк прежде, вы будете чувствовать себя в Symfony2 как дома.
+If you have ever used a web framework before, you should feel right at home
+with Symfony2.
 
 .. index::
-   pair: Песочница; Загрузка
+   pair: Sandbox; Download
 
-Загрузка и Установка
---------------------
+Downloading and Installing Symfony2
+-----------------------------------
 
-В первую очередь, убедитесь что у вас установлен как минимум PHP 5.3.2 и корректно настроен для работы с web сервером, таким как Apache.
+First, check that you have at least PHP 5.3.2 installed and correctly
+configured to work with a web server like Apache.
 
-Готовы? Давайте начнем с загрузки Symfony. Для быстрого старта мы будем использовать "песочницу Symfony". Это Symfony, который содержит все необходимые библиотеки и несколько простых контроллеров; также включена базовая конфигурация. Наибольшее преимущество песочницы перед другими типами инсталляции в том, что вы можете сразу же начать экспериментировать с Symfony.
+Ready? Let's start by downloading Symfony2. To get started even faster, we are
+going to use the "Symfony2 sandbox". It is a Symfony2 project where all the
+required libraries and some simple controllers are already included; the basic
+configuration is also already done. The great advantage of the sandbox over
+other types of installation is that you can start experimenting with Symfony2
+immediately.
 
-Загрузите `sandbox`_, и распакуйте ее в корневую директорию web сервера. Сейчас у вас должна быть директория ``sandbox/``::
+Download the `sandbox`_, and unpack it in your root web directory. You
+should now have a ``sandbox/`` directory::
 
-    www/ <- ваша корневая web директория
-        sandbox/ <- распакованый архив
+    www/ <- your web root directory
+        sandbox/ <- the unpacked archive
             app/
                 cache/
                 config/
@@ -33,63 +44,75 @@
             web/
 
 .. index::
-   single: Инсталляция; Проверка
+   single: Installation; Check
 
-Проверка Конфигурации
----------------------
+Checking the Configuration
+--------------------------
 
-Для того чтобы избежать головной боли в последствии, проверьте, может ли быть запущен Symfony проект у вас – для этого откройте следующий URL:
+To avoid some headaches further down the line, check that your configuration
+can run a Symfony2 project smoothly by requesting the following URL:
 
     http://localhost/sandbox/web/check.php
 
-Внимательно прочитайте вывод скрипта и исправьте все проблемы которые он найдет.
+Read the script output carefully and fix any problem that it finds.
 
-Теперь запросите вашу первую "реальную" страничку на Symfony:
+Now, request your first "real" Symfony2 webpage:
 
-    http://localhost/sandbox/web/index_dev.php/
+    http://localhost/sandbox/web/app_dev.php/
 
-Symfony должен поблагодарить за ваши затраченные усилия!
+Symfony2 should congratulate you for your hard work so far!
 
-Ваше Первое Приложение
-----------------------
+Creating your first Application
+-------------------------------
 
-Песочница содержит простое ":term:`приложение`" Hello world и мы будем использовать его для того чтобы узнать побольше о Symfony. Откройте следующий URL для того чтобы Symfony мог поприветствовать вас (замените Fabien на ваше имя):
+The sandbox comes with a simple Hello World ":term:`application`" and that's
+the application we will use to learn more about Symfony2. Go to the following
+URL to be greeted by Symfony2 (replace Fabien with your first name):
 
-    http://localhost/sandbox/web/index_dev.php/hello/Fabien
+    http://localhost/sandbox/web/app_dev.php/hello/Fabien
 
-Что происходит в этом месте? Давайте разберем URL:
+What's going on here? Let's dissect the URL:
 
-.. index:: Front Контроллер
+.. index:: Front Controller
 
-* ``index_dev.php``: Это "front контроллер". Это единая точка входа для приложения – она обрабатывает все запросы пользователя;
+* ``app_dev.php``: This is a "front controller". It is the unique entry point
+  of the application and it responds to all user requests;
 
-* ``/hello/Fabien``: это виртуальный путь к ресурсу, который хочет получить пользователь.
+* ``/hello/Fabien``: This is the "virtual" path to the resource the user wants
+  to access.
 
-Ваша обязанность как разработчика - написать код, который отражает запрос (``/hello/Fabien``) с соответствующим ресурсом (``Hello
+Your responsibility as a developer is to write the code that maps the user
+request (``/hello/Fabien``) to the resource associated with it (``Hello
 Fabien!``).
 
 .. index::
-   single: Конфигурация
+   single: Configuration
 
-Конфигурация
-~~~~~~~~~~~~
-
-Но как Symfony связывает запрос с вашим кодом? Просто считывая некоторый конфигурационный файл.
-
-Все конфигурационные файлы Symfony2 могут быть написаны на PHP, XML, или `YAML`_
-(YAML это простой формат, который очень упрощает описание конфигурационных настроек).
-
-.. tip::
-   По умолчанию в песочнице выбран формат YAML, но вы можете легко переключить его на XML или PHP отредактировав файл ``app/AppKernel.php``. Вы можете переключить формат следуя инструкциям внизу файла ``app/AppKernel.php`` (в руководстве конфигурация показана во всех поддерживаемых форматах).
-
-.. index::
-   single: Маршрутизация
-   pair: Конфигурация; Маршрутизация
-
-Маршрутизация
+Configuration
 ~~~~~~~~~~~~~
 
-Symfony проводит маршрутизацию запроса анализируя файл конфигурации маршрутов:
+But how does Symfony2 route the request to your code? Simply by reading some
+configuration file.
+
+All Symfony2 configuration files can be written in either PHP, XML, or `YAML`_
+(YAML is a simple format that makes the description of configuration settings
+very easy).
+
+.. tip::
+
+    The sandbox defaults to YAML, but you can easily switch to XML or PHP by
+    editing the ``app/AppKernel.php`` file. You can switch now by looking at
+    the bottom of this file for instructions (the tutorials show the
+    configuration for all supported formats).
+
+.. index::
+   single: Routing
+   pair: Configuration; Routing
+
+Routing
+~~~~~~~
+
+So, Symfony2 routes the request by reading the routing configuration file:
 
 .. configuration-block::
 
@@ -126,14 +149,16 @@ Symfony проводит маршрутизацию запроса анализ�
         use Symfony\Component\Routing\Route;
 
         $collection = new RouteCollection();
-        $collection->addRoute('homepage', new Route('/', array(
+        $collection->add('homepage', new Route('/', array(
             '_controller' => 'FrameworkBundle:Default:index',
         )));
         $collection->addCollection($loader->import("HelloBundle/Resources/config/routing.php"));
 
         return $collection;
 
-Первые несколько линий файла конфигурации маршрутов определяют, какой код будет вызван, когда пользователь запросит ресурс "``/``". Более интересно выглядит последняя часть, которая импортирует другой конфигурационный файл, который выглядит следующим образом:
+The first few lines of the routing configuration file define which code to
+call when the user requests the "``/``" resource. More interesting is the last
+part, which imports another routing configuration file that reads as follows:
 
 .. configuration-block::
 
@@ -165,22 +190,25 @@ Symfony проводит маршрутизацию запроса анализ�
         use Symfony\Component\Routing\Route;
 
         $collection = new RouteCollection();
-        $collection->addRoute('hello', new Route('/hello/:name', array(
+        $collection->add('hello', new Route('/hello/:name', array(
             '_controller' => 'HelloBundle:Hello:index',
         )));
 
         return $collection;
 
-Here we go! Как вы можете видеть, шаблон "``/hello/:name``" (строка которая начинается с двоеточия как ``:name`` это метка, плэйсхолдер) отображается на контроллер, который определен через значение ``_controller``.
+Here we go! As you can see, the "``/hello/:name``" resource pattern (a string
+beginning with a colon like ``:name`` is a placeholder) is mapped to a
+controller, referenced by the ``_controller`` value.
 
 .. index::
-   single: Контроллер
-   single: MVC; Контроллер
+   single: Controller
+   single: MVC; Controller
 
-Контроллеры
+Controllers
 ~~~~~~~~~~~
 
-Контроллер ответственный за возврат представления ресурса (как правило HTML) и определен как PHP класс:
+The controller is responsible for returning a representation of the resource
+(most of the time an HTML one) and it is defined as a PHP class:
 
 .. code-block:: php
    :linenos:
@@ -195,61 +223,102 @@ Here we go! Как вы можете видеть, шаблон "``/hello/:name`
     {
         public function indexAction($name)
         {
-            return $this->render('HelloBundle:Hello:index.php', array('name' => $name));
+            return $this->render('HelloBundle:Hello:index.twig', array('name' => $name));
+
+            // render a PHP template instead
+            // return $this->render('HelloBundle:Hello:index.php', array('name' => $name));
         }
     }
 
-Код довольно простой, но давайте разберем его по строкам:
+The code is pretty straightforward but let's explain this code line by line:
 
-* *строка 3*: Symfony использует все преимущества PHP 5.3, все контроллеры находятся в пространствах имен (пространство имен - это первая часть значения переменной маршрутизации ``_controller``: ``HelloBundle``).
+* *line 3*: Symfony2 takes advantage of new PHP 5.3 features and as such, all
+  controllers are properly namespaced (the namespace is the first part of the
+  ``_controller`` routing value: ``HelloBundle``).
 
-* *строка 7*: Имя контроллера - это конкатенация второй части значения ``_controller`` переменной маршрутизации (``Hello``) и слова ``Controller``. Он расширяет встроенный класс ``Controller``, который предоставляет полезные сокращения (как мы далее убедимся в этом руководстве).
+* *line 7*: The controller name is the concatenation of the second part of the
+  ``_controller`` routing value (``Hello``) and ``Controller``. It extends the
+  built-in ``Controller`` class, which provides useful shortcuts (as we will
+  see later in this tutorial).
 
-* *строка 9*: Каждый контроллер состоит из нескольких действий. Следуя конфигурации, страница hello обрабатывается действием ``index`` (третья часть значения переменной машрутизации``_controller``). Этот метод получает имена подстановок в качестве аргументов (в нашем случае ``$name``).
+* *line 9*: Each controller is made of several actions. As per the
+  configuration, the hello page is handled by the ``index`` action (the third
+  part of the ``_controller`` routing value). This method receives the
+  resource placeholder values as arguments (``$name`` in our case).
 
-* *строка  11*: Метод ``render()`` загружает и интерпретирует шаблон (``HelloBundle:Hello:index``) с переменными, передаваемыми в качестве второго аргумента.
+* *line 11*: The ``render()`` method loads and renders a template
+  (``HelloBundle:Hello:index.twig``) with the variables passed as a second
+  argument.
 
-Но что такое :term:`бандл`? Весь код, который вы пишите в Symfony проекте организован в банлах. В понимании Symfony, бандл - это структурированный набор файлов (PHP файлы, таблицы стилей, JavaScript-ы, изображения, ...) которые реализуют отдельную функциональность (блог, форум, ...) которой легко можно поделиться с другими разработчиками. В нашем примере, у нас есть один бандл, ``HelloBundle``.
+But what is a :term:`bundle`? All the code you write in a Symfony2 project is
+organized in bundles. In Symfony2 speak, a bundle is a structured set of files
+(PHP files, stylesheets, JavaScripts, images, ...) that implements a single
+feature (a blog, a forum, ...) and which can be easily shared with other
+developers. In our example, we only have one bundle, ``HelloBundle``.
 
-Шаблоны
-~~~~~~~
+Templates
+~~~~~~~~~
 
-Итак, контроллер отображает шаблон ``HelloBundle:Hello:index.php``. Но что скрыто в имени шаблона? ``HelloBundle`` это имя бандла, ``Hello`` это контроллер, и ``index.php`` имя файла шаблона. Шаблон по сути состоит из HTML или простых PHP выражений:
+So, the controller renders the ``HelloBundle:Hello:index.twig`` template. But
+what's in a template name? ``HelloBundle`` is the bundle name, ``Hello`` is
+the controller, and ``index.twig`` the template name. By default, the sandbox
+uses Twig as its template engine:
 
-.. code-block:: html+php
+.. code-block:: jinja
 
-    # src/Application/HelloBundle/Resources/views/Hello/index.php
-    <?php $view->extend('HelloBundle::layout.php') ?>
+    {# src/Application/HelloBundle/Resources/views/Hello/index.twig #}
+    {% extends "HelloBundle::layout.twig" %}
 
-    Hello <?php echo $name ?>!
+    {% block content %}
+        Hello {{ name }}!
+    {% endblock %}
 
-Поздравляем! Вы разобрались в первом кусочке Symfony кода. Не так уж и сложно, правда? Symfony делает web-разработку более быстрой и приятной.
+Congratulations! You have looked at your first Symfony2 piece of code. That was
+not so hard, was it? Symfony2 makes it really easy to implement web sites
+better and faster.
 
 .. index::
-   single: Окружение
-   single: Конфигурация; Окружение
+   single: Environment
+   single: Configuration; Environment
 
-Окружения
----------
+Working with Environments
+-------------------------
 
-Теперь, когда вы уже лучше понимаете как работает Symfony, давайте поближе посмотрим на нижнюю часть страницы; Вы увидите небольшую панель с логотипами Symfony и PHP. Она называется "Web Debug Toolbar" и является лучшим другом web-разработчика. Конечно же, этот инструмент не должен отображаться пользователю в финальной версии. Поэтому мы предусмотрели другой фронт-контроллер (``index.php``) в директории ``web/``, оптимизированный для окружения финального продукта:
+Now that you have a better understanding on how Symfony2 works, have a closer
+look at the bottom of the page; you will notice a small bar with the Symfony2
+and PHP logos. It is called the "Web Debug Toolbar" and it is the developer's
+best friend. Of course, such a tool must not be displayed when you deploy your
+application to your production servers. That's why you will find another front
+controller in the ``web/`` directory (``app.php``), optimized for the
+production environment:
 
-    http://localhost/sandbox/web/index.php/hello/Fabien
+    http://localhost/sandbox/web/app.php/hello/Fabien
 
-Если у вас установлен ``mod_rewrite``, вы можете опустить ``index.php`` в URL:
+And if you use Apache with ``mod_rewrite`` enabled, you can even omit the
+``app.php`` part of the URL:
 
     http://localhost/sandbox/web/hello/Fabien
 
-Последнее, но не в последнюю очередь, на серверах с финальной версией, вам следует сделать корневой директорией web сервера директорию ``web/`` из соображений безопасности, а также улучшения отображения URL:
+Last but not least, on the production servers, you should point your web root
+directory to the ``web/`` directory to secure your installation and have an even
+better looking URL:
 
     http://localhost/hello/Fabien
 
-Для того, чтобы окружение финальной версии было настолько быстрым насколько возможно, Symfony использует кэш, который хранится в директории ``app/cache/``. Когда вы делаете изменения, вам нужно вручную удалить файлы кэша. Вот почему вы должны всегда при разработке использовать фронт контроллер для разработки (``index_dev.php``).
+To make the production environment as fast as possible, Symfony2 maintains a
+cache under the ``app/cache/`` directory. When you make changes to the code or
+configuration, you need to manually remove the cached files. That's why you
+should always use the development front controller (``app_dev.php``) when
+working on a project.
 
-Заключительное Слово
+Final Thoughts
 --------------
 
-10 минут прошли. Теперь вы можете создавать свои собственные простые маршруты, контроллеры и шаблоны. В качестве упражнения, попытайтесь построить что-либо более полезное чем приложение Hello! Но если вы желаете знать больше о Symfony, вы можете сейчас же приступить к изучению следующей части руководства, где мы углубимся в изучение системы шаблонов.
+The 10 minutes are over. By now, you should be able to create your own simple
+routes, controllers, and templates. As an exercise, try to build something
+more useful than the Hello application! But if you are eager to learn more
+about Symfony2, you can read the next part of this tutorial right away, where
+we dive more into the templating system.
 
 .. _sandbox: http://symfony-reloaded.org/code#sandbox
 .. _YAML:    http://www.yaml.org/

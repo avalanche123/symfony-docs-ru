@@ -140,8 +140,9 @@ configuration file:
         $container->loadFromExtension('hello', 'config', array());
 
 .. note::
-   You can create as many ``xxxLoad()`` methods as you want to define more
-   configuration blocks for your extension.
+
+    You can create as many ``xxxLoad()`` methods as you want to define more
+    configuration blocks for your extension.
 
 Parsing a Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -219,8 +220,9 @@ The global parameters are the following:
 * ``kernel.charset``
 
 .. caution::
-   All parameter and service names starting with a ``_`` are reserved for the
-   framework, and new ones must not be defined by bundles.
+
+    All parameter and service names starting with a ``_`` are reserved for the
+    framework, and new ones must not be defined by bundles.
 
 .. index::
    pair: Convention; Configuration
@@ -242,7 +244,7 @@ When creating an extension, follow these simple conventions:
 * The extension should provide an XSD schema.
 
 If you follow these simple conventions, your extensions will be registered
-automatically by Symfony. If not, override the Bundle
+automatically by Symfony2. If not, override the Bundle
 :method:`Symfony\\Component\\HttpKernel\\Bundle\\Bundle::registerExtensions` method::
 
     class HelloBundle extends Bundle
@@ -282,5 +284,6 @@ method::
     }
 
 .. caution::
-   Symfony2 tries to be as explicit as possible. So, registering a default
-   configuration automatically is probably not a good idea.
+
+    Symfony2 tries to be as explicit as possible. So, registering a default
+    configuration automatically is probably not a good idea.

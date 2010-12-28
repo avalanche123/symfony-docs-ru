@@ -1,10 +1,11 @@
-Безопасность
-============
+Security
+========
 
 .. toctree::
    :maxdepth: 2
 
-   Обзор <overview>
-   пользователи
-   аутентификация
-   авторизация
+   Overview <overview>
+   users
+   authentication
+   authorization
+   acl

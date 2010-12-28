@@ -1,68 +1,82 @@
-﻿Архитектура
+The Architecture
 ================
 
-Вы мой герой! Кто бы мог подумать что вы все еще будете здесь после первых трех частей? Ваши усилия скоро будут вознаграждены. В первых трех частях мы глубоко не вникали в архитектуру фреймворка. Так как она выделяет Symfony2 из толпы фреймворков, давайте сейчас же в нее погрузимся.
+You are my hero! Who would have thought that you would still be here after the
+first three parts? Your efforts will be well-rewarded soon. The first three
+parts didn't look too deeply at the architecture of the framework. As it makes
+Symfony2 stand apart from the framework crowd, let's dive into it now.
 
 .. index::
-   single: Структура Директорий
+   single: Directory Structure
 
-Структура Директорий
+The Directory Structure
 -----------------------
 
-Структура директорий приложения :term:`application` на Symfony довольно гибкая но структура директорий песочницы отражает типовую и рекомендованную структуру приложения Symfony:
+The directory structure of a Symfony2 :term:`application` is rather flexible
+but the directory structure of the sandbox reflects the typical and recommended
+structure of a Symfony2 application:
 
-* ``app/``: В этой категории содержится конфигурация приложения;
+* ``app/``: This directory contains the application configuration;
 
-* ``src/``: Весь PHP код содержится в этой директории;
+* ``src/``: All the PHP code is stored under this directory;
 
-* ``web/``: Это корневая web директория проекта.
+* ``web/``: This should be the web root directory.
 
-Web Директория
+The Web Directory
 ~~~~~~~~~~~~~~~~~
 
-Корневая web директория - это домашняя директория для всех публичных и статических файлов типа изображений, стилей и javascript-файлов. Она также содержит боевые фронт-контроллеры:
+The web root directory is the home of all public and static files like images,
+stylesheets, and JavaScript files. It is also where each :term:`front controller`
+lives::
 
-.. code-block:: html+php
-
-    <!-- web/index.php -->
-    <?php
-
+    // web/app.php
     require_once __DIR__.'/../app/AppKernel.php';
 
-    $kernel = new AppKernel('prod', false);
-    $kernel->handle()->send();
+    use Symfony\Component\HttpFoundation\Request;
 
-Как любой фронт-контроллер, ``index.php`` использует Kernel Class, ``AppKernel``, для запуска приложения.
+    $kernel = new AppKernel('prod', false);
+    $kernel->handle(new Request())->send();
+
+Like any front controller, ``app.php`` uses a Kernel Class, ``AppKernel``, to
+bootstrap the application.
 
 .. index::
-   single: Ядро
+   single: Kernel
 
-Директория Приложения
+The Application Directory
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Класс ``AppKernel`` это главная входная точка конфигурации приложения как такового, и содержится в директории ``app/``.
+The ``AppKernel`` class is the main entry point of the application
+configuration and as such, it is stored in the ``app/`` directory.
 
-Этот класс должен реализовывать четыре метода:
+This class must implement four methods:
 
-* ``registerRootDir()``: Возвращает корневую директорию;
+* ``registerRootDir()``: Returns the configuration root directory;
 
-* ``registerBundles()``: Возвращает массив всех бандлов, необходимых для запуска приложения (обратите внимание на ``Application\HelloBundle\HelloBundle``);
+* ``registerBundles()``: Returns an array of all bundles needed to run the
+  application (notice the reference to
+  ``Application\HelloBundle\HelloBundle``);
 
-* ``registerBundleDirs()``: Возвращает массив ассоциаций пространств имен и их домашних директорий;
+* ``registerBundleDirs()``: Returns an array associating namespaces and their
+  home directories;
 
-* ``registerContainerConfiguration()``: Возвращает главный объект конфигурации (об этом подробнее ниже);
+* ``registerContainerConfiguration()``: Returns the main configuration object
+  (more on this later);
 
-Обратите внимание на реализацию этих методов по умолчанию для того чтобы лучше понять гибкость фреймворка.
+Have a look at the default implementation of these methods to better
+understand the flexibility of the framework.
 
-Для того чтобы это все работало, ядру необходим один файл из директории ``src/``::
+To make things work together, the kernel requires one file from the ``src/``
+directory::
 
     // app/AppKernel.php
     require_once __DIR__.'/../src/autoload.php';
 
-Директория Исходных Кодов
+The Source Directory
 ~~~~~~~~~~~~~~~~~~~~
 
-Файл ``src/autoload.php`` ответственный за автозагрузку всех файлов из директории ``src/``::
+The ``src/autoload.php`` file is responsible for autoloading all the files
+stored in the ``src/`` directory::
 
     // src/autoload.php
     $vendorDir = __DIR__.'/vendor';
@@ -73,15 +87,16 @@ Web Директория
 
     $loader = new UniversalClassLoader();
     $loader->registerNamespaces(array(
-        'Symfony'                    => $vendorDir.'/symfony/src',
-        'Application'                => __DIR__,
-        'Bundle'                     => __DIR__,
-        'Doctrine\\Common'           => $vendorDir.'/doctrine-common/lib',
-        'Doctrine\\DBAL\\Migrations' => $vendorDir.'/doctrine-migrations/lib',
-        'Doctrine\\ODM\\MongoDB'     => $vendorDir.'/doctrine-mongodb/lib',
-        'Doctrine\\DBAL'             => $vendorDir.'/doctrine-dbal/lib',
-        'Doctrine'                   => $vendorDir.'/doctrine/lib',
-        'Zend'                       => $vendorDir.'/zend/library',
+        'Symfony'                        => $vendorDir.'/symfony/src',
+        'Application'                    => __DIR__,
+        'Bundle'                         => __DIR__,
+        'Doctrine\\Common\\DataFixtures' => $vendorDir.'/doctrine-data-fixtures/lib',
+        'Doctrine\\Common'               => $vendorDir.'/doctrine-common/lib',
+        'Doctrine\\DBAL\\Migrations'     => $vendorDir.'/doctrine-migrations/lib',
+        'Doctrine\\ODM\\MongoDB'         => $vendorDir.'/doctrine-mongodb/lib',
+        'Doctrine\\DBAL'                 => $vendorDir.'/doctrine-dbal/lib',
+        'Doctrine'                       => $vendorDir.'/doctrine/lib',
+        'Zend'                           => $vendorDir.'/zend/library',
     ));
     $loader->registerPrefixes(array(
         'Swift_' => $vendorDir.'/swiftmailer/lib/classes',
@@ -89,26 +104,39 @@ Web Директория
     ));
     $loader->register();
 
-Symfony ``UniversalClassLoader`` используется для автозагрузки файлов, которые отвечают всем техническим требованиям `стандартов`_ PHP 5.3 пространств имен или `соглашению`_ по наименованию PEAR для классов. Как вы можете видеть, все зависимости хранятся в директории ``vendor/``, но это только соглашение. Вы можете хранить их где захотите, глобально на вашем сервере или локально в ваших проектах.
+The ``UniversalClassLoader`` from Symfony2 is used to autoload files that
+respect either the technical interoperability `standards`_ for PHP 5.3
+namespaces or the PEAR naming `convention`_ for classes. As you can see
+here, all dependencies are stored under the ``vendor/`` directory, but this is
+just a convention. You can store them wherever you want, globally on your
+server or locally in your projects.
 
 .. index::
-   single: Бандлы
+   single: Bundles
 
-Система Бандлов
+The Bundle System
 -----------------
 
-В этой секции мы начинаем рассмотрение одной из наиболее существенных и мощных особенностей Symfony, ее системы :term:`бандлов`.
+This section starts to scratch the surface of one of the greatest and most
+powerful features of Symfony2, the :term:`bundle` system.
 
-Бандл чем-то похож на плагин в других программах. Но почему тогда его назвали бандл вместо плагин? Потому что все в Symfony это бандлы, начиная от функционала ядра до кода, который вы пишете для своего приложения.
-Бандлы - это главные структурные кирпичики в Symfony. Это наделяет вас гибкостью использовать функционал встроенный в сторонние бандлы или же распостранять ваши собственные бандлы. Это позволяет с легкостью вибирать и включать в приложение только нужный функционал, оптимизируя его на свой вкус.
+A bundle is kind of like a plugin in other software. So why is it called
+bundle and not plugin? Because *everything* is a bundle in Symfony2, from
+the core framework features to the code you write for your application.
+Bundles are first-class citizens in Symfony2. This gives you the flexibility to
+use pre-built features packaged in third-party bundles or to distribute your
+own bundles. It makes it easy to pick and choose which features to enable
+in your application and optimize them the way you want.
 
-Приложение состоит из бандлов, которые объявлены в методе ``registerBundles()`` класса ``AppKernel``::
+An application is made up of bundles as defined in the ``registerBundles()``
+method of the ``AppKernel`` class::
 
     // app/AppKernel.php
     public function registerBundles()
     {
         $bundles = array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new Symfony\Bundle\TwigBundle\TwigBundle(),
 
             // enable third-party bundles
             new Symfony\Bundle\ZendBundle\ZendBundle(),
@@ -116,11 +144,9 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
             new Symfony\Bundle\DoctrineBundle\DoctrineBundle(),
             //new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
             //new Symfony\Bundle\DoctrineMongoDBBundle\DoctrineMongoDBBundle(),
-            //new Symfony\Bundle\PropelBundle\PropelBundle(),
-            //new Symfony\Bundle\TwigBundle\TwigBundle(),
 
             // register your bundles
-            new Application\AppBundle\AppBundle(),
+            new Application\HelloBundle\HelloBundle(),
         );
 
         if ($this->isDebug()) {
@@ -130,10 +156,13 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
         return $bundles;
     }
 
-Отметьте, что вместе с ``HelloBundle``, о котором мы уже говорили, что ядро также подключает ``FrameworkBundle``, ``DoctrineBundle``,
-``SwiftmailerBundle``, и ``ZendBundle``. Они входят в состав ядра фреймворка.
+In addition to the ``HelloBundle`` that we have already talked about, notice
+that the kernel also enables ``FrameworkBundle``, ``DoctrineBundle``,
+``SwiftmailerBundle``, and ``ZendBundle``. They are all part of the core
+framework.
 
-Каждый бандл может быть настроен при помощи конфигурационных файлов, написанных на YAML, XML, или PHP. Взгляните на конфигурацию по умолчанию:
+Each bundle can be customized via configuration files written in YAML, XML, or
+PHP. Have a look at the default configuration:
 
 .. configuration-block::
 
@@ -147,14 +176,10 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
             router:        { resource: "%kernel.root_dir%/config/routing.yml" }
             validation:    { enabled: true, annotations: true }
             templating:
-                escaping:       htmlspecialchars
                 #assets_version: SomeVersionScheme
-            #user:
-            #    default_locale: fr
-            #    session:
-            #        name:     SYMFONY
-            #        type:     Native
-            #        lifetime: 3600
+            session:
+                default_locale: en
+                lifetime: 3600
 
         ## Twig Configuration
         #twig.config:
@@ -182,12 +207,7 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
         <app:config csrf-secret="xxxxxxxxxx" charset="UTF-8" error-handler="null">
             <app:router resource="%kernel.root_dir%/config/routing.xml" />
             <app:validation enabled="true" annotations="true" />
-            <app:templating escaping="htmlspecialchars" />
-            <!--
-            <app:user default-locale="fr">
-                <app:session name="SYMFONY" type="Native" lifetime="3600" />
-            </app:user>
-            //-->
+            <app:session default-locale="en" lifetime="3600" />
         </app:config>
 
         <!-- Twig Configuration -->
@@ -222,17 +242,12 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
             'router'        => array('resource' => '%kernel.root_dir%/config/routing.php'),
             'validation'    => array('enabled' => true, 'annotations' => true),
             'templating'    => array(
-                'escaping'        => 'htmlspecialchars'
                 #'assets_version' => "SomeVersionScheme",
             ),
-            #'user' => array(
-            #    'default_locale' => "fr",
-            #    'session' => array(
-            #        'name' => "SYMFONY",
-            #        'type' => "Native",
-            #        'lifetime' => "3600",
-            #    )
-            #),
+            'session' => array(
+                'default_locale' => "en",
+                'lifetime' => "3600",
+            ),
         ));
 
         // Twig Configuration
@@ -262,9 +277,10 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
         ));
         */
 
-Каждая запись наподобие ``app.config`` определяет конфигурацию бандла.
+Each entry like ``app.config`` defines the configuration for a bundle.
 
-Каждое окружение :term:`environment` может перекрывать конфигурацию по умолчанию путем создания специфичного конфигурационного файла:
+Each :term:`environment` can override the default configuration by providing a
+specific configuration file:
 
 .. configuration-block::
 
@@ -285,7 +301,7 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
         zend.config:
             logger:
                 priority: debug
-                path:     %kernel.root_dir%/logs/%kernel.environment%.log
+                path:     %kernel.logs_dir%/%kernel.environment%.log
 
     .. code-block:: xml
 
@@ -310,7 +326,7 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/config_dev.php
         $loader->import('config.php');
 
         $container->loadFromExtension('app', 'config', array(
@@ -330,7 +346,11 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
             ),
         ));
 
-Как мы видели в предыдущей части, приложение состоит из бандлов объявленных в методе ``registerBundles()``, но откуда Symfony знает где искать бандлы? Symfony очень гибкий в этом плане. Метод ``registerBundleDirs()`` возвращает ассоциативный массив, который отображает пространство имен для любого допустимого каталога (локального или глобального)::
+As we have seen in the previous part, an application is made up of bundles
+defined in the ``registerBundles()`` method. But how does Symfony2 know where
+to look for bundles? Symfony2 is quite flexible in this regard. The
+``registerBundleDirs()`` method must return an associative array that maps
+namespaces to any valid directory (local or global ones)::
 
     public function registerBundleDirs()
     {
@@ -341,56 +361,78 @@ Symfony ``UniversalClassLoader`` используется для автозаг�
         );
     }
 
-Таким образом, когда вы ссылаетесь в имени контроллера или шаблона на ``HelloBundle``, Symfony будет искать их в данных директориях.
+So, when you reference the ``HelloBundle`` in a controller name or in a template
+name, Symfony2 will look for it under the given directories.
 
-Теперь вы понимаете Symfony такой гибкий? Делитесь вашими бандлами между приложениями, храните их локально или глобально, на ваше усмотрение.
-
-.. index::
-   single: Вендоры
-
-Вендоры
--------
-
-Скорее всего ваше приложение будет зависеть от сторонних библиотек. Они должны храниться в директории ``src/vendor/``. Она уже содержит библиотеки Symfony, библиотеку SwiftMailer, Doctrine ORM, Propel ORM, систему шаблонов Twig и избранное из классов Zend Framework.
+Do you understand now why Symfony2 is so flexible? Share your bundles between
+applications, store them locally or globally, your choice.
 
 .. index::
-   single: Cache
+   single: Vendors
+
+Using Vendors
+-------------
+
+Odds are that your application will depend on third-party libraries. Those
+should be stored in the ``src/vendor/`` directory. This directory already
+contains the Symfony2 libraries, the SwiftMailer library, the Doctrine ORM,
+the Twig templating system, and a selection of the Zend Framework classes.
+
+.. index::
+   single: Configuration Cache
    single: Logs
 
-Кэширование и Логи
+Cache and Logs
 --------------
 
-Symfony, вероятно, это один из самых быстрых фреймворков. Но как он может быть таким быстрым, если он постоянно должен парсить и интерпретировать десятки YAML и XML файлов при каждом запросе? Частично это обязанность системы кэширования. Конфигурация приложения парсится только для первого запроса и после этого компилируется в обычный PHP код, который хранится в директории приложения ``cache/``. В окружении для разработки, Symfony сбрасывает кэш когда вы изменяете файл. Но в главном окружении, это уже ваша обязанность чистить кэш, когда вы обновляете ваш код или конфигурацию.
+Symfony2 is probably one of the fastest full-stack frameworks around. But how
+can it be so fast if it parses and interprets tens of YAML and XML files for
+each request? This is partly due to its cache system. The application
+configuration is only parsed for the very first request and then compiled down
+to plain PHP code stored in the ``cache/`` application directory. In the
+development environment, Symfony2 is smart enough to flush the cache when you
+change a file. But in the production environment, it is your responsibility
+to clear the cache when you update your code or change its configuration.
 
-Пр разработке web приложения, вещи могут пойти не так, как надо разными способами. Файлы логов в директории приложения ``logs/`` раскажут вам все про запросы и помогут быстро устранить проблемы.
+When developing a web application, things can go wrong in many ways. The log
+files in the ``logs/`` application directory tell you everything about the
+requests and help you fix the problem quickly.
 
 .. index::
    single: CLI
-   single: Командная строка
+   single: Command Line
 
-Интерфейс Командной Строки
+The Command Line Interface
 --------------------------
 
-В состав каждого приложения входит интерфейс командной строки (``консоль``), который помогает вам обслуживать ваше приложение. Консоль предоставляет команды, которые увеличивают вашу продуктивность, автоматизируя частые и повторяющиеся задачи.
+Each application comes with a command line interface tool (``console``) that
+helps you maintain your application. It provides commands that boost your
+productivity by automating tedious and repetitive tasks.
 
-Запустите консоль без агрументов, для того чтобы получить представление о ее возможностях:
+Run it without any arguments to learn more about its capabilities:
 
 .. code-block:: bash
 
     $ php app/console
 
-Опция ``--help`` поможет вам уточнить способ использования любой команды:
+The ``--help`` option helps you discover the usage of a command:
 
 .. code-block:: bash
 
     $ php app/console router:debug --help
 
-Заключительное Слово
---------------------
+Final Thoughts
+--------------
 
-Называйте меня сумасшедшим, но после прочтения этой части, вы должны уметь заставить работать Symfony на вас быстро и комфортно. В Symfony все сделано так, чтобы вы могли настроить его на ваше усмотрение. Так что, перемещайте директории как вам угодно, не стесняйтесь.
+Call me crazy, but after reading this part, you should be comfortable with
+moving things around and making Symfony2 work for you. Everything is done in
+Symfony2 to get out of your way. So, feel free to rename and move directories
+around as you see fit.
 
-И это все для быстрого тура. От тестирования до отправки электронной почты, вам все еще многое предстоит узнать чтобы стать мастером Symfony. Готовы погрузиться в изучение этих тем сейчас? Не откладывайте на потом, переходите к официальным страницам `руководств` страницам и выбирайте любую интересующую вас тему.
+And that's all for the quick tour. From testing to sending emails, you still
+need to learn a lot to become a Symfony2 master. Ready to dig into these topics
+now? Look no further - go to the official `guides`_ page and pick any topic you
+want.
 
 .. _standards:  http://groups.google.com/group/php-standards/web/psr-0-final-proposal
 .. _convention: http://pear.php.net/

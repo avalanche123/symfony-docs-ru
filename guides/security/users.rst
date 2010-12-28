@@ -1,33 +1,55 @@
-Пользователи
-============
+.. index::
+   single: Security; Users
 
-Безопасность имеет сенс только в случае, когда с вашим приложением работают пользователи, которым вы не можете доверять. Пользователем может быть человек, работающий через браузер, некоторое устройство, web сервис, или же это бот.
+Users
+=====
 
-Определение пользователей
--------------------------
+Security only makes sense because your application is accessed by clients you
+cannot trust. A client can be a human behind a browser, but also a device, a
+web service, or even a bot.
 
-Во время аутентификации, Symfony2 пытается найти соответствующего пользователя сравнивая клиентские учетные данные (чаще всего это имя пользователя и пароль). Та как Symfony2 не строит никаких догадок по поводу PHP представления клиента/пользователя, приложение должно определить класс пользователя и подключить его к Symfony2 через класс поставщика пользователей.
+Defining the Users
+------------------
+
+During authentication, Symfony2 tries to retrieve a user matching the client
+credentials (most of the time a username and a password). As Symfony2 makes no
+assumption about the client/user PHP representation, it's up to the
+application to define a user class and hook it up with Symfony2 via a user
+provider class.
+
+.. index::
+   single: Security; UserProviderInterface
 
 UserProviderInterface
 ~~~~~~~~~~~~~~~~~~~~~
 
-Провайдер пользователей должен реализовывать интерфейс :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
+The user provider must implement
+:class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
 
     interface UserProviderInterface
     {
          function loadUserByUsername($username);
     }
 
-Метод ``loadUserByUsername()`` получает имя пользователя и должен возвратить объект пользователя User. Если пользователь не может быть найден, он должен выбросить исключение :class:`Symfony\\Component\\Security\\Exception\\UsernameNotFoundException`.
+The ``loadUserByUsername()`` method receives the username and must return the
+User object. If the user cannot be found, it must throw a
+:class:`Symfony\\Component\\Security\\Exception\\UsernameNotFoundException`
+exception.
 
-.. примечание::
+.. tip::
 
-    Чаще всего, вам нет надобности определять провайдер пользователя самим, так как в состав Symfony2 входят наиболее общие варианты. Смотрите следующую секцию для более детальной информации.
+    Most of the time, you don't need to define a user provider yourself as
+    Symfony2 comes with the most common ones. See the next section for more
+    information.
+
+.. index::
+   single: Security; AccountInterface
 
 AccountInterface
 ~~~~~~~~~~~~~~~~
 
-Провайдер пользователя должен возвращать объекты, реализующие интерфейс :class:`Symfony\\Component\\Security\\User\\AccountInterface`::
+The user provider must return objects that implement
+:class:`Symfony\\Component\\Security\\User\\AccountInterface`::
 
     interface AccountInterface
     {
@@ -39,17 +61,23 @@ AccountInterface
         function eraseCredentials();
     }
 
-* ``__toString()``: Возвращает строковое представление пользователя;
-* ``getRoles()``: Возвращает роли, сопоставленные пользователю;
-* ``getPassword()``: Возвращает пароль, используемое для аутентификации пользователя;
-* ``getSalt()``: Возвращает соль;
-* ``getUsername()``: Возвращает имя пользователя, используемое для аутентификации пользователя;
-* ``eraseCredentials()``: Удаляет чувствительные данные из объекта пользователя.
+* ``__toString()``: Returns a string representation for the user;
+* ``getRoles()``: Returns the roles granted to the user;
+* ``getPassword()``: Returns the password used to authenticate the user;
+* ``getSalt()``: Returns the salt;
+* ``getUsername()``: Returns the username used to authenticate the user;
+* ``eraseCredentials()``: Removes sensitive data from the user.
 
-Кодирование Паролей
-~~~~~~~~~~~~~~~~~~~
+.. index::
+   single: Security; Password encoding
 
-Вместо хранения паролей в чистом виде, вы можете закодировать их. Для этого вам следует использовать объект :class:`Symfony\\Component\\Security\\Encoder\\PasswordEncoderInterface`::
+Encoding Passwords
+~~~~~~~~~~~~~~~~~~
+
+Instead of storing passwords in clear, you can encode them. When doing so, you
+should use a
+:class:`Symfony\\Component\\Security\\Encoder\\PasswordEncoderInterface`
+object::
 
     interface PasswordEncoderInterface
     {
@@ -57,13 +85,13 @@ AccountInterface
         function isPasswordValid($encoded, $raw, $salt);
     }
 
-.. примечание::
+.. note::
 
-    Во время аутентификации, Symfony2 будет использовать метод ``isPasswordValid()``
-    для проверки пароля пользователя; прочитайте следующую секцию, чтобы узнать, как уведомить ваш провайдер
-    аутентификации использовать кодирование.
+    During authentication, Symfony2 will use the ``isPasswordValid()`` method
+    to check the user password; read the next section to learn how to make
+    your authentication provider aware of the encoder to use.
 
-В большинстве случаев, используйте
+For most use case, use
 :class:`Symfony\\Component\\Security\\Encoder\\MessageDigestPasswordEncoder`::
 
     $user = new User();
@@ -72,13 +100,21 @@ AccountInterface
     $password = $encoder->encodePassword('MyPass', $user->getSalt());
     $user->setPassword($password);
 
-Когда кодируете ваши пароли, очень хорошо будет определить уникальную "соль" для каждого пользователя (метод ``getSalt()`` может возвращать первичный ключ если пользователи хранятся, например, в базе данных).
+When encoding your passwords, it's better to also define a unique salt per user
+(the ``getSalt()`` method can return the primary key if users are persisted in
+a database for instance).
+
+.. index::
+   single: Security; AdvancedAccountInterface
 
 AdvancedAccountInterface
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Перед и после аутентификацией, Symfony2 может проверить различные флаги для пользователя.
-Если ваш класс пользователя реализует интерфейс :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface` вместо :class:`Symfony\\Component\\Security\\User\\AccountInterface`, Symfony2 сделает сопутствующие проверки автоматически::
+Before and after authentication, Symfony2 can check various flags on the user.
+If your user class implements
+:class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface` instead
+of :class:`Symfony\\Component\\Security\\User\\AccountInterface`, Symfony2
+will make the associated checks automatically::
 
     interface AdvancedAccountInterface extends AccountInterface
     {
@@ -88,33 +124,46 @@ AdvancedAccountInterface
         function isEnabled();
     }
 
-* ``isAccountNonExpired()``: Возвращает ``true`` если аккаунт пользователя истек;
-* ``isAccountNonLocked()``: Возвращает ``true`` когда пользователь заблокирован;
-* ``isCredentialsNonExpired()``: Возвращает ``true`` пользовательские учетные данные (пароль) устарели;
-* ``isEnabled()``: Возвращает ``true`` когда пользователь включен.
+* ``isAccountNonExpired()``: Returns ``true`` when the user's account has
+  expired;
+* ``isAccountNonLocked()``: Returns ``true`` when the user is locked;
+* ``isCredentialsNonExpired()``: Returns ``true`` when the user's credentials
+  (password) has expired;
+* ``isEnabled()``: Returns ``true`` when the user is enabled.
 
-.. примечание::
+.. note::
 
-    Интерфейс :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
-    зависит от объекта
+    The :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
+    relies on an
     :class:`Symfony\\Component\\Security\\User\\AccountCheckerInterface`
-    для того чтобы выполнить пре-аутентификационные и пост-аутентификационные проверки.
+    object to do the pre-authentication and post-authentication checks.
 
-Определение Провайдера
-----------------------
+.. index::
+   single: Security; User Providers
 
-Как мы видели в предыдущей секции, провайдер реализует интерфейс :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`. В состав Symfony2 входит провайдер для пользователей "в памяти", Doctrine Entity, и базовый класс для любого DAO провайдера, который вы, возможно, захотите создать.
+Defining a Provider
+-------------------
 
-Провайдер "в памяти"
-~~~~~~~~~~~~~~~~~~~~
+As we have seen in the previous section, a provider implements
+:class:`Symfony\\Component\\Security\\User\\UserProviderInterface`. Symfony2
+comes with provider for in-memory users, Doctrine Entities, Doctrine
+Documents, and defines a base class for any DAO provider you might want to
+create.
 
-Провайдер "в памяти" это отличный провайдер для защиты серверной части вашего персонального web сайта или прототипа. Это также лучший провайдер когда вы пишите unit тесты:
+.. index::
+   single: Security; In-memory user provider
+
+In-memory Provider
+~~~~~~~~~~~~~~~~~~
+
+The in-memory provider is a great provider to secure a personal website backend
+or a prototype. It is also the best provider when writing unit tests:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             providers:
                 main:
@@ -128,7 +177,7 @@ AdvancedAccountInterface
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <provider name="main">
                 <user name="foo" password="foo" roles="ROLE_USER" />
@@ -143,7 +192,7 @@ AdvancedAccountInterface
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'providers' => array(
                 'main' => array('users' => array(
@@ -156,12 +205,17 @@ AdvancedAccountInterface
             ),
         ));
 
-Конфигурация сверху определяет два провайдера "в памяти". Как вы можете видеть, второй из них использует 'sha1' для кодировки пользовательских паролей.
+The above configuration defines two in-memory providers. As you can see, the
+second one uses 'sha1' to encode the user passwords.
 
-Провайдер Doctrine Entity
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.. index::
+   single: Security; Doctrine Entity Provider
+   single: Doctrine; Doctrine Entity Provider
 
-В большинстве случаев, пользователи описываются через Doctrine Entity::
+Doctrine Entity Provider
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Most of the time, users are described by a Doctrine Entity::
 
     /**
      * @Entity
@@ -171,13 +225,14 @@ AdvancedAccountInterface
         // ...
     }
 
-В этом случае, вы можете использовать провайдер Doctrine по умолчанию без его самостоятельного создания:
+In such a case, you can use the default Doctrine provider without creating one
+yourself:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             providers:
                 main:
@@ -186,7 +241,7 @@ AdvancedAccountInterface
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <provider name="main">
                 <password-encoder>sha1</password-encoder>
@@ -196,7 +251,7 @@ AdvancedAccountInterface
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'providers' => array(
                 'main' => array(
@@ -206,10 +261,12 @@ AdvancedAccountInterface
             ),
         ));
 
-Вхождение ``entity`` конфигурирует класс Entity для использования для пользователя, а ``property`` - это название колонки PHP, где хранится имя пользователя.
+The ``entity`` entry configures the Entity class to use for the user, and
+``property`` the PHP column name where the username is stored.
 
-Если получение пользователя сложнее, чем просто вызов ``findOneBy()``,
-удалите установку ``property`` и сделайте чтобы класс Entity Repository реализовывал интерфейс :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
+If retrieving the user is more complex than a simple ``findOneBy()`` call,
+remove the ``property`` setting and make your Entity Repository class
+implement :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
 
     /**
      * @Entity(repositoryClass="SecurityBundle:UserRepository")
@@ -230,46 +287,161 @@ AdvancedAccountInterface
         }
     }
 
-.. примечание::
+.. tip::
 
-    Если вы используете интерфейс 
+    If you use the
     :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
-    не проверяйте различные флаги (закрыт, устарел, включен, ...)
-    когда получаете пользователя с базы данных так как проверки будут сделаны системой аутентификации автоматически (и соответствующие исключения будут выброшены при необходимости). Если у вас установлены специальные флаги, переопределите реализацию интерфейса
+    interface, don't check the various flags (locked, expired, enabled, ...)
+    when retrieving the user from the database as this will be managed by the
+    authentication system automatically (and proper exceptions will be thrown
+    if needed). If you have special flags, override the default
     :class:`Symfony\\Component\\Security\\User\\AccountCheckerInterface`
-    по умолчанию.
+    implementation.
 
-Извлечение Пользователя
------------------------
+.. index::
+   single: Security; Doctrine Document Provider
+   single: Doctrine; Doctrine Document Provider
 
-После аутентификации, пользователь доступен через безопасный контекст::
+Doctrine Document Provider
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    $user = $container->get('security.context')->getUser();
+Most of the time, users are described by a Doctrine Document::
 
-Вы также можете проверить, аутентифицирован ли пользователь при помощи метода ``isAuthenticated()``.
+    /**
+     * @Document
+     */
+    class User implements AccountInterface
+    {
+        // ...
+    }
 
-Роли
-----
-
-У пользователя может быть столько ролей, сколько необходимо. Роли обычно определяются как строки,
-но они могут быть любым объектом, реализующим интерфейс :class:`Symfony\\Component\\Security\\Role\\RoleInterface` (роли во внутреннем представлении всегда объекты). Роли, определяемые строкой, должны начинаться префиксом ``ROLE_``, чтобы автоматически обрабатываться Symfony2.
-
-Роли используются менеджером принятия решений по контролю доступа для защиты ресурсов. Прочитайте секцию :doc:`Authorization </guides/security/authorization>`, чтобы узнать больше о контроле доступа, ролях и голосующих.
-
-.. примечание::
-
-    Если вы определили ваши собственные роли при помощи внешнего класса ролей, не используйте префикс ``ROLE_``.
-
-Иерархические Роли
-~~~~~~~~~~~~~~~~~~
-
-Вместо того, чтобы ассоциировать пользователям множество ролей, вы можете определить правила наследования ролей путем создания иерархии ролей:
+In such a case, you can use the default Doctrine provider without creating one
+yourself:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
+        security.config:
+            providers:
+                main:
+                    password_encoder: sha1
+                    document: { class: SecurityBundle:User, property: username }
+
+    .. code-block:: xml
+
+        <!-- app/config/security.xml -->
+        <config>
+            <provider name="main">
+                <password-encoder>sha1</password-encoder>
+                <document class="SecurityBundle:User" property="username" />
+            </provider>
+        </config>
+
+    .. code-block:: php
+
+        // app/config/security.php
+        $container->loadFromExtension('security', 'config', array(
+            'providers' => array(
+                'main' => array(
+                    'password_encoder' => 'sha1',
+                    'document' => array('class' => 'SecurityBundle:User', 'property' => 'username'),
+                ),
+            ),
+        ));
+
+The ``document`` entry configures the Document class to use for the user, and
+``property`` the PHP column name where the username is stored.
+
+If retrieving the user is more complex than a simple ``findOneBy()`` call,
+remove the ``property`` setting and make your Document Repository class
+implement :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
+
+    /**
+     * @Document(repositoryClass="SecurityBundle:UserRepository")
+     */
+    class User implements AccountInterface
+    {
+        // ...
+    }
+
+    class UserRepository extends DocumentRepository implements UserProviderInterface
+    {
+        public function loadUserByUsername($username)
+        {
+            // do whatever you need to retrieve the user from the database
+            // code below is the implementation used when using the property setting
+
+            return $this->findOneBy(array('username' => $username));
+        }
+    }
+
+.. tip::
+
+    If you use the
+    :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
+    interface, don't check the various flags (locked, expired, enabled, ...)
+    when retrieving the user from the database as this will be managed by the
+    authentication system automatically (and proper exceptions will be thrown
+    if needed). If you have special flags, override the default
+    :class:`Symfony\\Component\\Security\\User\\AccountCheckerInterface`
+    implementation.
+
+Retrieving the User
+-------------------
+
+After authentication, the user is accessed via the security context::
+
+    $user = $container->get('security.context')->getUser();
+
+You can also check if the user is authenticated with the ``isAuthenticated()``
+method::
+
+    $container->get('security.context')->isAuthenticated();
+
+.. tip::
+
+    Be aware that anonymous users are considered authenticated. If you want to
+    check if a user is "fully authenticated" (non-anonymous), you need to check
+    if the user has the special ``IS_AUTHENTICATED_FULLY`` role (or check that
+    the user has not the ``IS_AUTHENTICATED_ANONYMOUSLY`` role).
+
+.. index::
+   single: Security; Roles
+
+Roles
+-----
+
+A User can have as many roles as needed. Roles are usually defined as strings,
+but they can be any object implementing
+:class:`Symfony\\Component\\Security\\Role\\RoleInterface` (roles are always
+objects internally). Roles defined as strings should begin with the ``ROLE_``
+prefix to be automatically managed by Symfony2.
+
+The roles are used by the access decision manager to secure resources. Read
+the :doc:`Authorization </guides/security/authorization>` document to learn
+more about access control, roles, and voters.
+
+.. tip::
+
+    If you define your own roles with a dedicated Role class, don't use the
+    ``ROLE_`` prefix.
+
+.. index::
+   single: Security; Roles (Hierarchical)
+
+Hierarchical Roles
+~~~~~~~~~~~~~~~~~~
+
+Instead of associating many roles to users, you can define role inheritance
+rules by creating a role hierarchy:
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # app/config/security.yml
         security.config:
             role_hierarchy:
                 ROLE_ADMIN:       ROLE_USER
@@ -277,7 +449,7 @@ AdvancedAccountInterface
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <role-hierarchy>
                 <role id="ROLE_ADMIN">ROLE_USER</role>
@@ -287,12 +459,13 @@ AdvancedAccountInterface
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'role_hierarchy' => array(
                 'ROLE_ADMIN'       => 'ROLE_USER',
-                'ROLE_SUPER_ADMIN' => array('ROLE_USER,ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH'),
+                'ROLE_SUPER_ADMIN' => array('ROLE_USER', 'ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH'),
             ),
         ));
 
-В конфигурации сверху, у пользователи с ролью 'ROLE_ADMIN' также будет роль 'ROLE_USER'. Роль 'ROLE_SUPER_ADMIN' обладает множественным наследованием.
+In the above configuration, users with 'ROLE_ADMIN' role will also have the
+'ROLE_USER' role. The 'ROLE_SUPER_ADMIN' role has multiple inheritance.
