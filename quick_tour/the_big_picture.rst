@@ -14,8 +14,8 @@
 Загрузка и установка
 --------------------
 
-В первую очередь, убедитесь что у вас установлен как минимум PHP 5.3.2 и
-он настроен для работы с web сервером, таким как Apache.
+В первую очередь, убедитесь что у вас установлен как минимум PHP 5.3.2 и он
+настроен для работы с web сервером, таким как Apache.
 
 Готовы? Давайте начнем с загрузки Symfony2. Для быстрого старта мы будем
 использовать "Symfony2 песочницу". Это Symfony2, который содержит все
@@ -23,11 +23,11 @@
 базовая конфигурация. Наибольшее преимущество песочницы перед другими типами
 инсталляции в том, что вы можете сразу же начать экспериментировать с Symfony2.
 
-Загрузите `sandbox`_, и распакуйте её в корневую директорию web сервера.
-Сейчас у вас должна быть директория ``sandbox/``::
+Загрузите песочницу (`sandbox`_), и распакуйте её в корневую директорию web
+сервера. Сейчас у вас должна быть папка ``sandbox/``::
 
     www/ <- ваша корневая web директория
-        sandbox/ <- распакованый архив
+        sandbox/ <- распакованный архив
             app/
                 cache/
                 config/
@@ -47,12 +47,12 @@
 Проверка конфигурации
 ---------------------
 
-Для того чтобы избежать головной боли в последствии, проверьте, может ли быть
-запущен Symfony2 проект у вас – для этого откройте следующий URL:
+Для того чтобы избежать головной боли в будущем, проверьте, сможет ли ваша
+система запустить Symfony2 без проблем – для этого откройте следующий URL:
 
     http://localhost/sandbox/web/check.php
 
-Внимательно прочитайте вывод скрипта и исправьте все проблемы которые он найдет.
+Внимательно прочитайте вывод скрипта и исправьте все проблемы, которые он найдет.
 
 Теперь запросите вашу первую "реальную" страничку на Symfony2:
 
@@ -60,7 +60,7 @@
 
 Symfony2 должен поблагодарить вас за приложенные усилия!
 
-Ваше первое приложение
+Создаём первое приложение
 ----------------------
 
 Песочница поставляется с простым Hello World ":term:`application`".
@@ -74,7 +74,7 @@ URL чтобы Symfony2 вас поприветствовал (замените 
 .. index:: Front Controller
 
 * ``app_dev.php``: Это "front controller". Уникальная точка входа для приложения,
-  которая отвечает на все запросы пользователей;
+  которая отвечает на все запросы пользователя;
 
 * ``/hello/Fabien``: Это "виртуальный" путь ресурса, к которому пользователь
   хочет получить доступ.
@@ -109,7 +109,7 @@ URL чтобы Symfony2 вас поприветствовал (замените 
 Маршрутизация
 ~~~~~~~~~~~~~
 
-Symfony2 проводит маршрутизацию запроса анализируя файл конфигурации маршрутов:
+Symfony2 проводит маршрутизацию запроса, анализируя файл конфигурации маршрутов:
 
 .. configuration-block::
 
@@ -152,10 +152,9 @@ Symfony2 проводит маршрутизацию запроса анализ
         $collection->addCollection($loader->import("HelloBundle/Resources/config/routing.php"));
 
         return $collection;
-
-The first few lines of the routing configuration file define which code to
-call when the user requests the "``/``" resource. More interesting is the last
-part, which imports another routing configuration file that reads as follows:
+Первые несколько строк файла настроек маршрутизации определяют, какой код вызвать
+когда пользователь запросит ресурс "``/``". Более интересна концовка, которая
+внедряет следующий файл настроек маршрутизации, который состоит из:
 
 .. configuration-block::
 
@@ -193,9 +192,9 @@ part, which imports another routing configuration file that reads as follows:
 
         return $collection;
 
-Here we go! As you can see, the "``/hello/:name``" resource pattern (a string
-beginning with a colon like ``:name`` is a placeholder) is mapped to a
-controller, referenced by the ``_controller`` value.
+Ну, вот! Теперь вы видите, паттерн ресурса "``/hello/:name``" (строка,
+начинающаяся с двоеточия ``:name``, называется заполнитель) сопоставляется с
+контроллером, заданным через значение ``_controller``.
 
 .. index::
    single: Controller
@@ -204,8 +203,8 @@ controller, referenced by the ``_controller`` value.
 Контроллеры
 ~~~~~~~~~~~
 
-Контроллер отвечает за возвращение представления ресурса
-(зачастую это HTML) и определён как PHP класс:
+Контроллер отвественен за возвращение представления ресурса (зачастую это HTML)
+и определён как PHP класс:
 
 .. code-block:: php
    :linenos:
@@ -229,19 +228,19 @@ controller, referenced by the ``_controller`` value.
 
 Код довольно простой, но давайте разберём его по строкам:
 
-* *строка 3*: Symfony2 takes advantage of new PHP 5.3 features and as such, all
-  controllers are properly namespaced (the namespace is the first part of the
-  ``_controller`` routing value: ``HelloBundle``).
+* *строка 3*: Symfony2 использует преимущства новых возможностей PHP 5.3 и
+  потому все контроллеры находятся в пространствах имён (пространство имён это
+  первая часть значения переменной для маршрутизации ``_controller``: ``HelloBundle``).
 
-* *строка 7*: The controller name is the concatenation of the second part of the
-  ``_controller`` routing value (``Hello``) and ``Controller``. It extends the
-  built-in ``Controller`` class, which provides useful shortcuts (as we will
-  see later in this tutorial).
+* *строка 7*: Имя контроллера состоит из второй части значения переменной для
+  маршрутизации ``_controller`` (``Hello``) и слова ``Controller``. Он
+  расширяет встроенный класс ``Controller``, который обеспечивает полезные
+  сокращения (их мы увидим позже в этом руководстве).
 
 * *строка 9*: Каждый контроллер состоит из нескольких действий. Согласно
-  конфигурации, страница hello обрабатывается действием ``index`` (the third
-  part of the ``_controller`` routing value). This method receives the
-  resource placeholder values as arguments (``$name`` in our case).
+  конфигурации, страница hello обрабатывается действием ``index`` (третья часть
+  значения переменной для маршрутизации ``_controller``). Этот метод получает
+  через аргументы значения заполнителя для данного ресурса (``$name`` в нашем случае).
 
 * *строка 11*: Метод ``render()`` загружает и заполняет шаблон
   (``HelloBundle:Hello:index.twig``) переменными, переданными вторым аргументом.
@@ -250,15 +249,14 @@ controller, referenced by the ``_controller`` value.
 через бандлы. На языке Symfony2 бандл это структурированный набор файлов
 (файлы PHP, таблицы стилей, JavaScripts, изображения, ...), который
 реализует одну функцию (блог, форум, ...) и который с лёгкостью может быть
-распространён среди других разработчиков. In our example, we only have one bundle, ``HelloBundle``.
+распространён среди других разработчиков. В нашем примере только один бандл ``HelloBundle``.
 
 Шаблоны
 ~~~~~~~
 
-So, the controller renders the ``HelloBundle:Hello:index.twig`` template. But
-what's in a template name? ``HelloBundle`` is the bundle name, ``Hello`` is
-the controller, and ``index.twig`` the template name. By default, the sandbox
-uses Twig as its template engine:
+Итак, контроллер заполняет шаблон ``HelloBundle:Hello:index.twig``. Но что оно
+значит? ``HelloBundle`` это имя бандла, ``Hello`` это контроллер, а ``index.twig``
+это имя шаблона. Изначально песочница использует движок шаблонов Twig:
 
 .. code-block:: jinja
 
@@ -269,52 +267,51 @@ uses Twig as its template engine:
         Hello {{ name }}!
     {% endblock %}
 
-Congratulations! You have looked at your first Symfony2 piece of code. That was
-not so hard, was it? Symfony2 makes it really easy to implement web sites
-better and faster.
+Поздравляем! Вы увидели первый кусочек кода для Symfony2. Это не было трудно,
+не так ли? Symfony2 позволяет внедрять сайты удобно и быстро.
 
 .. index::
    single: Environment
    single: Configuration; Environment
 
-Working with Environments
+Работаем с Окружениями (Environments)
 -------------------------
 
-Now that you have a better understanding on how Symfony2 works, have a closer
-look at the bottom of the page; you will notice a small bar with the Symfony2
-and PHP logos. It is called the "Web Debug Toolbar" and it is the developer's
-best friend. Of course, such a tool must not be displayed when you deploy your
-application to your production servers. That's why you will find another front
-controller in the ``web/`` directory (``app.php``), optimized for the
-production environment:
+Теперь, когда вы лучше разбираетесь в работе Symfony2, давайте взглянем на
+нижнюю часть страницы; вы увидите небольшую полоску со значками Symfony2 и PHP.
+Она называется "Web панель отладки" ("Web Debug Toolbar") - лучший друг
+разработчика. Конечно, такой инструмент не должен отображаться, когда вы начнёте
+разворачивать приложение на производственном сервере. Для этого обратите
+внимание на другой контроллер в папке ``web/`` (``app.php``), оптимизированный
+для производственного окружения:
 
     http://localhost/sandbox/web/app.php/hello/Fabien
 
-And if you use Apache with ``mod_rewrite`` enabled, you can even omit the
-``app.php`` part of the URL:
+Если вы используете Apache с включённым ``mod_rewrite``, вы можете отказаться от
+использования ``app.php`` части в URL:
 
     http://localhost/sandbox/web/hello/Fabien
 
-Last but not least, on the production servers, you should point your web root
-directory to the ``web/`` directory to secure your installation and have an even
-better looking URL:
+И это ещё не всё, на производственном сервере, вам следует сделать корневой web
+директорией папку ``web/`` чтобы обезопасить установку и получить даже более
+красивый URL:
 
     http://localhost/hello/Fabien
 
-To make the production environment as fast as possible, Symfony2 maintains a
-cache under the ``app/cache/`` directory. When you make changes to the code or
-configuration, you need to manually remove the cached files. That's why you
-should always use the development front controller (``app_dev.php``) when
-working on a project.
+Чтобы сделать производственное окружение быстрым насколько это возможно,
+Symfony2 делает кэш в папке ``app/cache/``. Когда вы вносите изменения в код или
+конфигурацию, вам необходимо вручную удалить кэш файлы. Вот почему лучше
+использовать фронт контроллер для разработки (``app_dev.php``) когда работаете
+над проектом.
 
-Заключительное Слово
+Заключительное слово
 --------------
 
-The 10 minutes are over. By now, you should be able to create your own simple
-routes, controllers, and templates. As an exercise, try to build something
-more useful than the Hello application! But if you are eager to learn more
-about Symfony2, you can read the next part of this tutorial right away, where
-we dive more into the templating system.
+10 минут истекли. Теперь вы должны быть способны создать свои простые маршруты,
+контроллеры и шаблоны. Для закрепления материала, попробуйте создать что-либо
+более полезное чем приложение Hello! Но если вы стремитесь узнать больше о
+Symfony2, прочтите следующую часть руководства прямо сейчас, в котором мы глубже
+затронем систему шаблонов.
 
 .. _sandbox: http://symfony-reloaded.org/code#sandbox
 .. _YAML:    http://www.yaml.org/
