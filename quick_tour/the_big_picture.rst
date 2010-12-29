@@ -1,24 +1,30 @@
 ﻿Общая картина
 =============
 
-So, you want to try out Symfony2 but only have 10 minutes or so? This first
-part of this tutorial has been written for you. It explains how to get started
-fast with Symfony2 by showing you the structure of a simple ready-made
-project.
+Итак вы хотите попробовать Symfony2, но в наличии у вас не более 10 минут?
+Первая часть этого учебника написана для вас. Она объяснит как быстро начать
+с Symfony2, показав структуру простого готового проекта.
 
-Если вы когда-нибудь использовали какой-либо веб-фреймворк прежде, вы будете чувствовать себя в Symfony2 как дома.
+Если вы когда-нибудь использовали какой-либо веб-фреймворк прежде, вы будете
+чувствовать себя в Symfony2 как дома.
 
 .. index::
    pair: Sandbox; Download
 
-Загрузка и Установка
+Загрузка и установка
 --------------------
 
-В первую очередь, убедитесь что у вас установлен как минимум PHP 5.3.2 и корректно настроен для работы с web сервером, таким как Apache.
+В первую очередь, убедитесь что у вас установлен как минимум PHP 5.3.2 и
+он настроен для работы с web сервером, таким как Apache.
 
-Готовы? Давайте начнем с загрузки Symfony. Для быстрого старта мы будем использовать "песочницу Symfony". Это Symfony, который содержит все необходимые библиотеки и несколько простых контроллеров; также включена базовая конфигурация. Наибольшее преимущество песочницы перед другими типами инсталляции в том, что вы можете сразу же начать экспериментировать с Symfony.
+Готовы? Давайте начнем с загрузки Symfony2. Для быстрого старта мы будем
+использовать "Symfony2 песочницу". Это Symfony2, который содержит все
+необходимые библиотеки и несколько простых контроллеров; также в неё включена
+базовая конфигурация. Наибольшее преимущество песочницы перед другими типами
+инсталляции в том, что вы можете сразу же начать экспериментировать с Symfony2.
 
-Загрузите `sandbox`_, и распакуйте ее в корневую директорию web сервера. Сейчас у вас должна быть директория ``sandbox/``::
+Загрузите `sandbox`_, и распакуйте её в корневую директорию web сервера.
+Сейчас у вас должна быть директория ``sandbox/``::
 
     www/ <- ваша корневая web директория
         sandbox/ <- распакованый архив
@@ -38,43 +44,44 @@ project.
 .. index::
    single: Installation; Check
 
-Проверка Конфигурации
+Проверка конфигурации
 ---------------------
 
-Для того чтобы избежать головной боли в последствии, проверьте, может ли быть запущен Symfony проект у вас – для этого откройте следующий URL:
+Для того чтобы избежать головной боли в последствии, проверьте, может ли быть
+запущен Symfony2 проект у вас – для этого откройте следующий URL:
 
     http://localhost/sandbox/web/check.php
 
 Внимательно прочитайте вывод скрипта и исправьте все проблемы которые он найдет.
 
-Теперь запросите вашу первую "реальную" страничку на Symfony:
+Теперь запросите вашу первую "реальную" страничку на Symfony2:
 
     http://localhost/sandbox/web/app_dev.php/
 
-Symfony должен поблагодарить за ваши затраченные усилия!
+Symfony2 должен поблагодарить вас за приложенные усилия!
 
-Ваше Первое Приложение
+Ваше первое приложение
 ----------------------
 
-The sandbox comes with a simple Hello World ":term:`application`" and that's
-the application we will use to learn more about Symfony2. Go to the following
-URL to be greeted by Symfony2 (replace Fabien with your first name):
+Песочница поставляется с простым Hello World ":term:`application`".
+Мы будем использовать его чтобы узнать больше о Symfony2. Проследуйте по этому
+URL чтобы Symfony2 вас поприветствовал (замените Fabien на своё имя):
 
     http://localhost/sandbox/web/app_dev.php/hello/Fabien
 
-Что происходит в этом месте? Давайте разберем URL:
+Что происходит в этом месте? Давайте разберём URL:
 
 .. index:: Front Controller
 
-* ``app_dev.php``: This is a "front controller". It is the unique entry point
-  of the application and it responds to all user requests;
+* ``app_dev.php``: Это "front controller". Уникальная точка входа для приложения,
+  которая отвечает на все запросы пользователей;
 
-* ``/hello/Fabien``: This is the "virtual" path to the resource the user wants
-  to access.
+* ``/hello/Fabien``: Это "виртуальный" путь ресурса, к которому пользователь
+  хочет получить доступ.
 
-Your responsibility as a developer is to write the code that maps the user
-request (``/hello/Fabien``) to the resource associated with it (``Hello
-Fabien!``).
+От вас как от разработчика требуется написать код, который сопоставит
+пользовательский запрос (``/hello/Fabien``) и ассоциированный с ним ресурс
+(``HelloFabien!``).
 
 .. index::
    single: Configuration
@@ -82,15 +89,16 @@ Fabien!``).
 Конфигурация
 ~~~~~~~~~~~~
 
-Но как Symfony связывает запрос с вашим кодом? Просто считывая некоторый конфигурационный файл.
+Но как Symfony2 связывает запрос с вашим кодом? Просто прочитав некоторый файл
+конфигурации.
 
 Все конфигурационные файлы Symfony2 могут быть написаны на PHP, XML, или `YAML`_
 (YAML это простой формат, который очень упрощает описание конфигурационных настроек).
 
 .. tip::
 
-    The sandbox defaults to YAML, but you can easily switch to XML or PHP by
-    editing the ``app/AppKernel.php`` file. You can switch now by looking at
+    Песочница настроена на YAML, но вы легко сможете переключиться на XML или PHP
+    изменив файл ``app/AppKernel.php``. You can switch now by looking at
     the bottom of this file for instructions (the tutorials show the
     configuration for all supported formats).
 
@@ -101,7 +109,7 @@ Fabien!``).
 Маршрутизация
 ~~~~~~~~~~~~~
 
-Symfony проводит маршрутизацию запроса анализируя файл конфигурации маршрутов:
+Symfony2 проводит маршрутизацию запроса анализируя файл конфигурации маршрутов:
 
 .. configuration-block::
 
@@ -196,8 +204,8 @@ controller, referenced by the ``_controller`` value.
 Контроллеры
 ~~~~~~~~~~~
 
-The controller is responsible for returning a representation of the resource
-(most of the time an HTML one) and it is defined as a PHP class:
+Контроллер отвечает за возвращение представления ресурса
+(зачастую это HTML) и определён как PHP класс:
 
 .. code-block:: php
    :linenos:
@@ -219,31 +227,30 @@ The controller is responsible for returning a representation of the resource
         }
     }
 
-Код довольно простой, но давайте разберем его по строкам:
+Код довольно простой, но давайте разберём его по строкам:
 
-* *line 3*: Symfony2 takes advantage of new PHP 5.3 features and as such, all
+* *строка 3*: Symfony2 takes advantage of new PHP 5.3 features and as such, all
   controllers are properly namespaced (the namespace is the first part of the
   ``_controller`` routing value: ``HelloBundle``).
 
-* *line 7*: The controller name is the concatenation of the second part of the
+* *строка 7*: The controller name is the concatenation of the second part of the
   ``_controller`` routing value (``Hello``) and ``Controller``. It extends the
   built-in ``Controller`` class, which provides useful shortcuts (as we will
   see later in this tutorial).
 
-* *line 9*: Each controller is made of several actions. As per the
-  configuration, the hello page is handled by the ``index`` action (the third
+* *строка 9*: Каждый контроллер состоит из нескольких действий. Согласно
+  конфигурации, страница hello обрабатывается действием ``index`` (the third
   part of the ``_controller`` routing value). This method receives the
   resource placeholder values as arguments (``$name`` in our case).
 
-* *line 11*: The ``render()`` method loads and renders a template
-  (``HelloBundle:Hello:index.twig``) with the variables passed as a second
-  argument.
+* *строка 11*: Метод ``render()`` загружает и заполняет шаблон
+  (``HelloBundle:Hello:index.twig``) переменными, переданными вторым аргументом.
 
-But what is a :term:`bundle`? All the code you write in a Symfony2 project is
-organized in bundles. In Symfony2 speak, a bundle is a structured set of files
-(PHP files, stylesheets, JavaScripts, images, ...) that implements a single
-feature (a blog, a forum, ...) and which can be easily shared with other
-developers. In our example, we only have one bundle, ``HelloBundle``.
+Но что такое :term:`bundle`? Весь код, написанный в Symfony2 упорядочен
+через бандлы. На языке Symfony2 бандл это структурированный набор файлов
+(файлы PHP, таблицы стилей, JavaScripts, изображения, ...), который
+реализует одну функцию (блог, форум, ...) и который с лёгкостью может быть
+распространён среди других разработчиков. In our example, we only have one bundle, ``HelloBundle``.
 
 Шаблоны
 ~~~~~~~

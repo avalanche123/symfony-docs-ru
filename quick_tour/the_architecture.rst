@@ -1,30 +1,32 @@
-﻿Архитектура
+Архитектура
 ================
 
-Вы мой герой! Кто бы мог подумать что вы все еще будете здесь после первых трех частей? Ваши усилия скоро будут вознаграждены. В первых трех частях мы глубоко не вникали в архитектуру фреймворка. Так как она выделяет Symfony2 из толпы фреймворков, давайте сейчас же в нее погрузимся.
+Вы мой герой! Кто бы мог подумать что вы всё ещё будете здесь после первых трёх
+частей? Ваши усилия скоро будут вознаграждены. В первых трёх частях мы глубоко
+не вникали в архитектуру фреймворка. Но так как она выделяет Symfony2 из толпы
+фреймворков, давайте сейчас же в неё погрузимся.
 
 .. index::
    single: Directory Structure
 
-Структура Директорий
------------------------
+Структура папок
+------------------
 
-The directory structure of a Symfony2 :term:`application` is rather flexible
-but the directory structure of the sandbox reflects the typical and recommended
-structure of a Symfony2 application:
+Структура папок приложения (:term:`application`) на Symfony2 довольно гибкая,
+но типичная и рекомендованная структура папок показана в песочнице Symfony2:
 
-* ``app/``: В этой категории содержится конфигурация приложения;
+* ``app/``: Эта папка содержит конфигурацию приложения;
 
-* ``src/``: Весь PHP код содержится в этой директории;
+* ``src/``: Весь PHP код хранится здесь;
 
-* ``web/``: Это корневая web директория проекта.
+* ``web/``: Это папка должна быть корневой web директорией.
 
-Web Директория
+Web директория
 ~~~~~~~~~~~~~~~~~
 
-The web root directory is the home of all public and static files like images,
-stylesheets, and JavaScript files. It is also where each :term:`front controller`
-lives::
+Корневая web директория - это дом для всех публичных и статичных файлов, таких
+как изображения, таблицы стилей и файлы JavaScript. Здесь также обитает
+:term:`front controller`::
 
     // web/app.php
     require_once __DIR__.'/../app/AppKernel.php';
@@ -34,38 +36,43 @@ lives::
     $kernel = new AppKernel('prod', false);
     $kernel->handle(new Request())->send();
 
-Like any front controller, ``app.php`` uses a Kernel Class, ``AppKernel``, to
-bootstrap the application.
+Как и любой фронт контроллер, ``app.php`` использует Kernel Class,
+``AppKernel``, чтобы начать загрузку приложения.
 
 .. index::
    single: Kernel
 
-Директория Приложения
+Папка приложения
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Класс ``AppKernel`` это главная входная точка конфигурации приложения как такового, и содержится в директории ``app/``.
+Класс ``AppKernel`` это главная входная точка конфигурации приложения, поэтому
+он содержится в директории ``app/``.
 
 Этот класс должен реализовывать четыре метода:
 
-* ``registerRootDir()``: Returns the configuration root directory;
+* ``registerRootDir()``: Возвращает корневую папку конфигурации;
 
-* ``registerBundles()``: Возвращает массив всех бандлов, необходимых для запуска приложения (обратите внимание на ``Application\HelloBundle\HelloBundle``);
+* ``registerBundles()``: Возвращает массив всех бандлов, необходимых для
+  запуска приложения (см. ссылку ``Application\HelloBundle\HelloBundle``);
 
-* ``registerBundleDirs()``: Возвращает массив ассоциаций пространств имен и их домашних директорий;
+* ``registerBundleDirs()``: Возвращает массив, связывающий пространства имён и
+  их домашние директории;
 
-* ``registerContainerConfiguration()``: Возвращает главный объект конфигурации (об этом подробнее ниже);
+* ``registerContainerConfiguration()``: Возвращает главный объект конфигурации
+  (об этом чуть позже);
 
-Обратите внимание на реализацию этих методов по умолчанию для того чтобы лучше понять гибкость фреймворка.
+Обратите внимание на типичную реализацию этих методов для того чтобы лучше
+понять гибкость фреймворка.
 
-Для того чтобы это все работало, ядру необходим один файл из директории ``src/``::
+Чтобы всё это заработало, ядру необходим один файл из директории ``src/``::
 
     // app/AppKernel.php
     require_once __DIR__.'/../src/autoload.php';
 
-Директория Исходных Кодов
+Папка с исходниками
 ~~~~~~~~~~~~~~~~~~~~
 
-Файл ``src/autoload.php`` ответственный за автозагрузку всех файлов из директории ``src/``::
+Файл ``src/autoload.php`` ответственен за автозагрузку всех файлов из папки ``src/``::
 
     // src/autoload.php
     $vendorDir = __DIR__.'/vendor';
@@ -93,32 +100,32 @@ bootstrap the application.
     ));
     $loader->register();
 
-The ``UniversalClassLoader`` from Symfony2 is used to autoload files that
-respect either the technical interoperability `standards`_ for PHP 5.3
-namespaces or the PEAR naming `convention`_ for classes. As you can see
-here, all dependencies are stored under the ``vendor/`` directory, but this is
-just a convention. You can store them wherever you want, globally on your
-server or locally in your projects.
+``UniversalClassLoader`` из Symfony2 используется для автозагрузки файлов,
+которые относятся либо соотвествуют техническим стандартам `standards`_ для
+пространств имён в PHP 5.3 или соглашению `convention`_ о наименованиях для
+классов в PEAR. Как вы видите, все зависимости хранятся в папке ``vendor/``,
+но это просто соглашение. Можете хранить их где пожелаете, глобально на сервере
+или локально в проекте.
 
 .. index::
    single: Bundles
 
-Система Бандлов
+Система бандлов
 -----------------
 
-This section starts to scratch the surface of one of the greatest and most
-powerful features of Symfony2, the :term:`bundle` system.
+Этот раздел кратко поведает вам об одной из существеннейших и наиболее мощных
+особенностей Symfony2, о системе бандлов :term:`bundle`.
 
-A bundle is kind of like a plugin in other software. So why is it called
-bundle and not plugin? Because *everything* is a bundle in Symfony2, from
-the core framework features to the code you write for your application.
-Bundles are first-class citizens in Symfony2. This gives you the flexibility to
-use pre-built features packaged in third-party bundles or to distribute your
-own bundles. It makes it easy to pick and choose which features to enable
-in your application and optimize them the way you want.
+Бандл в некотором роде как плагин в других программах. Почему его назвали
+бандл, а не плагин? Потому что *всё что угодно* в Symfony2 это бандл, от
+ключевых особенностей фреймворка до кода, который вы пишете для приложения.
+Бандлы это высшая каста в Symfony2. Это даёт вам гибкость в применении как уже
+встроенных особенностей сторонних бандлов, так и в написании своих собственных.
+Бандл позволяет выбрать необходимые для приложения особенности и оптимизировать
+их как вы этого хотите.
 
-An application is made up of bundles as defined in the ``registerBundles()``
-method of the ``AppKernel`` class::
+Приложение составлено из бандлов, объявленных в методе ``registerBundles()``
+класса ``AppKernel``::
 
     // app/AppKernel.php
     public function registerBundles()
@@ -145,12 +152,12 @@ method of the ``AppKernel`` class::
         return $bundles;
     }
 
-In addition to the ``HelloBundle`` that we have already talked about, notice
-that the kernel also enables ``FrameworkBundle``, ``DoctrineBundle``,
-``SwiftmailerBundle``, and ``ZendBundle``. They are all part of the core
-framework.
+В дополнение к ``HelloBundle``, о котором мы недавно говорили, заметьте что ядро
+также включает ``FrameworkBundle``, ``DoctrineBundle``, ``SwiftmailerBundle`` и
+``ZendBundle``. Все они части ядра фрэймворка.
 
-Каждый бандл может быть настроен при помощи конфигурационных файлов, написанных на YAML, XML, или PHP. Взгляните на конфигурацию по умолчанию:
+Каждый бандл может быть настроен при помощи конфигурационных файлов, написанных
+на YAML, XML, или PHP. Взгляните на конфигурацию по умолчанию:
 
 .. configuration-block::
 
@@ -265,9 +272,10 @@ framework.
         ));
         */
 
-Каждая запись наподобие ``app.config`` определяет конфигурацию бандла.
+Каждая запись ``app.config`` указывает на настройку для бандла.
 
-Каждое окружение :term:`environment` может перекрывать конфигурацию по умолчанию путем создания специфичного конфигурационного файла:
+Каждое `окружение` (:term:`environment`) может переопределять стандартную
+конфигурацию, задавая специфичный конфигурационный файл:
 
 .. configuration-block::
 
@@ -333,11 +341,11 @@ framework.
             ),
         ));
 
-As we have seen in the previous part, an application is made up of bundles
-defined in the ``registerBundles()`` method. But how does Symfony2 know where
-to look for bundles? Symfony2 is quite flexible in this regard. The
-``registerBundleDirs()`` method must return an associative array that maps
-namespaces to any valid directory (local or global ones)::
+В предыдущей участке кода вы могли убедиться что приложение состоит из бандлов,
+определённых в методе ``registerBundles()``. Но откуда Symfony2 знает где их
+искать? Symfony2 и здесь достаточно гибок. Метод ``registerBundleDirs()`` должен
+возвратить ассоциативный массив, который связывает пространства имён с любой
+доступной папкой (локальной или глобальной)::
 
     public function registerBundleDirs()
     {
@@ -348,20 +356,22 @@ namespaces to any valid directory (local or global ones)::
         );
     }
 
-Таким образом, когда вы ссылаетесь в имени контроллера или шаблона на ``HelloBundle``, Symfony будет искать их в данных директориях.
+Таким образом, когда вы ссылаетесь на ``HelloBundle`` в имени контроллера или
+в имени шаблона, Symfony2 будет искать их в данных директориях.
 
-Теперь вы понимаете Symfony такой гибкий? Делитесь вашими бандлами между приложениями, храните их локально или глобально, на ваше усмотрение.
+Теперь вы понимаете почему Symfony2 такой гибкий? Делитесь вашими бандлами
+между приложениями, храните их локально или глобально, всё на ваш выбор.
 
 .. index::
    single: Vendors
 
-Using Vendors
+Применение вендоров
 -------------
 
-Odds are that your application will depend on third-party libraries. Those
-should be stored in the ``src/vendor/`` directory. This directory already
-contains the Symfony2 libraries, the SwiftMailer library, the Doctrine ORM,
-the Twig templating system, and a selection of the Zend Framework classes.
+Скорее всего ваше приложение будет зависеть и от сторонних библиотек. Они должны
+хранится в папке ``src/vendor/``. Она уже содержит библиотеки Symfony2,
+библиотеку SwiftMailer, Doctrine ORM, систему шаблонизации Twig и выборку из
+классов Zend Framework.
 
 .. index::
    single: Configuration Cache
@@ -370,49 +380,53 @@ the Twig templating system, and a selection of the Zend Framework classes.
 Кэширование и Логи
 --------------
 
-Symfony2 is probably one of the fastest full-stack frameworks around. But how
-can it be so fast if it parses and interprets tens of YAML and XML files for
-each request? This is partly due to its cache system. The application
-configuration is only parsed for the very first request and then compiled down
-to plain PHP code stored in the ``cache/`` application directory. In the
-development environment, Symfony2 is smart enough to flush the cache when you
-change a file. But in the production environment, it is your responsibility
-to clear the cache when you update your code or change its configuration.
+Symfony2 пожалуй одна из быстрейших среди многофункциональных фреймворков. Но
+откуда взяться такой скорости когда она анализирует и интерпретирует десятки
+YAML и XML для каждого запроса? Отчасти это благодаря системе кэширования.
+Конфигурация приложения анализируется только при первом запросе, затем она
+компилируется в чистый PHP и хранится в ``cache/`` папке приложения. В среде
+разработки Symfony2 достаточно умён чтобы очищать кэш когда вы измените файл.
+Но в производственной среде, когда вы изменяете код или конфигурацию, то
+ответственность по очистке кэша перекладывается на вас.
 
-When developing a web application, things can go wrong in many ways. The log
-files in the ``logs/`` application directory tell you everything about the
-requests and help you fix the problem quickly.
+Когда разрабатывается web приложение, многое может пойти не так. Логи в ``logs/``
+в папке приложения расскажут вам всё о запросах и помогут быстро решить проблемы.
 
 .. index::
    single: CLI
    single: Command Line
 
-Интерфейс Командной Строки
+Интерфейс командной строки
 --------------------------
 
-В состав каждого приложения входит интерфейс командной строки (``консоль``), который помогает вам обслуживать ваше приложение. Консоль предоставляет команды, которые увеличивают вашу продуктивность, автоматизируя частые и повторяющиеся задачи.
+Все приложения идут с интерфейсом командной строки (``консоль``), который
+помогает обслуживать приложение. Он предоставляет команды, которые увеличивают
+вашу продуктивность, автоматизируя частые и повторяющиеся задачи.
 
-Запустите консоль без агрументов, для того чтобы получить представление о ее возможностях:
+Запустите консоль без агрументов, чтобы получить представление о её возможностях:
 
 .. code-block:: bash
 
     $ php app/console
 
-Опция ``--help`` поможет вам уточнить способ использования любой команды:
+Опция ``--help`` поможет вам уточнить возможности использования команды:
 
 .. code-block:: bash
 
     $ php app/console router:debug --help
 
-Заключительное Слово
+Заключительное слово
 --------------------
 
-Называйте меня сумасшедшим, но после прочтения этой части, вы должны уметь заставить работать Symfony на вас быстро и комфортно. В Symfony все сделано так, чтобы вы могли настроить его на ваше усмотрение. Так что, перемещайте директории как вам угодно, не стесняйтесь.
+Называйте меня сумасшедшим, но после прочтения этой части, вам должно быть
+комфортно перемещать любые вещи и при этом заставить Symfony2 работать на вас.
+В Symfony2 всё сделано так, чтобы вы смогли настроить его на ваше усмотрение.
+Так что, переименовывайте и перемещайте директории как вам угодно.
 
-And that's all for the quick tour. From testing to sending emails, you still
-need to learn a lot to become a Symfony2 master. Ready to dig into these topics
-now? Look no further - go to the official `guides`_ page and pick any topic you
-want.
+Для начала этого достаточно. Вам ещё предстоит многому научиться, от
+тестирования до отправки почты, чтобы стать мастером Symfony2. Готовы
+погрузиться в чтение сейчас? Следуйте на официальную страницу руководств
+(`guides`_) и выбирайте любую тему.
 
 .. _standards:  http://groups.google.com/group/php-standards/web/psr-0-final-proposal
 .. _convention: http://pear.php.net/

@@ -7,8 +7,15 @@
 	:orphan:
 
 	.. glossary::
+
 	.. note::
+
 	.. tip::
+
+	.. toctree::
+	   :maxdepth: 2
+	   :glob:
+	   :numbered:
 
 2. Служебные слова
 	API
