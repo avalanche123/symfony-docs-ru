@@ -1,22 +1,26 @@
-﻿.. index::
-   single: Контроллер
-   single: MVC; Контроллер
+.. index::
+   single: Controller
+   single: MVC; Controller
 
 Контроллер
 ==========
 
-Вы все еще с нами после первых двух частей? Вы уже становитесь ярым приверженцем Symfony2! Без лишней суеты, давайте узнаем что контроллеры могут для вас сделать.
+Всё ещё с нами после первых двух частей? Вы становитесь ярым приверженцем Symfony2!
+Давайте, без лишней суеты, узнаем что контроллеры могут сделать для вас.
 
 .. index::
-   single: Форматы
-   single: Контроллер; Форматы
-   single: Маршрутизация; Форматы
-   single: Вид; Форматы
+   single: Formats
+   single: Controller; Formats
+   single: Routing; Formats
+   single: View; Formats
 
-Форматы
--------
+Использование форматов
+-------------
 
-В наши дни, web приложение должно иметь возможность доставлять пользователю больше чем просто HTML страницы. Начиная от XML для RSS потоков или Web Сервисов, до JSON для Ajax запросов, существует множество форматов на выбор. Symfony имеет встроенную поддержку этих форматов. Отредактируйте ``routing.yml`` и добавьте ``_format`` со значением ``xml``:
+В наши дни, web приложение должно уметь выдавать не только HTML страницы.
+Начиная с XML для RSS каналов и Web служб, заканчивая JSON для Ajax запросов,
+существует множество различных форматов. Поддержка этих форматов в Symfony2
+проста. Измените ``routing.yml``, добавив ``_format`` со значением ``xml``:
 
 .. configuration-block::
 
@@ -38,12 +42,12 @@
     .. code-block:: php
 
         // src/Application/HelloBundle/Resources/config/routing.php
-        $collection->addRoute('hello', new Route('/hello/:name', array(
+        $collection->add('hello', new Route('/hello/:name', array(
             '_controller' => 'HelloBundle:Hello:index',
             '_format'     => 'xml',
         )));
 
-Затем, добавьте шаблон ``index.xml.php`` рядом с ``index.php``:
+Затем, наряду с ``index.php`` добавьте шаблон ``index.xml.php``:
 
 .. code-block:: xml+php
 
@@ -52,7 +56,10 @@
         <name><?php echo $name ?></name>
     </hello>
 
-Это все что нужно сделать. Не требуется даже менять контроллер. Для стандартных форматов, Symfony автоматически будет выбирать лучший ``Content-Type`` заголовок для ответа. Если вам необходима поддержка различных форматов в одном действии, используйте в выражении pattern модификатор ``:_format``:
+Вот и всё что для этого нужно. Нет нужды изменять контроллер. Для стандартных
+форматов Symfony2 автоматически подбирает заголовок ``Content-Type`` для ответа.
+Если хотите поддержку форматов лишь для одного действия, тогда используйте
+заполнитель ``:_format`` в паттерне:
 
 .. configuration-block::
 
@@ -76,59 +83,67 @@
     .. code-block:: php
 
         // src/Application/HelloBundle/Resources/config/routing.php
-        $collection->addRoute('hello', new Route('/hello/:name.:_format', array(
+        $collection->add('hello', new Route('/hello/:name.:_format', array(
             '_controller' => 'HelloBundle:Hello:index',
             '_format'     => 'html',
         ), array(
             '_format' => '(html|xml|json)',
         )));
 
-Контроллер теперь будет вызван для URL-адресов вида ``/hello/Fabien.xml`` или
-``/hello/Fabien.json``. В качестве значения по умолчанию для ``_format`` используется ``html``, ``/hello/Fabien`` и ``/hello/Fabien.html`` оба используют ``html`` формат.
+Таким образом контроллер будет вызыван для следующих URL:: ``/hello/Fabien.xml``
+или ``/hello/Fabien.json``. ``html`` это первоначальное значение для ``_format``,
+т. е. ``/hello/Fabien`` и ``/hello/Fabien.html`` оба соотвествуют формату ``html``.
 
-Ключ ``requirements`` определяет регулярное выражение, под которое должна подпадать переменная подстановки. В этом примере, если вы захотите вызвать ``/hello/Fabien.js``, вы получите ошибку HTTP 404, так как он не соответствует требованиям для ``_format``.
+Запись ``requirements`` устанавилвает регулярные выражения, которым должны
+соотвествовать заполнители. Если в этом примере запросить ресурс ``/hello/Fabien.js``
+вы получите ошибку 404 HTTP, потому что он не удовлетворяет тербованию для ``_format``.
 
 .. index::
-   single: Ответ
+   single: Response
 
-Объект Ответа
+Объект Response
 -------------------
 
-Теперь, давайте вернемся к контроллеру ``Hello``::
+Теперь, давайте вернёмся к контроллеру ``Hello``::
 
     // src/Application/HelloBundle/Controller/HelloController.php
 
     public function indexAction($name)
     {
-        return $this->render('HelloBundle:Hello:index', array('name' => $name));
+        return $this->render('HelloBundle:Hello:index.php', array('name' => $name));
     }
 
-Метод ``render()`` осущевляет отображение шаблона и возвращает объект ``Response``. Ответ может быть донастроен перед отправкой браузеру, например, для изменения значения ``Content-Type``::
+Метод ``render()`` заполняет шаблон и возвращает объект ``Response``. Ответ может
+быть оптимизирован, перед тем как отправится в браузер, допустим, чтобы изменить
+``Content-Type``::
 
     public function indexAction($name)
     {
-        $response = $this->render('HelloBundle:Hello:index', array('name' => $name));
+        $response = $this->render('HelloBundle:Hello:index.php', array('name' => $name));
         $response->headers->set('Content-Type', 'text/plain');
 
         return $response;
     }
 
-Для простейших шаблонов, вы даже можете создать объект ``Response`` вручную и сэкономить этим несколько миллисекунд::
+Для простейших шаблонов, вы даже можете создать объект ``Response`` вручную и
+сэкономить этим несколько миллисекунд::
 
     public function indexAction($name)
     {
         return $this->createResponse('Hello '.$name);
     }
 
-Это действительно полезно, когда контроллер должен отправить JSON ответ на Ajax запрос.
+Это действительно полезно, когда контроллер должен отправить JSON ответ на Ajax
+запрос.
 
 .. index::
-   single: Исключения
+   single: Exceptions
 
-Управление Ошибками
+Управление ошибками
 -------------------
 
-Когда что-либо не найдено, вам следует хорошо поиграться с HTTP протоколом и вернуть ответ 404. Это легко сделать путем вызова встроенного HTTP исключения::
+Когда что-нибудь не найдено, вы должны вести честную игру с протоколом HTTP и
+вернуть ответ 404. Это легко сделать выдав встроенное исключение для HTTP::
 
     use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -142,38 +157,43 @@
         return $this->render(...);
     }
 
-``NotFoundHttpException`` вернет браузеру ответ HTTP 404. Похожим образом, ``ForbiddenHttpException`` вернет ошибку 403 и ``UnauthorizedHttpException`` вернет ответ 401. Для любых других кодов ошибок HTTP, вы можете использовать базовый класс ``HttpException`` и передавать код HTTP ошибки в качестве кода исключения::
-
-    throw new HttpException('Unauthorized access.', 401);
+``NotFoundHttpException`` вернёт в браузер ответ 404 HTTP.
 
 .. index::
-   single: Controller; Перемещение
-   single: Controller; Перенаправление
+   single: Controller; Redirect
+   single: Controller; Forward
 
-Перемещения и Перенаправления
+Перемещения и перенаправления
 -----------------------------
 
-Если вы хотите переместить пользователя на другую страницу, используйте метод ``redirect()``::
+Если вы хотите переместить пользователя на другую страницу, используйте метод
+``redirect()``::
 
     $this->redirect($this->generateUrl('hello', array('name' => 'Lucas')));
 
-Метод ``generateUrl()`` здесь - такой же метод как и ``generate()``, который мы использовали в хелпере маршрутизации ранее. Он принимает имя пути и массив параметров в качестве аргументов и возвращает соответствующий дружественный URL.
+``generateUrl()`` такой же метод как и ``generate()``, который мы применяли ранее в
+хелпере ``router``. Он получает имя маршрута и массив параметров как аргументы
+и возвращает ассоциированный дружественный URL.
 
-Вы также легко можете перенаправить одно действие на другое при помощи метода ``forward()``. Как и для хелпера ``$view['actions']``, он выполняет внутренний подзапрос, но он возвращает объект ``Response`` для возможности дальнейшей модификации при необходимости::
+Также вы можете легко переместить одно действие на другое с помощью метода
+``forward()``. Как и для хелпера ``actions``, он применяет внутренний подзапрос,
+но возвращает объект ``Response``, что позволяет в дальнейшем его изменить если
+возникнет необходимость::
 
     $response = $this->forward('HelloBundle:Hello:fancy', array('name' => $name, 'color' => 'green'));
 
     // do something with the response or return it directly
 
 .. index::
-   single: Запрос
+   single: Request
 
-Объект Запроса
+Объект Request
 ------------------
 
-Кроме значений переменных подстановки в маршрутах, у контроллера также есть доступ к объекту запроса ``Request``::
+Помимо значений заполнителей для маршрутизации, контроллер имеет доступ к
+объекту ``Request``::
 
-    $request = $this['request'];
+    $request = $this->get('request');
 
     $request->isXmlHttpRequest(); // is it an Ajax request?
 
@@ -183,7 +203,7 @@
 
     $request->request->get('page'); // get a $_POST parameter
 
-В шаблоне вы также можете получить доступ к объекту запроса через хелпер ``request``:
+В шаблоне получить доступ к объекту ``Request`` можно через хелпер ``request``::
 
 .. code-block:: html+php
 
@@ -192,29 +212,38 @@
 Сессия
 -----------
 
-Даже если у HTTP протокола нет поддержки состояний, Symfony снабжен изящным объектом сессии,
-которая представляет собой клиента (будь то реальный человек, использующий браузер, бот, или web сервис). Между двумя запросами, Symfony сохраняет атрибуты в cookie путем встроенного в PHP механизма сессий.
+Протокол HTTP не имеет состояний, но Symfony2 предоставляет удобный объект
+сиссии, который представляет клиента (будь он человеком, использующим браузер,
+ботом или web службой). Между двумя запросами Symfony2 хранит атрибуты в cookie,
+используя родные сессии из PHP.
 
-Сохранение и извлечение информации из сессии может быть легко произведено из любого контроллера::
+Сохранение и получение информации из сессии легко выполняется из любого
+контроллера::
+
+    $session = $this->get('request')->getSession();
 
     // store an attribute for reuse during a later user request
-    $this['request']->getSession()->set('foo', 'bar');
+    $session->set('foo', 'bar');
 
     // in another controller for another request
-    $foo = $this['request']->getSession()->get('foo');
+    $foo = $session->get('foo');
 
-    // get/set the user culture
-    $this['request']->getSession()->setLocale('fr');
+    // set the user locale
+    $session->setLocale('fr');
 
-Вы также можете хранить небольшие сообщения, которые будут доступны только в ближайших запросах::
+Также можно хранить небольшие сообщения, которые будут доступны для следующего
+запроса::
 
     // store a message for the very next request (in a controller)
-    $this['session']->setFlash('notice', 'Congratulations, your action succeeded!');
+    $session->setFlash('notice', 'Congratulations, your action succeeded!');
 
     // display the message back in the next request (in a template)
     <?php echo $view['session']->getFlash('notice') ?>
 
-Заключительное Слово
+Заключительное слово
 --------------------
 
-Вот и все что хотелось рассказать, и я даже не уверен, что мы использовали все отведенные 10 минут. В предыдущей части мы видели, как расширить систему шаблонов при помощи хелперов. Но в Symfony2 все может быть расширено или заменено при помощи бандлов. Это и есть тема следующей части данного руководства.
+Вот и всё что хотелось рассказать, и я даже уверен, что мы не использовали все
+отведённые 10 минут. В предыдущей части мы рассмотрели как расширить систему
+шаблонов при помощи хелперов. Но в Symfony2 всё может быть расширено или
+заменено с помощью бандлов. Это и есть тема следующей части руководства.

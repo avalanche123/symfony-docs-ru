@@ -1,14 +1,14 @@
-﻿Быстрый Тур
+Краткий тур
 ==========
 
-Начните работу быстрее с Быстрым Туром по Symfony2:
+Быстрый старт с кратким туром по Symfony2:
 
 .. toctree::
    :maxdepth: 2
    :glob:
    :numbered:
 
-   the_big_picture
-   the_view
-   the_controller
-   the_architecture
+   ﻿Общая картина <the_big_picture>
+   Вид <the_view>
+   Контроллер <the_controller>
+   Архитектура <the_architecture>

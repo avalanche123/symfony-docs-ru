@@ -68,7 +68,7 @@
 
   * :doc:`Обзор </guides/internals/overview>` |
   * :doc:`Ядро </guides/internals/kernel>` |
-  * :doc:`Profiler </guides/internals/profiler>`
+  * :doc:`Профилировщик </guides/internals/profiler>`
 
 * :doc:`Symfony2 для пользователей symfony 1</guides/symfony1>`
 * :doc:`Symfony2 стабильный API</guides/stable_api>`

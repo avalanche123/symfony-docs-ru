@@ -5,6 +5,7 @@
    :maxdepth: 2
 
    Обзор <overview>
-   пользователи
-   аутентификация
-   авторизация
+   Пользователи <users>
+   Идентификация <authentication>
+   Авторизация <authorization>
+   acl
