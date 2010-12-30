@@ -1,39 +1,39 @@
-The Symfony2 Stable API
+Стабильный API для Symfony2
 =======================
 
-The Symfony2 stable API is a subset of all Symfony2 published public methods
-(components and core bundles) that share the following properties:
+Стабильный API это набор всех public методов Symfony2 (компонентов и бандлов
+ядра), которые соотвествуют следующим критериям:
 
-* The namespace and class name won't change;
-* The method name won't change;
-* The method signature (arguments and return value type) won't change;
-* The semantic of what the method does won't change.
+* пространство имён и имя класса не изменятся;
+* названия метода не изменится;
+* сигнатура (аргументы и возвращаемое значение) метода не изменится;
+* семантика того, что делает метод не изменится.
 
-The implementation itself can change though. The only valid case for a change
-in the stable API is in order to fix a security issue.
-
-.. note::
-
-    The stable API is based on a whitelist. Therefore, everything not listed
-    explicitly in this document is not part of the stable API.
+Хотя реализация может изменится. Единственный обоснованный случай для
+изменения в стабильном API это исправление проблемы безопасности.
 
 .. note::
 
-    This is a work in progress and the definitive list will be published when
-    Symfony2 final will be released. In the meantime, if you think that some
-    methods deserve to be in this list, please start a discussion on the
-    Symfony developer mailing-list.
+    Стабильное API основано на белом списке. Таким образом, всё что
+    не перечислено в этом документе не является частью стабильного API.
+
+.. note::
+
+    Список находится в стадии разработки, окончательный вариант опубликуют когда
+    будет выпущена финальная Symfony2. В то же время, если вы считаете что
+    некоторые методы заслуживают того чтобы быть в нём, пожалуйста, начните
+    обсуждение в Symfony developer mailing-list.
 
 .. tip::
 
-    Any method part of the stable API is marked as such on the Symfony2 API
-    website (has the ``@stable`` annotation).
+    Любой метод из стабильного API отмечен как таковой на сайте Symfony2 API
+    (имеет примечание ``@stable``).
 
 .. tip::
 
-    Any third party bundle should also publish its own stable API.
+    Любой сторонний бандл должен публиковать свой стабильный API.
 
-HttpKernel Component
+Компонент HttpKernel
 --------------------
 
 * HttpKernelInterface:::method:`Symfony\\Components\\HttpKernel\\HttpKernelInterface::handle`

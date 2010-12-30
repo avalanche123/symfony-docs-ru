@@ -1,7 +1,7 @@
 Doctrine
 ========
 
-Learn about the Doctrine integration with Symfony2:
+Узнайте об интеграции Doctrine в Symfony2:
 
 .. toctree::
     :maxdepth: 2

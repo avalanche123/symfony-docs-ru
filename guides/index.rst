@@ -1,7 +1,7 @@
-Guides
+Руководства
 ======
 
-Dive into Symfony2 with the topical guides:
+Погрузись в Symfony2 с актуальными руководствами:
 
 .. toctree::
     :hidden:

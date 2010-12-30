@@ -1,76 +1,76 @@
-* **Templating**:
+* **Шаблоны**:
 
-  * `Twig`_ | 
-  * :doc:`PHP </guides/templating/PHP>` | 
-  * :doc:`Recipes </guides/templating/recipes>`
+  * `Twig`_ |
+  * :doc:`PHP </guides/templating/PHP>` |
+  * :doc:`Рецепты </guides/templating/recipes>`
 
 * **Doctrine**:
 
-  * :doc:`DBAL </guides/doctrine/dbal/overview>` | 
-  * :doc:`ORM </guides/doctrine/orm/overview>` | 
-  * :doc:`Migrations </guides/doctrine/migrations/overview>` | 
+  * :doc:`DBAL </guides/doctrine/dbal/overview>` |
+  * :doc:`ORM </guides/doctrine/orm/overview>` |
+  * :doc:`Migrations </guides/doctrine/migrations/overview>` |
   * :doc:`MongoDB </guides/doctrine/mongodb-odm/overview>`
 
-* **Testing**:
+* **Тестирование**:
 
-  * :doc:`Overview </guides/testing/overview>` | 
-  * :doc:`Configuration </guides/testing/configuration>` | 
-  * :doc:`Crawler </guides/testing/crawler>` | 
-  * :doc:`Client </guides/testing/client>` | 
-  * :doc:`Recipes </guides/testing/recipes>`
+  * :doc:`Обзор </guides/testing/overview>` |
+  * :doc:`Настройка </guides/testing/configuration>` |
+  * :doc:`Crawler </guides/testing/crawler>` |
+  * :doc:`Client </guides/testing/client>` |
+  * :doc:`Рецепты </guides/testing/recipes>`
 
-* **Validation**:
+* **Валидация**:
 
-  * :doc:`Overview </guides/validator/overview>` | 
-  * :doc:`Validation </guides/validator/validation>` | 
-  * :doc:`/guides/validator/constraints`
+  * :doc:`Обзор </guides/validator/overview>` |
+  * :doc:`Проверка </guides/validator/validation>` |
+  * :doc:`Исключения </guides/validator/constraints>`
 
-* **Forms**:
+* **Формы**:
 
-  * :doc:`Overview </guides/forms/overview>` | 
-  * :doc:`Templates </guides/forms/view>`
+  * :doc:`Обзор </guides/forms/overview>` |
+  * :doc:`Шаблоны </guides/forms/view>`
 
-* **Security**:
+* **Безопасность**:
 
-  * :doc:`Overview </guides/security/overview>` | 
-  * :doc:`/guides/security/users` | 
-  * :doc:`/guides/security/authentication` | 
-  * :doc:`/guides/security/authorization`
+  * :doc:`Обзор </guides/security/overview>` |
+  * :doc:`Пользователи </guides/security/users>` |
+  * :doc:`Идентификация </guides/security/authentication>` |
+  * :doc:`Авторизация </guides/security/authorization>`
 
-* **Cache**:
+* **Кэширование**:
 
   * :doc:`/guides/cache/http`
 
 * :doc:`/guides/emails`
 * :doc:`/guides/translation`
-* **Event Dispatcher**:
+* **Диспетчер событий**:
 
-  * :doc:`Overview </guides/event/overview>` | 
-  * :doc:`Recipes </guides/event/recipes>`
+  * :doc:`Обзор </guides/event/overview>` |
+  * :doc:`Рецепты </guides/event/recipes>`
 
-* **Tools**:
+* **Инструменты**:
 
-  * :doc:`/guides/tools/autoloader` | 
-  * :doc:`Finder </guides/tools/finder>` | 
-  * :doc:`/guides/tools/YAML` | 
+  * :doc:`/guides/tools/autoloader` |
+  * :doc:`Finder </guides/tools/finder>` |
+  * :doc:`/guides/tools/YAML` |
   * :doc:`Process </guides/tools/process>`
 
-* **Bundles**:
+* **Бандлы**:
 
-  * :doc:`Best Practices </guides/bundles/best_practices>` | 
-  * :doc:`Configuration </guides/bundles/configuration>`
+  * :doc:`Наилучшее применение </guides/bundles/best_practices>` |
+  * :doc:`Настройка </guides/bundles/configuration>`
 
-* **Dependency Injection**:
+* **Внедрение зависимости**:
 
-  * :doc:`Extensions </guides/dependency_injection/extensions>`
+  * :doc:`Расширения </guides/dependency_injection/extensions>`
 
-* **Internals**:
+* **Внутренности**:
 
-  * :doc:`Overview </guides/internals/overview>` | 
-  * :doc:`Kernel </guides/internals/kernel>` | 
+  * :doc:`Обзор </guides/internals/overview>` |
+  * :doc:`Ядро </guides/internals/kernel>` |
   * :doc:`Profiler </guides/internals/profiler>`
 
-* :doc:`Symfony2 for symfony 1 users</guides/symfony1>`
-* :doc:`Symfony2 stable API</guides/stable_api>`
+* :doc:`Symfony2 для пользователей symfony 1</guides/symfony1>`
+* :doc:`Symfony2 стабильный API</guides/stable_api>`
 
 .. _Twig: http://www.twig-project.org/documentation
