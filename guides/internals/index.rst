@@ -1,9 +1,9 @@
-Symfony2 Internals
+Внутренности Symfony2
 ==================
 
 .. toctree::
    :maxdepth: 2
 
-   overview
-   kernel
-   profiler
+   Обзор <overview>
+   Ядро <kernel>
+   Профилировщик <profiler>

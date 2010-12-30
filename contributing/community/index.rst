@@ -1,4 +1,4 @@
-Contributing Code
+Содействие в коде
 =================
 
 .. toctree::

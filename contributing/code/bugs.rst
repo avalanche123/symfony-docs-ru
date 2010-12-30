@@ -1,34 +1,34 @@
-Reporting a Bug
+Сообщение об ошибке
 ===============
 
-Whenever you find a bug in Symfony2, we kindly ask you to report it. It helps
-us make a better Symfony2.
+Когда находите ошибку в Symfony2, любезно просим вас сообщить о ней. Это поможет
+сделать Symfony2 лучше.
 
 .. caution::
 
-    If you think you've found a security issue, please use the special
-    :doc:`procedure <security>` instead.
+    Если вы полагаете что нашли брешь в безопасности, воспользуйтесь специальной
+    :doc:`процедурой <security>`.
 
-Before submitting a bug:
+Перед отправкой ошибки:
 
- * Double-check the official `documentation`_ to see if you're not misusing the
-   framework;
+ * Дважды проверьте официальную `documentation`_ чтобы удостовериться что вы
+   правильно используете фреймворк;
 
- * Ask assistance on the `users mailing-list`_, the `forum`_, or on the
-   #symfony `IRC channel`_ if you're not sure if your issue is really a bug.
+ * Попросите содействия в `users mailing-list`_, на `forum`_ или
+   #symfony `IRC channel`_ если не уверены в том что это действительно ошибка.
 
-If your problem definitely looks like a bug, report it using the official bug
-`tracker`_ and follow some basic rules:
+Если проблема без сомнений выглядит как ошибка, сообщите о ней, используя
+`tracker`_ и соблюдая несколько основных правил:
 
- * Use the title field to clearly describe the issue;
+ * Используйте поле title чтобы чётко обозначить вопрос;
 
- * Describe the steps needed to reproduce the bug with short code examples
-   (providing a unit test that illustrates the bug is better);
+ * Опишите шаги, необходимые для воспроизведения ошибки с короткими примерами
+   кода (ещё лучше предоставить модульный тест, показывающий её);
 
- * Give as much details as possible about your environment (OS, PHP version,
-   Symfony version, enabled extensions, ...);
+ * Предоставьте как можно более детальную информацию о своём окружении (ОС,
+   версия PHP, версия Symfony, включённые расширения, ...);
 
- * *(optional)* Attach a :doc:`patch <patches>`.
+ * *(по усмотрению)* Прикрепите :doc:`патч <patches>`.
 
 .. _documentation: http://docs.symfony-reloaded.org/
 .. _users mailing-list: http://groups.google.com/group/symfony-users

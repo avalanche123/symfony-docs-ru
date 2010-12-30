@@ -1,8 +1,8 @@
-Event System
+Система событий
 ============
 
 .. toctree::
    :maxdepth: 2
 
-   Overview <overview>
-   recipes
+   Обзор <overview>
+   Рецепты <recipes>

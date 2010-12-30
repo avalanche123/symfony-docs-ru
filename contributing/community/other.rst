@@ -1,13 +1,13 @@
-Other Resources
+Другие источники
 ===============
 
-In order to follow what is happening in the community you might find helpful
-these additional resources:
+Чтобы быть в курсе того что происходит в сообществе, вам могут пригодиться
+эти дополнительные источники:
 
- * List of open `pull requests`_
- * List of recent `commits`_
- * List of open `bugs`_
- * List of open source `bundles`_
+ * Список открытых `pull requests`_
+ * Список последних `commits`_
+ * Список открытых `bugs`_
+ * Список open source `bundles`_
 
 .. _pull requests: https://github.com/fabpot/symfony/pulls
 .. _commits:       https://github.com/fabpot/symfony/commits/master

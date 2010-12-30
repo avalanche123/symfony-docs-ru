@@ -1,8 +1,8 @@
-Database Abstraction Layer
+Слой абстракции базы данных
 ==========================
 
 .. toctree::
    :maxdepth: 2
 
-   Overview <overview>
-   configuration
+   Обзор <overview>
+   Настройка <configuration>

@@ -1,7 +1,7 @@
-Database Migrations
+Перемещения базы данных
 ===================
 
 .. toctree::
    :maxdepth: 2
 
-   Overview <overview>
+   Обзор <overview>
