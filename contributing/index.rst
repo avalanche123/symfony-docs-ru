@@ -1,7 +1,7 @@
-Contributing
+Содействие
 ============
 
-Contribute to Symfony2:
+Помощь в разработке Symfony2:
 
 .. toctree::
     :hidden:
