@@ -1,28 +1,38 @@
-Аутентификация
+.. index::
+   single: Security; Authentication
+
+Идентификация
 ==============
 
-Аутентификация в Symfony2 регулируется системой Firewall. It is made of
-listeners that enforce security and redirect the user if his credentials are
-not available, not sufficient, or just wrong.
+Идентификация в Symfony2 регулируется системой Firewall. Она основана на
+обработчиках, которые следят за безопасностью и перенаправляют пользователя
+если его полномочия не доступны, не достаточны или попросту неправильны.
 
-.. совет::
+.. note::
 
-    Firewall реализован через событие ``core.security``, которое вызывается сразу после события
-    ``core.request``. Вся функциональность, о которой пойдет речь в этой части, реализована через
-    обработчики этого события.
+    Firewall реализован через событие ``core.security``, которое вызывается
+    сразу после события ``core.request``. Вся функциональность, о которой пойдёт
+    речь в этой части, реализована через обработчики этого события.
+
+.. index::
+   single: Security; Firewall
+  pair: Security; Configuration
 
 Карта Firewall
---------------
+----------------
 
-Firewall может быть настроен для защиты всего приложения, или может использовать различные стратегии аутентификации для различных частей приложения.
+Firewall может быть настроен для защиты всего приложения, также может использовать
+различные стратегии идентификации для различных частей приложения.
 
-Часто, web сайт может открыть публичную часть для всех, при этом защищая панель управления при помощи формы аутентификации, и защищая публичные API/Web Сервисы через базовую HTTP аутентификацию:
+Часто, web сайт открывает публичную часть для всех, при этом защищая панель
+управления с помощью формы идентификации, и защищает публичные API/Web Службы
+через базовую HTTP идентификацию:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 backend:
@@ -39,7 +49,7 @@ Firewall может быть настроен для защиты всего п�
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall pattern="/admin/.*">
                 <form-login />
@@ -53,7 +63,7 @@ Firewall может быть настроен для защиты всего п�
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'backend' => array('pattern' => '/admin/.*', 'http_basic' => true, 'logout' => true),
@@ -62,38 +72,44 @@ Firewall может быть настроен для защиты всего п�
             ),
         ));
 
-Каждая конфигурация firewall-а будет активирована когда входящий запрос совпадет с регулярным выражением, определенным в настройке ``pattern``. Этот шаблон должен совпадать с информацией о пути, содержащейся в запросе (``preg_match('#^'.PATTERN_VALUE.'$#', $request->getPathInfo())``.)
+Каждая конфигурация firewall-а активируется когда входящий запрос совпадёт с
+регулярным выражением, определённым в настройке ``pattern``. Этот шаблон должен
+совпадать с запрошенным путём
+(``preg_match('#^'.PATTERN_VALUE.'$#', $request->getPathInfo())``.)
 
-.. примечание::
+.. tip::
 
-    The definition order of firewall configurations is significant as Symfony2
-    will use the first configuration for which the pattern matches the request
-    (so you need to define more specific configurations first).
+    Важен порядок определения правил для фаервола, т. к. Symfony2
+    использует первую настройку, для которой паттерн соответствует запросу
+    (т. о. сначала определите более конкретные конфигурации).
 
-Механизмы аутентификации
-------------------------
+.. index::
+   pair: Security; Configuration
 
-Out of the box, Symfony2 supports the following authentication mechanisms:
+Механизмы идентификации
+-------------------------
+
+Symfony2 поставляется с поддержкой следующих механизмов идентификации:
 
 * HTTP Basic;
 * HTTP Digest;
-* Form based authentication;
-* X.509 certificates;
-* Anonymous authentication.
+* Идентификация через форму;
+* X.509 сертификаты;
+* Анонимная идентификация.
 
-Each authentication mechanism consists of two classes that makes it work: a
-listener and an entry point. The *listener* tries to authenticate incoming
-requests. When the user is not authenticated or when the listener detects
-wrong credentials, the *entry point* creates a response to send feedback to
-the user and to provide a way for him to enter his credentials.
+Каждый механизм состоит из двух классов, выполняющих его работу: слушатель
+и точка входа. *Слушатель* пытается идентифицировать запросы. Если пользователь
+не идентифицирован или если слушатель обнаружит неправильные полномочия,
+*точка входа* создаст ответ чтобы выдать ответную реакцию пользователю и
+предоставить ему возможность войти в свои полномочия.
 
-You can configure a firewall to use more than one authentication mechanisms:
+Вы можете настроить фаервол для использования более одного механизма идентификации:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 backend:
@@ -105,7 +121,7 @@ You can configure a firewall to use more than one authentication mechanisms:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall pattern="/admin/.*">
                 <x509 />
@@ -117,7 +133,7 @@ You can configure a firewall to use more than one authentication mechanisms:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'backend' => array(
@@ -130,27 +146,36 @@ You can configure a firewall to use more than one authentication mechanisms:
             ),
         ));
 
-A user accessing a resource under ``/admin/`` will be able to provide a valid
-X.509 certificate, an Authorization HTTP header, or use a form to login.
+Пользователь, проникающий в ресурсы ``/admin/``, должен предоставить либо
+сертификат X.509, либо заголовок Authorization HTTP, а также может использовать
+форму входа.
 
 .. note::
 
-    When the user is not authenticated and if there is more than one
-    authentication mechanisms, Symfony2 automatically defines a default entry
-    point (in the example above, the login form; but if the user send an
-    Authorization HTTP header with wrong credentials, Symfony2 will use the
-    HTTP basic entry point.)
+    Когда пользователь не идентифицирован и установлено более одного механизма
+    идентификации, Symfony2 автоматически определяет точку входа по умолчанию
+    (в предыдущем примере, ею будет форма входа; но если пользователь отправит
+    заголовок Authorization HTTP с неправильными полномочиями, Symfony2 будет
+    использовать точку входа HTTP Basic).
+
+.. note::
+
+    Идентификация HTTP Basic применяется повсюду, но не безопасна. HTTP Digest
+    более защищена, не очень везде применима на практике.
+
+.. index::
+   single: Security; HTTP Basic
 
 HTTP Basic
 ~~~~~~~~~~
 
-Configuring HTTP basic authentication is as simple as it can get:
+Настроить идентификацию HTTP basic очень просто:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -158,7 +183,7 @@ Configuring HTTP basic authentication is as simple as it can get:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <http-basic />
@@ -167,23 +192,26 @@ Configuring HTTP basic authentication is as simple as it can get:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main' => array('http_basic' => true),
             ),
         ));
 
+.. index::
+   single: Security; HTTP Digest
+
 HTTP Digest
 ~~~~~~~~~~~
 
-Configuring HTTP digest authentication is as simple as it can get:
+Настроить идентификацию HTTP digest очень просто:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -191,7 +219,7 @@ Configuring HTTP digest authentication is as simple as it can get:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <http-digest />
@@ -200,7 +228,7 @@ Configuring HTTP digest authentication is as simple as it can get:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main' => array('http_digest' => true),
@@ -209,19 +237,21 @@ Configuring HTTP digest authentication is as simple as it can get:
 
 .. caution::
 
-    To use HTTP Digest, you must store the user passwords in clear.
+    Используя HTTP Digest, храните пароли пользователей в открытом виде.
 
-Form based authentication
+.. index::
+   single: Security; Form based
+
+Идентификация через форму
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Form based authentication is the most used authentication mechanism on the Web
-nowadays:
+Идентификация через форму - наиболее используемый механизм в Web на сегодня:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -229,7 +259,7 @@ nowadays:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <form-login />
@@ -238,19 +268,19 @@ nowadays:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main' => array('form_login' => true),
             ),
         ));
 
-When the user is not authenticated, he is redirected to the ``login_path`` URL
-(``/login`` by default).
+Если пользователь не идентифицирован, он перенаправляется на URL ``login_path``
+(``/login`` по умолчанию).
 
-This listener relies on a form to interact with the user. It handles the form
-submission automatically but not its display; so you must implement that part
-yourself::
+Этот прослушиватель полагается на форму для взаимодействия с пользователем. Он
+обрабатывает передачу формы автоматически, но не её отображение; т. о. вы должны
+выполнить эту задачу самостоятельно:
 
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Symfony\Component\Security\SecurityContext;
@@ -260,42 +290,61 @@ yourself::
         public function loginAction()
         {
             // get the error if any (works with forward and redirect -- see below)
-            if ($this['request']->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-                $error = $this['request']->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+            if ($this->get('request')->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+                $error = $this->get('request')->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
             } else {
-                $error = $this['request']->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
+                $error = $this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
             }
 
             return $this->render('SecurityBundle:Security:login.php', array(
                 // last username entered by the user
-                'last_username' => $this['request']->getSession()->get(SecurityContext::LAST_USERNAME),
+                'last_username' => $this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
                 'error'         => $error,
             ));
         }
     }
 
-And the corresponding template::
+И соотвествующий шаблон:
 
-    <?php if ($error): ?>
-        <div><?php echo $error ?></div>
-    <?php endif; ?>
+.. configuration-block::
 
-    <form action="/_login_check" method="post">
-        <label for="username">Username:</label>
+    .. code-block:: html+php
 
-        <input type="text" id="username" name="_username" value="<?php echo $last_username ?>" />
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password" />
+        <?php if ($error): ?>
+            <div><?php echo $error ?></div>
+        <?php endif; ?>
 
-        <input type="submit" name="login" />
-    </form>
+        <form action="<?php echo $view['router']->generate('_security_check') ?>" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="_username" value="<?php echo $last_username ?>" />
 
-The template must have a ``_username`` and ``_password`` fields, and the form
-submission URL must be the value of the ``check_path`` setting
-(``/login_check`` by default).
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="_password" />
 
-Finally, you will need to route the controller to the ``/login`` URL
-(``login_path`` value):
+            <input type="submit" name="login" />
+        </form>
+
+    .. code-block:: jinja
+
+        {% if error %}
+            <div>{{ error }}</div>
+        {% endif %}
+
+        <form action="{{ path('_security_check') }}" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="_username" value="{{ last_username }}" />
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="_password" />
+
+            <input type="submit" name="login" />
+        </form>
+
+Шаблон должен иметь поля ``_username`` и ``_password``, в форме URL для передачи
+должен быть значением настройки ``check_path`` (``/login_check`` по умолчанию).
+
+Наконец, добавьте URL маршруты для ``/login`` (значение ``login_path``) и
+``/login_check`` (значение ``login_check``):
 
 .. code-block:: xml
 
@@ -303,40 +352,44 @@ Finally, you will need to route the controller to the ``/login`` URL
         <default key="_controller">SecurityBundle:Security:login</default>
     </route>
 
-After an authentication failure, the user is redirected to the login page. You
-can use forward instead by setting the ``failure_forward`` to ``true``. You
-can also redirect or forward to another page if you set the ``failure_path``
-setting.
+    <route id="_security_check" pattern="/login_check" />
 
-After a successful authentication, the user is redirected based on the
-following algorithm:
+После неудачной идентификации пользователь переадресовывается на страницу входа.
+Вместо этого можно использовать перенаправление установив ``failure_forward`` в
+значение ``true``. Также можно переадресовать или перенаправить на другую
+страницу, если указать``failure_path``.
 
-* if ``always_use_default_target_path`` is ``true`` (``false`` is the
-  default), redirect to the ``default_target_path`` (``/`` by default);
+После удачной идентификации пользователь переадресовывается согласно следующему
+алгоритму:
 
-* if the request contains a parameter named ``_target_path`` (configurable via
-  ``target_path_parameter``), redirect the user to this parameter value;
+* Если ``always_use_default_target_path`` равно ``true`` (``false`` по умолчанию),
+  переадресовывает пользователя на ``default_target_path`` (``/`` по умолчанию);
 
-* if there is a target URL stored in the session (which is done automatically
-  when a user is redirected to the login page), redirect the user to that URL;
+* Если запрос содержит параметр, названный ``_target_path`` (настраивается через
+  ``target_path_parameter``), то переадресовывает пользователя на адрес, указанный
+  в нём;
 
-* if ``use_referer`` is set to ``true`` (``false`` is the default), redirect
-  the use to the Referrer URL;
+* Если целевой URL хранится в сессии (это делается автоматически когда
+  пользователь переадресовывается на страницу входа), то переадресовывает
+  пользователя на этот URL;
 
-* Redirect the user to the ``default_target_path`` URL (``/`` by default).
+* Если ``use_referer`` равно ``true`` (``false`` по умолчанию), то переадресовывает
+  пользователя на Referrer URL;
+
+* Переадресовывает пользователя на ``default_target_path`` URL (``/`` по умолчанию).
 
 .. note::
 
-    All URLs must be path info values or absolute URLs.
+    Все URL-ы должны быть значениями path info или абсолютными URL-ами.
 
-The default values for all settings are the most sensible ones, but here is a
-configuration example that shows how to override them all:
+Первоначальные значения для всех настроек являются наиболее точными, но вот
+пример конфигурации, показывающий как их можно переопределить:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -351,7 +404,7 @@ configuration example that shows how to override them all:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <form-login
@@ -368,7 +421,7 @@ configuration example that shows how to override them all:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main' => array('form_login' => array(
@@ -383,16 +436,20 @@ configuration example that shows how to override them all:
             ),
         ));
 
-X.509 Certificates
+.. index::
+   single: Security; X.509 certificates
+
+X.509 сертификаты
 ~~~~~~~~~~~~~~~~~~
 
-X.509 certificates are a great way to authenticate users if you know them all:
+X.509 сертификаты отличный способ идентификации пользователей если все они вам
+известны:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -400,7 +457,7 @@ X.509 certificates are a great way to authenticate users if you know them all:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <x509 />
@@ -409,17 +466,17 @@ X.509 certificates are a great way to authenticate users if you know them all:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main' => array('x509' => true),
             ),
         ));
 
-As Symfony2 does not validate the certificate itself, and because obviously it
-cannot enforce the password, you must first configure your web server
-correctly before enabling this authenticating mechanism. Here is a simple but
-working configuration for Apache:
+Так как Symfony2 не проверяет сертификаты самостоятельно, потому что он не
+сможет усилить пароль, вам придётся правильно настроить web сервер перед
+включением это механизма идентификации. Вот простой, но рабочий пример
+конфигурации для Apache:
 
 .. code-block:: xml
 
@@ -427,7 +484,7 @@ working configuration for Apache:
         ServerName intranet.example.com:443
 
         DocumentRoot "/some/path"
-        DirectoryIndex index.php
+        DirectoryIndex app.php
         <Directory "/some/path">
             Allow from all
             Order allow,deny
@@ -443,27 +500,32 @@ working configuration for Apache:
         SSLVerifyDepth 1
     </VirtualHost>
 
-By default, the username is the email declared in the certificate (the value
-of the ``SSL_CLIENT_S_DN_Email`` environment variable.)
+Первоначально username это email, указанный в сертификате (значение
+переменной окружения ``SSL_CLIENT_S_DN_Email``).
 
 .. tip::
 
-    Certificate authentication only works when the user access the application
-    via HTTPS.
+    Идентификация через сертификат работает только когда пользователь обращается
+    к приложению через HTTPS.
 
-Anonymous Users
+.. index::
+   single: Security; Anonymous Users
+
+Анонимные пользователи
 ~~~~~~~~~~~~~~~
 
-When you disable security, no user is attached to the request anymore. If you
-still want one, you can activate anonymous users. An anonymous user is not
-authenticated and "real" authentication occurs whenever the user wants to
-access a resource restricted by an access control rule:
+Когда отключается безопасность, то больше ни один из пользователей не
+прикрепляется к запросу. Но если вы всё же хотите этого, активизируйте анонимных
+пользователей. Анонимный это идентифицированный пользователь, но имеющий только
+одну роль ``IS_AUTHENTICATED_ANONYMOUSLY``. "Настоящая" идентификация происходит
+только тогда, когда пользователь допускается к ресурсам, ограниченным более
+жёсткими правилами контроля:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -471,7 +533,7 @@ access a resource restricted by an access control rule:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <anonymous />
@@ -480,38 +542,36 @@ access a resource restricted by an access control rule:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main' => array('anonymous' => true),
             ),
         ));
 
-You can check if a user is fully-authenticated with the ``isAuthenticated()``
-of the security context:
+Так как анонимные пользователи идентифицированы, то метод ``isAuthenticated()``
+возвращает ``true``. Чтобы проверить анонимный ли пользователь, проверяйте роль
+``IS_AUTHENTICATED_ANONYMOUSLY`` (помните, все не анонимные пользователи
+имеют роль ``IS_AUTHENTICATED_FULLY``).
 
-    $container->get('security.context')->isAuthenticated();
+.. index::
+   single: Security; Stateless Authentication
 
-.. tip::
-
-    All anonymous users automatically have the 'IS_AUTHENTICATED_ANONYMOUSLY'
-    role.
-
-Stateless Authentication
+Stateless идентификация
 ------------------------
 
-By default, Symfony2 relies on a cookie (the Session) to persist the security
-context of the user. But if you use certificates or HTTP authentication for
-instance, persistence is not needed as credentials are available for each
-request. In that case, and if you don't need to store anything else between
-requests, you can activate the stateless authentication (which means that no
-cookie will be ever created by Symfony2):
+Первоначально Symfony2 полагается на cookie (Session) чтобы сохранять контекст
+безопасности пользователя. Но если вы используете сертификаты или идентификацию
+через HTTP, то в сохранении нет необходимости т. к. полномочия доступны каждому
+запросу. В этом случае, а также если вам не надо хранить что-либо между
+запросами, можете активировать stateless идентификацию (это значит что ни один
+cookie не будет создан Symfony2):
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -520,7 +580,7 @@ cookie will be ever created by Symfony2):
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall stateless="true">
                 <http-basic />
@@ -529,7 +589,7 @@ cookie will be ever created by Symfony2):
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main' => array('http_basic' => true, 'stateless' => true),
@@ -538,22 +598,25 @@ cookie will be ever created by Symfony2):
 
 .. note::
 
-    If you use a form login, Symfony2 will create a cookie even if you set
-    ``stateless`` to ``true``.
+    Если используется вход через форму, Symfony2 создаст cookie даже если
+    ``stateless`` равно ``true``.
 
-Impersonating a User
+.. index::
+   single: Security; Impersonating
+
+Обезличивание пользователя
 --------------------
 
-Sometimes, it's useful to be able to switch from one user to another without
-having to logout and login again (for instance when you are debugging or try
-to understand a bug a user see and you cannot reproduce.) This can be easily
-done by activating the ``switch-user`` listener:
+Иногда полезно переключаться с одного пользователя на другого без выхода из
+системы и повторного входа (например, когда вы занимаетесь отладкой или пытаетесь
+понять ошибку, которую видит пользователь, но не можете её воспроизвести). Это
+делается через простую активацию прослушивателя ``switch-user``::
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -562,7 +625,7 @@ done by activating the ``switch-user`` listener:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <http-basic />
@@ -572,32 +635,33 @@ done by activating the ``switch-user`` listener:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main'=> array('http_basic' => true, 'switch_user' => true),
             ),
         ));
 
-To switch to another user, just add a query string with the ``_switch_user``
-parameter and the username as the value to the current URL:
+Переключение на другого пользователя осуществляется через параметр ``_switch_user``
+строки запроса для данного URL со значением равным username:
 
     http://example.com/somewhere?_switch_user=thomas
 
-To switch back to the original user, use the special ``_exit`` username:
+Чтобы обратно переключиться используйте специальный username равный ``_exit``:
 
     http://example.com/somewhere?_switch_user=_exit
 
-Of course, this feature needs to be made available to a small group of users.
-By default, access is restricted to users having the 'ROLE_ALLOWED_TO_SWITCH'
-role. Change the default role with the ``role`` setting and for extra
-security, also change the parameter name via the ``parameter`` setting:
+Эта возможность должна быть доступна лишь небольшой группе пользователей.
+Первоначально доступ ограничен пользователями, имеющими роль
+'ROLE_ALLOWED_TO_SWITCH'. Замените первоначальную роль через настройку ``role``
+для дополнительной безопасности, также измените имя параметра через настройку
+``parameter``::
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -606,7 +670,7 @@ security, also change the parameter name via the ``parameter`` setting:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <http-basic />
@@ -616,7 +680,7 @@ security, also change the parameter name via the ``parameter`` setting:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main'=> array(
@@ -626,17 +690,20 @@ security, also change the parameter name via the ``parameter`` setting:
             ),
         ));
 
-Logout Users
+.. index::
+   single: Security; Logout
+
+Выход пользователей из системы
 ------------
 
-If you want to provide a way for your users to logout, activate the logout
-listener:
+Если хотите предоставить пользователям возможность выйти, то активируйте
+прослушиватель logout:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -645,7 +712,7 @@ listener:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <http-basic />
@@ -655,31 +722,31 @@ listener:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main'=> array('http_basic' => true, 'logout' => true),
             ),
         ));
 
-By default, users are logged out when they access ``/logout`` path and they
-are redirected to ``/``. This can be easily changed via the ``path`` and
-``target`` settings:
+По умолчанию пользователи выходят из системы когда запрашивают путь ``/logout``
+и они переадресовываются на ``/``. Это легко изменяется через настройки ``path``
+и ``target``::
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
                     http_basic: true
-                    logout:     { path: /signout, target: signin }
+                    logout:     { path: /signout, target: /signin }
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <http-basic />
@@ -689,7 +756,7 @@ are redirected to ``/``. This can be easily changed via the ``path`` and
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main'=> array(
@@ -698,19 +765,19 @@ are redirected to ``/``. This can be easily changed via the ``path`` and
             ),
         ));
 
-Authentication and User Providers
+Идентификация и провайдеры пользователя
 ---------------------------------
 
-By default, a firewall uses the first declared user provider for
-authentication. But if you want to use different user providers for different
-parts of your website, you can explicitly change the user provider for a
-firewall, or just for an authentication mechanism:
+Изначально фаервол использует первый объявленный ползовательский провайдер для
+идентификации. Но если вы хотите использовать различные провайдеры для разных
+частей web сайта, то можете явно указать их для фаервола или хотя бы для
+механизма идентификации:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             providers:
                 default:
@@ -734,7 +801,7 @@ firewall, or just for an authentication mechanism:
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <provider name="default">
                 <password-encoder>sha1</password-encoder>
@@ -757,7 +824,7 @@ firewall, or just for an authentication mechanism:
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'providers' => array(
                 'default' => array(
@@ -773,7 +840,7 @@ firewall, or just for an authentication mechanism:
                 'backend' => array(
                     'pattern' => '/admin/.*',
                     'x509' => array('provider' => 'certificate'),
-                    'form-login' => array(provider' => 'default')
+                    'form-login' => array('provider' => 'default')
                     'logout' => true,
                 ),
                 'api' => array(
@@ -785,14 +852,14 @@ firewall, or just for an authentication mechanism:
             ),
         ));
 
-In the above example, ``/admin/.*`` URLs accepts users from the
-``certificate`` user provider when using X.509 authenticating, and the
-``default`` provider when the user signs in with a form. The ``/api/.*`` URLs
-uses the ``default`` provider for all authentication mechanisms.
+В этом примере ``/admin/.*`` URL-ы принимают пользователей от провайдера
+``certificate``, когда используется идентификация X.509, и от провайдера ``default``,
+когда пользователь входит через форму. ``/api/.*`` URL-ы используют ``default``
+провайдер для всех механизмов идентификации.
 
 .. note::
 
-    The listeners do not use the user providers directly, but authenticating
-    providers. They do the actual authentication, like checking the password,
-    and they can use a user provider for that (this is not the case for the
-    anonymous authentication provider for instance).
+    Прослушиватели не используют провайдеры пользователей напрямую, но
+    идентифицируют через провайдеров. Они делают текущую идентификацию, такую
+    как проверка пароля, и могут использовать для этого провайдер пользователя
+    (провайдер анонимной идентификации это не тот случай).

@@ -222,7 +222,7 @@ Symfony2 поставляется со множеством специльных
 
 .. code-block:: jinja
 
-    <a href="{% path 'hello' with { 'name': 'Thomas' } %}">Greet Thomas!</a>
+    <a href="{{ path('hello', { 'name': 'Thomas' }) }}">Greet Thomas!</a>
 
 Тег ``path`` использует имя маршрута и массив параметров как аргументы.
 Имя маршрута это основа, в соотвествии с которой выбираются маршруты, а

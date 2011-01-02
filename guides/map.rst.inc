@@ -35,7 +35,9 @@
   * :doc:`Обзор </guides/security/overview>` |
   * :doc:`Пользователи </guides/security/users>` |
   * :doc:`Идентификация </guides/security/authentication>` |
-  * :doc:`Авторизация </guides/security/authorization>`
+  * :doc:`Авторизация </guides/security/authorization>` |
+  * :doc:`ACL </guides/security/acl>` |
+  * :doc:`Продвинутые ACL </guides/security/acl_advanced>`
 
 * **Кэширование**:
 
