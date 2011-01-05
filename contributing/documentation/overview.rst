@@ -1,24 +1,24 @@
-Contributing to the Documentation
+Содействие в документации
 =================================
 
-Documentation is as important as code. It follows the exact same principles:
-DRY, tests, ease of maintenance, extensibility, optimization, and refactoring
-just to name a few. And of course, documentation has bugs, typos, hard to read
-tutorials, and more.
+Документация также важна как и код. Она следует тем же принципам:
+DRY, тесты, простота в обслуживании, расширяемость, оптимизация и рефакторинг
+вот некоторые из них. И конечно же документация имеет ошибки, опечатки, 
+трудночитаемые инструкции и т. д.
 
-Contributing
+Содействие
 ------------
 
-Before contributing, you need to become familiar with the :doc:`markup
-language <format>` used by the documentation.
+Перед содействием вам необходимо ознакомиться с :doc:`языком разметки <format>`,
+используемым в документации.
 
-The Symfony2 documentation is hosted in a Git repository:
+Документация Symfony2 располагается в Git репозитории:
 
 .. code-block:: bash
 
     git://github.com/symfony/symfony-docs.git
 
-If you want to submit a patch, clone the official documentation repository:
+Если вы хотите прислать патч, клонируйте официальный репозиторий с документацией:
 
 .. code-block:: bash
 
@@ -26,22 +26,22 @@ If you want to submit a patch, clone the official documentation repository:
 
 .. note::
 
-    The Symfony2 documentation is licensed under a Creative Commons
-    Attribution-Share Alike 3.0 Unported :doc:`License <license>`.
+    Документация Symfony2 выходит под :doc:`лицензией <license>` Creative Commons
+    Attribution-Share Alike 3.0 Unported.
 
-Reporting an Issue
+Сообщение об ошибке
 ------------------
 
-The most easy contribution you can make is reporting issues: a typo, a grammar
-mistake, a bug in code example, a missing explanation, and so on.
+Самое простое содействие что вы можете оказать это сообщение об: опечатке, 
+грамматической ошибке, ошибке в примере кода, отсутствующем пояснении и т. д.
 
-Steps:
+Шаги:
 
-* Submit a bug in the bug tracker;
+* Сообщить об ошибке в баг трекер;
 
-* *(optional)* Submit a patch.
+* *(по желанию)* Прислать патч.
 
-Translating
+Перевод
 -----------
 
-Read the dedicated :doc:`document <translations>`.
+Прочитайте посвящённый этому :doc:`документ <translations>`.

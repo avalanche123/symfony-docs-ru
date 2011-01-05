@@ -1,10 +1,10 @@
-Contributing Documentation
+Содействие в документации
 ==========================
 
 .. toctree::
     :maxdepth: 2
 
-    overview
-    format
-    translations
-    license
+    Обзор <overview>
+    Формат <format>
+    Переводы <translations>
+    Лицензия <license>

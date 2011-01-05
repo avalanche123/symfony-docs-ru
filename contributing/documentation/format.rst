@@ -1,36 +1,36 @@
-Documentation Format
+Формат документации
 ====================
 
-The Symfony2 documentation uses `reStructuredText`_ as its markup language and
-`Sphinx`_ for building the output (HTML, PDF, ...).
+Документация Symfony2 использует `reStructuredText`_ как язык разметки и
+`Sphinx`_ для создания вывода (HTML, PDF и т. д.).
 
 reStructuredText
 ----------------
 
-reStructuredText "is an easy-to-read, what-you-see-is-what-you-get plaintext
-markup syntax and parser system".
+reStructuredText это "легкочитаемый, что видишь то и получишь, синтаксис
+разметки открытым текстом и система анализа".
 
-You can learn more about its syntax by reading existing Symfony2 `documents`_
-or by reading the `reStructuredText Primer`_ on the Sphinx website.
+Узнайте больше о его синтаксисе, прочитав Symfony2 `documents`_
+или `reStructuredText Primer`_ на web сайте Sphinx.
 
-If you are familiar with Markdown, be careful as things as sometimes very
-similar but different:
+Если вы знакомы с Markdown, будьте осторожны, т. к. некоторые вещи очень знакомы,
+но отличаются:
 
-* Lists starts at the beginning of a line (no indentation is allowed);
+* Списки начинаются с начала строки (необходимость отступа отсутствует);
 
-* Inline code blocks use double-ticks (````like this````).
+* Встроенные блоки кода используют двойные кавычки (````как здесь````).
 
 Sphinx
 ------
 
-Sphinx is a build system that adds some nice tools to create documentation
-from reStructuredText documents. As such, it adds new directives and
-interpreted text roles to standard reST `markup`_.
+Sphinx - это система сборки, добавляющая полезные инструменты для создания
+документации из документов reStructuredText. Она добавляет указания и
+роли интерпретированного текста к стандартной reST `markup`_.
 
-Syntax Highlighting
+Подсветка синтаксиса
 ~~~~~~~~~~~~~~~~~~~
 
-All code examples uses PHP as the default highlighted language. You can change
+Все примеры кода подсвечиваются по умолчанию как язык PHP. Вы можете изменить
 it with the ``code-block`` directive:
 
 .. code-block:: rst
@@ -39,8 +39,8 @@ it with the ``code-block`` directive:
 
         { foo: bar, bar: { foo: bar, bar: baz } }
 
-If your PHP code begins with ``<?php``, then you need to use ``html+php`` as
-the highlighted pseudo-language:
+Если ваш PHP код начинается с ``<?php``, тогда используйте ``html+php`` как
+подсвечиваемый псевдо-язык:
 
 .. code-block:: rst
 
@@ -50,14 +50,14 @@ the highlighted pseudo-language:
 
 .. note::
 
-    A list of supported languages is available on the `Pygments website`_.
+    Список поддерживаемых языков доступен на `Pygments website`_.
 
-Configuration Blocks
+Блоки конфигураций
 ~~~~~~~~~~~~~~~~~~~~
 
-Whenever you show a configuration, you must use the ``configuration-block``
-directive to show the configuration in all supported configuration formats
-(``PHP``, ``YAML``, and ``XML``):
+Всякий раз как вы показываете конфигурацию, используйте директиву
+``configuration-block`` чтобы отразить конфигурацию во всех поддерживаемых
+форматах (``PHP``, ``YAML`` и ``XML``):
 
 .. code-block:: rst
 
@@ -75,7 +75,7 @@ directive to show the configuration in all supported configuration formats
 
             // Configuration in PHP
 
-The previous reST snippet renders as follow:
+Предыдущая reST разметка отобразится следующим образом:
 
 .. configuration-block::
 
@@ -91,10 +91,10 @@ The previous reST snippet renders as follow:
 
         // Configuration in PHP
 
-The current list of supported formats are the following:
+Текущий список поддерживаемых форматов:
 
 =============== ===========
-Markup format   Displayed
+Формат разметки Отображается
 =============== ===========
 html            HTML
 xml             XML
@@ -106,7 +106,7 @@ jinja+html      Twig
 php+html        PHP
 html+php        PHP
 ini             INI
-php-annotations Annotations
+php-annotations Аннотации
 =============== ===========
 
 .. _reStructuredText:        http://docutils.sf.net/rst.html
