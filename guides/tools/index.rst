@@ -4,7 +4,7 @@
 .. toctree::
    :maxdepth: 2
 
-   autoloader
+   Автозагрузчик <autoloader>
    finder
    YAML
    process
