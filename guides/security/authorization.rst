@@ -1,23 +1,23 @@
 .. index::
    single: Security; Authorization
 
-Authorization
+Авторизация
 =============
 
-When the user is authenticated, you can restrict access to your application
-resources via access control rules. Authorization in Symfony2 covers this need
-but it also provides a standard and powerful way to decide if a user can
-access any resource (a URL, a model object, a method call, ...) thanks to a
-flexible access decision manager.
+Если пользователь идентифицирован, то вы можете ограничить доступ к ресурсам
+приложения через правила контроля доступа. Авторизация в Symfony2 предусматривает
+эту потребность, а также предоставляет стандартный и мощный способ рассуждений
+может ли пользователь получать любой ресурс (URL, объектную модель, вызов
+метода и т. д.), благодаря гибкому менеджеру разрешения доступа.
 
 .. index::
    single: Security; Access Control
 
-Defining Access Control Rules for HTTP resources
+Определение правил контроля доступа для  ресурсов HTTP
 ------------------------------------------------
 
-Authorization is enforced for each request, based on access control rules
-defined in your configuration:
+Авторизация выполняется для каждого запроса, основываясь на правилах контроля
+доступа, указанных в конфигурации:
 
 .. configuration-block::
 
@@ -49,15 +49,15 @@ defined in your configuration:
             ),
         ));
 
-For each incoming request, Symfony2 tries to find a matching access control
-rule (the first one wins) and throws an
-:class:`Symfony\\Component\Security\\Exception\\AccessDeniedException` if the
-user has not the needed roles or an
+Для каждого входящего запроса Symfony2 ищет совпадающее правило контроля доступа
+(выбирается первое совпадение) и выбрасывает
+:class:`Symfony\\Component\Security\\Exception\\AccessDeniedException` если
+пользователь не имеет необходимых ролей или
 :class:`Symfony\\Component\Security\\Exception\\AuthenticationCredentialsNotFoundException`
-if he is not authenticated yet.
+если он ещё не авторизован.
 
-In the example above, we match requests based on their path info, but there
-are many other ways as you will learn in the next section.
+В примере выше мы подбирали запросы, основываясь на их пути, но есть и другие
+способы, о которых вы узнаете в следующем разделе.
 
 .. tip::
 
@@ -65,10 +65,10 @@ are many other ways as you will learn in the next section.
     ``IS_AUTHENTICATED_ANONYMOUSLY`` for anonymous users and
     ``IS_AUTHENTICATED_FULLY`` for all others.
 
-Matching a Request
+Соотвествие запросу
 ------------------
 
-Access control rules can match a request in many different ways:
+Правила контроля доступа могут соотвествовать запросу различными способами:
 
 .. configuration-block::
 
@@ -131,10 +131,10 @@ Access control rules can match a request in many different ways:
 .. index::
    single: Security; HTTPS
 
-Enforcing HTTP or HTTPS
+Принудительный HTTP или HTTPS
 -----------------------
 
-Besides roles, you can also force parts of your website to use either HTTP or
+Помимо ролей также можно принудить части вашего web сайта использовать HTTP или
 HTTPS:
 
 .. configuration-block::
@@ -167,15 +167,14 @@ HTTPS:
             ),
         ));
 
-If no ``requires-channel`` is defined, Symfony2 will accept both HTTP and
-HTTPS. But as soon as you set the setting to either HTTP or HTTPS, Symfony2
-will redirect users if needed.
+Если ``requires-channel`` не указан, то Symfony2 разрешает оба HTTP и HTTPS.
+Но если настройка установлена на HTTP or HTTPS, то Symfony2 переадресует
+пользователей при необходимости.
 
-Access Control in Templates
+Контроль доступа в шаблонах
 ---------------------------
 
-If you want to check a user role in a template, you can use the dedicated
-syntax:
+Если хотите проверить роль пользователя внутри шаблона, то используйте синтаксис:
 
 .. configuration-block::
 
@@ -193,5 +192,5 @@ syntax:
 
 .. note::
 
-    If you need access to the user from a template, you need to pass it
-    explicitly.
+    Если вам нужен доступ к пользователю из шаблона, то вам необходимо явно
+    передавать его.
