@@ -1,22 +1,22 @@
-Symfony2 for symfony 1 users
+Symfony2 для пользователей symfony 1
 ============================
 
-Applications
+Приложения
 ------------
 
-In a symfony 1 project, it is common to have several applications: one for the
-frontend and one for the backend for instance.
+В проекте symfony 1 распространено иметь несколько приложений: например, одно для
+фронтэнда и одно для бэкэнда.
 
-In a Symfony2 project, you only need to create one application (a blog
-application, an intranet application, ...). Most of the time, if you want to
-create a second application, you'd better create another project and share
-some bundles between them.
+В проекте Symfony2 вам надо создать только одно прилоежение (приложение для
+блога, интернет приложение и т. д.). В большинстве случаев, если вам необходимо
+создать второе приложение, то лучше будет создать другой проект и разделить
+некоторые бандлы между ними.
 
-And if you need to separate the frontend and the backend features of some
-bundles, create sub-namespaces for controllers, sub-directories for templates,
-different semantic configurations, separate routing configurations, and so on.
+Если вам надо разделить фронтэнд и бэкэнд функции некоторых бандлов, создайте
+подпространства имён для контроллеров, подпапки для шаблонов, различные
+семантические настройки, разделите настройки маршрутизации и т. д.
 
 .. tip::
 
-    Read the definition of a :term:`Project`, an :term:`Application`, and a
-    :term:`Bundle` in the glossary.
+    Прочтите определения :term:`Project` и :term:`Application`, а также
+    :term:`Bundle` в словаре.

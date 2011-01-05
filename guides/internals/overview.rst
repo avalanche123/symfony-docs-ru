@@ -1,74 +1,73 @@
 .. index::
    single: Internals
 
-Internals Overview
+Обзор внутренностей
 ==================
 
-Looks like you want to understand how Symfony2 works and how to extend it.
-That makes me very happy! This section is an in-depth explanation of the
-Symfony2 internals.
+Похоже что вы хотите понять как работает Symfony2 и как его расширить.
+Это меня радует! Этот раздел подробно объясняет внутренности Symfony2.
 
 .. note::
 
-    You need to read this section only if you want to understand how Symfony2
-    works behind the scene, or if you want to extend Symfony2.
+    Чтение этого раздела необходимо только если вы хотите понять как работает
+    Symfony2 за кулисами или если хотите расширять Symfony2.
 
-The Symfony2 code is made of several independent layers. Each layer is built
-on top of the previous one.
+Код Symfony2 сделан из нескольких независимых слоёв. Каждый слой возведён на
+вершине предыдущего.
 
 .. tip::
 
-    Autoloading is not managed by the framework directly; it's done
-    independently with the help of the
-    :class:`Symfony\\Component\\HttpFoundation\\UniversalClassLoader` class
-    and the ``src/autoload.php`` file. Read the :doc:`dedicated chapter
-    </guides/tools/autoloader>` for more information.
+    Автозагрузка не управляется фреймворком напрямую; она выполняется
+    независимо с помощью класса
+    :class:`Symfony\\Component\\HttpFoundation\\UniversalClassLoader`
+    и файла ``src/autoload.php``. Прочтите :doc:`посвящённую этому главу
+    </guides/tools/autoloader>` для дополнительной информации.
 
-``HttpFoundation`` Component
+``HttpFoundation`` компонент
 ----------------------------
 
-The deepest level is the :namespace:`Symfony\\Component\\HttpFoundation`
-component. HttpFoundation provides the main objects needed to deal with HTTP.
-It is an Object-Oriented abstraction of some native PHP functions and
-variables:
+Глубочайший уровень это компонент :namespace:`Symfony\\Component\\HttpFoundation`.
+HttpFoundation предоставляет главные объекты, необходимые для работы с HTTP.
+Это объектно-ориентированная абстракция некоторых встроенных PHP функций и
+переменных:
 
-* The :class:`Symfony\\Component\\HttpFoundation\\Request` class abstracts
-  the main PHP global variables like ``$_GET``, ``$_POST``, ``$_COOKIE``,
-  ``$_FILES``, and ``$_SERVER``;
+* Класс :class:`Symfony\\Component\\HttpFoundation\\Request` абстрагирует
+  основные глобальные переменные в PHP, такие как ``$_GET``, ``$_POST``, ``$_COOKIE``,
+  ``$_FILES`` и ``$_SERVER``;
 
-* The :class:`Symfony\\Component\\HttpFoundation\\Response` class abstracts
-  some PHP functions like ``header()``, ``setcookie()``, and ``echo``;
+* Класс :class:`Symfony\\Component\\HttpFoundation\\Response` абстрагирует
+  некоторые PHP функции типа ``header()``, ``setcookie()`` и ``echo``;
 
-* The :class:`Symfony\\Component\\HttpFoundation\\Session` class and
+* Класс :class:`Symfony\\Component\\HttpFoundation\\Session` и интерфейс
   :class:`Symfony\\Component\\HttpFoundation\\SessionStorage\\SessionStorageInterface`
-  interface abstract session management ``session_*()`` functions.
+  абстрагируют функции для работы с сессией ``session_*()``.
 
 .. seealso::
 
-    Read more about the :doc:`HttpFoundation <http_foundation>` component.
+    Узнайте больше о компоненте :doc:`HttpFoundation <http_foundation>`.
 
-``HttpKernel`` Component
+``HttpKernel`` компонент
 ------------------------
 
-On top of HttpFoundation is the :namespace:`Symfony\\Component\\HttpKernel`
-component. HttpKernel handles the dynamic part of HTTP; it is a thin wrapper
-on top of the Request and Response classes to standardize the way requests are
-handled. It also provides extension points and tools that makes it the ideal
-starting point to create a Web framework without too much overhead.
+Выше HttpFoundation расположен компонент :namespace:`Symfony\\Component\\HttpKernel`.
+HttpKernel управляет динамической частью HTTP; это тонкая обёртка для классов
+Request и Response чтобы привести способы отбработки запросов к стандарту.
+Компонент также предоставляет точки для расширений и инструменты, делающие
+его идеальной стартовой площадкой для создания Web фреймворка без лишних проблем.
 
-It also optionally adds configurability and extensibility, thanks to the
-Dependency Injection component and a powerful plugin system (bundles).
+Также, по желанию, он добавляет настраиваемость и расширяемость благодаря
+компоненту Dependency Injection и могучей системе плагинов (бандлов).
 
 .. seealso::
 
-    Read more about the :doc:`HttpKernel <kernel>` component. Read more about
-    :doc:`Dependency Injection </guides/dependency_injection/index>` and
-    :doc:`Bundles </guides/bundles/index>`.
+    Узнайте больше о компоненте :doc:`HttpKernel <kernel>`, о
+    :doc:`Dependency Injection </guides/dependency_injection/index>` и о
+    :doc:`Бандлах </guides/bundles/index>`.
 
-``FrameworkBundle`` Bundle
+Бандл ``FrameworkBundle``
 --------------------------
 
-The :namespace:`Symfony\\Bundle\\FrameworkBundle` bundle is the bundle that
-ties the main components and libraries together to make a lightweight and fast
-MVC framework. It comes with a sensible default configuration and conventions
-to ease the learning curve.
+:namespace:`Symfony\\Bundle\\FrameworkBundle` - это бандл, связывающий
+главные компоненты и библиотеки вместе и делающий лёгкий и быстрый MVC фреймворк.
+Он поставляется с рациональной первоначальной конфигурацией и соглашениями для
+лучшего обучения.

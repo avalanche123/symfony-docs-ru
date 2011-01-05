@@ -1,9 +1,9 @@
-Symfony2 Validator
+Валидатор Symfony2
 ==================
 
 .. toctree::
    :maxdepth: 2
 
-   Overview <overview>
-   Validation <validation>
-   constraints
+   Обзор <overview>
+   Сверка <validation>
+   Ограничения <constraints>
