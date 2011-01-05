@@ -4,10 +4,10 @@
 .. toctree::
     :maxdepth: 2
 
-    bugs
-    patches
-    security
-    tests
-    standards
-    conventions
-    license
+    Ошибки <bugs>
+    Патчи <patches>
+    Безопасность <security>
+    Тесты <tests>
+    Стандарты <standards>
+    Соглашения <conventions>
+    Лицензия <license>

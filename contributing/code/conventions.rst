@@ -1,17 +1,17 @@
-Conventions
+Соглашения
 ===========
 
-The :doc:`standards` document describes the coding standards for the Symfony2
-projects and the internal and third-party bundles. This document describes
-coding standards and conventions used in the core framework to make it more
-consistent and predictable. You can follow them in your own code, but you
-don't need to.
+Документ :doc:`стандарты <standards>` описывает стандарты кодирования для проекта
+Symfony2, его внутренних и сторонних бандлов. Этот документ описывает стандарты
+кодирования и соглашения, используемые в ядре фреймворка чтобы сделать его
+более последовательным и предсказуемым. Можете следовать им в своём коде, но в
+этом нет особой нужды.
 
-Method Names
+Имена методов
 ------------
 
-When an object has a "main" many relation with related "things"
-(objects, parameters, ...), the method names are normalized:
+Когда объект имеет "главную" множественную связь со связанными "предметами"
+(объекты, параметры и т. д.), имена методов стандартизуются:
 
   * ``get()``
   * ``set()``
@@ -26,22 +26,22 @@ When an object has a "main" many relation with related "things"
   * ``count()``
   * ``keys()``
 
-The usage of these methods are only allowed when it is clear that there
-is a main relation:
+Использование этих методов применимо только когда ясно что существует основная
+связь:
 
-* a ``CookieJar`` has many ``Cookie``s;
+* ``CookieJar`` имеет множество ``Cookie``;
 
-* a Service ``Container`` has many services and many parameters (as services
-  is the main relation, we use the naming convention for this relation);
+* Служба ``Container`` имеет множество служб и множество параметров (т. к.
+  службы это главная связь, то мы используем соглашения для имён для этой связи);
 
-* a Console ``Input`` has many arguments and many options. There is no "main"
-  relation, and so the naming convention does not apply.
+* Консоль ``Input`` имеет множество аргументов и множество опций. Здесь нет
+  "основной" связи, поэтому соглашения для имён не применяются.
 
-For many relations where the convention does not apply, the following methods
-must be used instead (where ``XXX`` is the name of the related thing):
+Для множественных связей, к которым не применяется соглашение, должны
+использоваться следующие методы (где ``XXX`` это имя соотвествующего предмета):
 
 ============== =================
-Main Relation  Other Relations
+Главная связь  Другие связи
 ============== =================
 ``get()``      ``getXXX()``
 ``set()``      ``setXXX()``
@@ -54,5 +54,5 @@ Main Relation  Other Relations
 ``add()``      ``addXXX()``
 ``register()`` ``registerXXX()``
 ``count()``    ``countXXX()``
-``keys()``     n/a
+``keys()``     не доступно
 ============== =================

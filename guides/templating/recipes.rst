@@ -1,13 +1,13 @@
-Template Recipes
+Рецепты шаблонов
 ================
 
 .. _twig_extension_tag:
 
-Enabling Custom Twig Extensions
+Включение пользовательских расширений Twig
 -------------------------------
 
-To enable a Twig extension, add it as a regular service in one of your
-configuration, and tag it with ``twig.extension``:
+Чтобы включить расширение Twig добавьте его как постоянную службу в одну из
+ваших конфигураций и привяжите через тег ``twig.extension``:
 
 .. configuration-block::
 
@@ -34,12 +34,13 @@ configuration, and tag it with ``twig.extension``:
 
 .. _templating_renderer_tag:
 
-Enabling Custom Template Renderers
+Включение пользовательских визуализаторов шаблона
 ----------------------------------
 
-To enable a custom template renderer, add it as a regular service in one of
-your configuration, tag it with ``templating.renderer`` and define an ``alias``
-attribute (the renderer will be known by this alias in template name):
+Чтобы включить пользовательский визуализатор шаблона добавьте его как постоянную
+службу в одну из ваших конфигураций и привяжите через тег ``templating.renderer``
+и установите атрибут ``alias`` (визуализатор будет известен через алиас в имени
+шаблона):
 
 .. configuration-block::
 
@@ -66,12 +67,12 @@ attribute (the renderer will be known by this alias in template name):
 
 .. _templating_helper_tag:
 
-Enabling Custom PHP Template Helpers
+Включение пользовательских хелперов для шаблонов PHP
 ------------------------------------
 
-To enable a custom template helper, add it as a regular service in one of your
-configuration, tag it with ``templating.helper`` and define an ``alias``
-attribute (the helper will be accessible via this name is the templates):
+ЧТобы включить пользовательский хелпер для шаблона добавьте его как постоянную
+службу в одну из ваших конфигураций и привяжите через тег ``templating.helper``
+и установите атрибут ``alias`` (хелпер будет доступен через него в шаблонах):
 
 .. configuration-block::
 

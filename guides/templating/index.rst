@@ -1,9 +1,9 @@
-Templating
+Шаблоны
 ==========
 
 .. toctree::
    :maxdepth: 2
 
    PHP
-   recipes
+   Рецепты <recipes>
 
