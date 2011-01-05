@@ -1,5 +1,12 @@
-Пользователи
-============
+.. index::
+   single: Security; Users
+
+Users
+=====
+
+Security only makes sense because your application is accessed by clients you
+cannot trust. A client can be a human behind a browser, but also a device, a
+web service, or even a bot.
 
 Безопасность имеет сенс только в случае, когда с вашим приложением работают пользователи, которым вы не можете доверять. Пользователем может быть человек, работающий через браузер, некоторое устройство, web сервис, или же это бот.
 
@@ -57,7 +64,7 @@ AccountInterface
         function isPasswordValid($encoded, $raw, $salt);
     }
 
-.. примечание::
+.. note::
 
     Во время аутентификации, Symfony2 будет использовать метод ``isPasswordValid()``
     для проверки пароля пользователя; прочитайте следующую секцию, чтобы узнать, как уведомить ваш провайдер
@@ -93,7 +100,7 @@ AdvancedAccountInterface
 * ``isCredentialsNonExpired()``: Возвращает ``true`` пользовательские учетные данные (пароль) устарели;
 * ``isEnabled()``: Возвращает ``true`` когда пользователь включен.
 
-.. примечание::
+.. note::
 
     Интерфейс :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
     зависит от объекта
@@ -114,7 +121,7 @@ AdvancedAccountInterface
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             providers:
                 main:
@@ -128,7 +135,7 @@ AdvancedAccountInterface
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <provider name="main">
                 <user name="foo" password="foo" roles="ROLE_USER" />
@@ -143,7 +150,7 @@ AdvancedAccountInterface
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'providers' => array(
                 'main' => array('users' => array(
@@ -177,7 +184,7 @@ AdvancedAccountInterface
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             providers:
                 main:
@@ -186,7 +193,7 @@ AdvancedAccountInterface
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <provider name="main">
                 <password-encoder>sha1</password-encoder>
@@ -196,7 +203,7 @@ AdvancedAccountInterface
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'providers' => array(
                 'main' => array(
@@ -230,7 +237,97 @@ AdvancedAccountInterface
         }
     }
 
-.. примечание::
+.. tip::
+
+    If you use the
+    :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
+    interface, don't check the various flags (locked, expired, enabled, ...)
+    when retrieving the user from the database as this will be managed by the
+    authentication system automatically (and proper exceptions will be thrown
+    if needed). If you have special flags, override the default
+    :class:`Symfony\\Component\\Security\\User\\AccountCheckerInterface`
+    implementation.
+
+.. index::
+   single: Security; Doctrine Document Provider
+   single: Doctrine; Doctrine Document Provider
+
+Doctrine Document Provider
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Most of the time, users are described by a Doctrine Document::
+
+    /**
+     * @Document
+     */
+    class User implements AccountInterface
+    {
+        // ...
+    }
+
+In such a case, you can use the default Doctrine provider without creating one
+yourself:
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # app/config/security.yml
+        security.config:
+            providers:
+                main:
+                    password_encoder: sha1
+                    document: { class: SecurityBundle:User, property: username }
+
+    .. code-block:: xml
+
+        <!-- app/config/security.xml -->
+        <config>
+            <provider name="main">
+                <password-encoder>sha1</password-encoder>
+                <document class="SecurityBundle:User" property="username" />
+            </provider>
+        </config>
+
+    .. code-block:: php
+
+        // app/config/security.php
+        $container->loadFromExtension('security', 'config', array(
+            'providers' => array(
+                'main' => array(
+                    'password_encoder' => 'sha1',
+                    'document' => array('class' => 'SecurityBundle:User', 'property' => 'username'),
+                ),
+            ),
+        ));
+
+The ``document`` entry configures the Document class to use for the user, and
+``property`` the PHP column name where the username is stored.
+
+If retrieving the user is more complex than a simple ``findOneBy()`` call,
+remove the ``property`` setting and make your Document Repository class
+implement :class:`Symfony\\Component\\Security\\User\\UserProviderInterface`::
+
+    /**
+     * @Document(repositoryClass="SecurityBundle:UserRepository")
+     */
+    class User implements AccountInterface
+    {
+        // ...
+    }
+
+    class UserRepository extends DocumentRepository implements UserProviderInterface
+    {
+        public function loadUserByUsername($username)
+        {
+            // do whatever you need to retrieve the user from the database
+            // code below is the implementation used when using the property setting
+
+            return $this->findOneBy(array('username' => $username));
+        }
+    }
+
+.. tip::
 
     Если вы используете интерфейс 
     :class:`Symfony\\Component\\Security\\User\\AdvancedAccountInterface`
@@ -246,7 +343,23 @@ AdvancedAccountInterface
 
     $user = $container->get('security.context')->getUser();
 
-Вы также можете проверить, аутентифицирован ли пользователь при помощи метода ``isAuthenticated()``.
+You can also check if the user is authenticated with the ``isAuthenticated()``
+method::
+
+    $container->get('security.context')->isAuthenticated();
+
+.. tip::
+
+    Be aware that anonymous users are considered authenticated. If you want to
+    check if a user is "fully authenticated" (non-anonymous), you need to check
+    if the user has the special ``IS_AUTHENTICATED_FULLY`` role (or check that
+    the user has not the ``IS_AUTHENTICATED_ANONYMOUSLY`` role).
+
+.. index::
+   single: Security; Roles
+
+Roles
+-----
 
 Роли
 ----
@@ -269,7 +382,7 @@ AdvancedAccountInterface
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             role_hierarchy:
                 ROLE_ADMIN:       ROLE_USER
@@ -277,7 +390,7 @@ AdvancedAccountInterface
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <role-hierarchy>
                 <role id="ROLE_ADMIN">ROLE_USER</role>
@@ -287,7 +400,7 @@ AdvancedAccountInterface
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'role_hierarchy' => array(
                 'ROLE_ADMIN'       => 'ROLE_USER',

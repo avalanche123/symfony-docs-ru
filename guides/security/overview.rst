@@ -1,5 +1,8 @@
-﻿Безопасность
-============
+.. index::
+   single: Security
+
+Security
+========
 
 В состав Symfony2 входит встроенный слой безопасности. Он защищает ваше приложение путем обеспечения механизмов аутентификации и авторизации.
 
@@ -9,8 +12,11 @@
 :doc:`Authentication </guides/security/authentication>`, и
 :doc:`Authorization </guides/security/authorization>`.
 
-Конфигурация
-------------
+.. index::
+   pair: Security; Configuration
+
+Configuration
+-------------
 
 Для большинства случаев, безопасность в Symfony2 может быть легко сконфигурирована в вашем главном конфигурационном файле; вот типичная конфигурация:
 
@@ -127,7 +133,7 @@
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 main:
@@ -135,7 +141,7 @@
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall>
                 <http-basic />
@@ -144,7 +150,7 @@
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'main' => array('http-basic' => true),
@@ -157,7 +163,7 @@
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             firewalls:
                 backend:
@@ -169,7 +175,7 @@
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <firewall pattern="/admin/.*">
                 <http-basic />
@@ -180,7 +186,7 @@
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'firewalls' => array(
                 'backend' => array('pattern' => '/admin/.*', 'http-basic' => true),
@@ -188,13 +194,13 @@
             ),
         ));
 
-.. примечание::
+.. tip::
 
     Проще всего использовать базовую HTTP аутентификацию, но прочитайте часть :doc:`Authentication
     </guides/security/authentication>` для того чтобы узнать, как настраивать другие механизмы аутентификации, как настраивать аутентификацию без состояний, как вы можете имитировать другого пользователя, как включить https, и многое другое.
 
-Пользователи
-------------
+Users
+-----
 
 Во время аутентификации, Symfony2 опрашивает поставщика пользователей для создания объекта пользователя, отвечающего клиентскому запросу (с помощью учетных данных, как имя пользователя и пароль).
 Для быстрого старта, вы можете определить поставщика "в памяти" прямо в конфигурации:
@@ -203,7 +209,7 @@
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             providers:
                 main:
@@ -212,7 +218,7 @@
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <provider>
                 <user name="foo" password="foo" />
@@ -221,7 +227,7 @@
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'provider' => array(
                 'main' => array('users' => array(
@@ -234,12 +240,12 @@
 
     $user = $container->get('security.context')->getUser();
 
-.. примечание::
+.. tip::
 
     Использование поставщика "в памяти" - это отличный вариант легко защитить серверную часть вашего персонального сайта, создать прототип, или создать макет для тестов. Прочитайте часть :doc:`Users </guides/security/users>` для того чтобы изучить, как избежать ненадежных паролей, как использовать Doctrine Entity в качестве пользовательского поставщика, как определить несколько поставщиков, и многое другое.
 
-Авторизация
------------
+Authorization
+-------------
 
 Авторизация является необязательной, но позволяет мощно ограничивать доступ к ресурсам вашего приложения на основе пользовательских ролей:
 
@@ -247,7 +253,7 @@
 
     .. code-block:: yaml
 
-        # app/config/config.yml
+        # app/config/security.yml
         security.config:
             providers:
                 main:
@@ -258,7 +264,7 @@
 
     .. code-block:: xml
 
-        <!-- app/config/config.xml -->
+        <!-- app/config/security.xml -->
         <config>
             <provider>
                 <user name="foo" password="foo" roles="ROLE_USER,ROLE_ADMIN" />
@@ -271,7 +277,7 @@
 
     .. code-block:: php
 
-        // app/config/config.php
+        // app/config/security.php
         $container->loadFromExtension('security', 'config', array(
             'provider' => array(
                 'main' => array('users' => array(
@@ -286,6 +292,6 @@
 
 Конфигурация сверху определяет пользователя 'foo' с ролями 'ROLE_USER' и 'ROLE_ADMIN' и она ограничивает доступ к приложению в целом для пользователей с ролью 'ROLE_USER'.
 
-.. примечание::
+.. tip::
 
     Прочитайте часть :doc:`Authorization </guides/security/authorization>` для того, чтобы узнать, как определять иерархию ролей, как настроить ваш шаблон базируясь на ролях, как определить правила контроля доступа базируясь на атрибутах запроса, и многое другое.
