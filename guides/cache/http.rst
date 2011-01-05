@@ -1,18 +1,19 @@
 .. index::
    single: Cache
 
-HTTP Cache
-==========
+HTTP Кэш
+========
 
-The best way to improve the performance of an application is probably to cache
-its output and bypass it altogether. Of course, this is not possible for
-highly dynamic websites, or is it? This document will show you how Symfony2
-cache system works and why we think this is the best possible approach.
+Лучшим способом улучшить производительность приложения будет, вероятно, 
+кэшировать его вывод и обойти его полностью. Конечно же, это невозможно для 
+сильно динамичных web сайтов, или все-таки можно? Этот раздел покажет вам, 
+как работает система кэширования Symfony2 и почему мы думаем что это 
+наилучший возможный подход.
 
-Symfony2 cache system relies on the simplicity and power of the HTTP cache as
-defined in the HTTP specification. Basically, if you already know HTTP
-validation and expiration caching models, you are ready to use most of the
-Symfony2 cache system.
+Система кэширования Symfony2 полагается на простоту и мощь HTTP кэша, как 
+это определено в спецификации HTTP. В основном, если вам уже знакомы модели 
+кэширования HTTP валидации и устаревания, вы готовы к использованию 
+большей части системы кэширования Symfony2.
 
 .. index::
    single: Cache; Types of
@@ -20,15 +21,15 @@ Symfony2 cache system.
    single: Cache; Reverse Proxy
    single: Cache; Gateway
 
-Kinds of Caches
----------------
+Разновидности Кэша
+------------------
 
 HTTP cache headers are consumed and interpreted by three different kind of
 caches:
 
-* *Browser caches*: Every browser comes with its own local cache that is
-  mainly useful for when you hit "back" or when images are reused throughout a
-  website;
+* *Кэширование браузером*: Каждый браузер включает в себя собственный локальный кэш, 
+  который наиболее полезен, когда вы нажимаете кнопку "back" или когда изображения 
+  используются на web сайте неоднократно;
 
 * *Proxy caches*: A proxy is a *shared* cache as many people can be behind a
   single one. It's usually installed by large corporations and ISPs to reduce
