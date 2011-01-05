@@ -1,11 +1,11 @@
-Testing
+Тестирование
 =======
 
 .. toctree::
    :maxdepth: 2
 
-   Overview <overview>
-   configuration
+   Обзор <overview>
+   Настройка <configuration>
    crawler
    client
-   recipes
+   Рецепты <recipes>
