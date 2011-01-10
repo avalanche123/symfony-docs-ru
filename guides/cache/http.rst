@@ -198,43 +198,43 @@ specification states that "HTTP/1.1 servers should not send ``Expires`` dates
 more than one year in the future."
 
 .. index::
-   single: Cache; Cache-Control header
-   single: HTTP headers; Cache-Control
+   single: Кэш; Cache-Control заголовок
+   single: HTTP заголовки; Cache-Control
 
-Expiration with the ``Cache-Control`` Header
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Истечение с заголовком ``Cache-Control``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Because of the ``Expires`` header limitations, most of the time, you should
-use the ``Cache-Control`` header instead. As ``Cache-Control`` is a
-general-field header used to specify many different directives, Symfony2
-provides methods that abstract their manipulation. For expiration, there are
-two directives, ``max-age`` and ``s-maxage``. The first one is used by all
-caches, whereas the second one is only taken into account by shared caches::
+Так как у заголовка ``Expires`` есть ограничения, чаще всего, вам следует 
+использовать вместо него заголовок ``Cache-Control``. Так как ``Cache-Control`` 
+это заголовок общего назначения, используемый для установки различных директив, 
+Symfony2 предоставляет методы, которые абстрагируют манипуляции ими. Для истечения, 
+есть две директивы, ``max-age`` и ``s-maxage``. Первая используется всеми видами 
+кэшей, тогда как вторая берется во внимание только shared кэшами::
 
-    // Sets the number of seconds after which the response
-    // should no longer be considered fresh
+    // Устанавливает количество секунд по истечению которых
+    // ответ уже не будет считаться свежим
     $response->setMaxAge(600);
 
-    // Same as above but only for shared caches
+    // Тоже что и сверху, но только для shared кэшей
     $response->setSharedMaxAge(600);
 
 .. index::
-   single: Cache; Validation
+   single: Кэш; Валидация
 
-Validation
-~~~~~~~~~~
+Валидация
+~~~~~~~~~
 
-When a resource must be updated as soon as a change is made to the underlying
-data, the expiration model falls short. The validation model addresses this
-issue. Under this model, you mainly save bandwidth as the representation is
+Когда ресурс должен быть обновлен как только были изменены данные, модель 
+истечения терпит крах. Модель валидации решает эту задачу. В этой модели, 
+вы преимущественно сохраняете bandwidth as the representation is
 not sent twice to the same client (a 304 response is sent instead). But if you
 design your application carefully, you might be able to get the bare minimum
 data needed to send a 304 response and save CPU also; and if needed, perform
 the more heavy tasks (see below for an implementation example).
 
 .. index::
-   single: Cache; Etag header
-   single: HTTP headers; Etag
+   single: Кэш; Etag заголовок
+   single: HTTP заголовки; Etag
 
 Validation with the ``ETag`` Header
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
