@@ -81,7 +81,7 @@ Symfony2 автоматически устанавливает рационал�
 Класс :class:`Symfony\\Component\\HttpFoundation\\Response` предоставляет красивый 
 и простой API для упрощения манипуляций с HTTP заголовками::
 
-    // передавайте массив заголовков третьим аргументом в конструктор ответа
+    // передавайте массив заголовков третьим аргументом в конструктор Response
     $response = new Response($content, $status, $headers);
 
     // устанавливайте значение заголовка
@@ -166,10 +166,9 @@ HTTP спецификация (aka `RFC 2616`_) определяет две мо
 Истечение
 ~~~~~~~~~
 
-Whenever possible, you should use the expiration caching model as your
-application will only be called for the very first request and it will never
-be called again until it expires (it saves server CPU and allows for better
-scaling).
+По возможности, нужно использовать модель кэширования с истечением, если ваше 
+приложение будет вызвано при первом запросе и оно не будет вызываться снова пока 
+не устареет (это экономит CPU сервера и улучшает масштабируемость).
 
 .. index::
    single: Кэш; заголовок Истечения
@@ -179,9 +178,9 @@ scaling).
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 В соответствии с RFC 2616, "the ``Expires`` header field gives the date/time after
-which the response is considered stale." The ``Expires`` header can be set
-with the ``setExpires()`` Response method. It takes a ``DateTime`` instance as
-an argument::
+which the response is considered stale." Заголовок ``Expires`` может быть установлен 
+при помощи ``setExpires()`` метод класса Response. Он принимает экземпляр ``DateTime`` 
+в качестве аргумента::
 
     $date = new DateTime();
     $date->modify('+600 seconds');
@@ -190,12 +189,11 @@ an argument::
 
 .. note::
 
-    The ``setExpires()`` method automatically converts the date to the GMT
-    timezone as required by the specification (the date must be in the RFC1123
-    format).
+    Метод ``setExpires()`` автоматически конвертирует дату в формат GMT, 
+    чего требует спецификация (дата должна быть в формате RFC1123).
 
-The ``Expires`` header suffers from two limitations. First, the clocks on the
-Web server and the cache (aka the browser) must be synchronized. Then, the
+Заголовок ``Expires`` обладает двумя недостатками. Во-первых, часы Web сервера 
+и кэша (aka браузера) должны быть синхронизированы. Then, the
 specification states that "HTTP/1.1 servers should not send ``Expires`` dates
 more than one year in the future."
 
