@@ -74,99 +74,97 @@ Symfony2 автоматически устанавливает рационал�
 Модификация Заголовков Ответа
 -----------------------------
 
-Before we start our tour of the different HTTP headers you can use to enable
-caching for your application, you first need to learn how to change them in a
-Symfony2 application.
+Перед тем как мы начнем наш тур по различным HTTP заголовкам, которые вы 
+можете использовать для включения кэширования в вашем приложении, первым 
+делом вам нужно знать как изменять их в Symfony2 приложении.
 
-The :class:`Symfony\\Component\\HttpFoundation\\Response` class exposes a nice
-and simple API to ease HTTP headers manipulation::
+Класс :class:`Symfony\\Component\\HttpFoundation\\Response` предоставляет красивый 
+и простой API для упрощения манипуляций с HTTP заголовками::
 
-    // pass an array of headers as the third argument to the Response constructor
+    // передавайте массив заголовков третьим аргументом в конструктор ответа
     $response = new Response($content, $status, $headers);
 
-    // set a header value
+    // устанавливайте значение заголовка
     $response->headers->set('Content-Type', 'text/plain');
 
-    // add a header value to the existing values
+    // добавляйте значения заголовка к существующим значениям
     $response->headers->set('Vary', 'Accept', false);
 
-    // set a multi-valued header
+    // устанавливайте заголовок с многими значениями
     $response->headers->set('Vary', array('Accept', 'Accept-Encoding'));
 
-    // delete a header
+    // удаляйте заголовок
     $response->headers->delete('Content-Type');
 
-Besides this generic way of setting headers, the Response class also provides
-many specialized methods that ease the manipulation of the HTTP cache headers.
-You will learn more about them along the way.
+Кроме этих встроенных путей установки заголовков, класс Response также предоставляет 
+много специализированных методов, упрощающих манипуляции с заголовками HTTP кэша.
+По пути вы узнаете о них больше.
 
 .. tip::
 
-    HTTP header names are case insensitive. As Symfony2 converts them to a
-    normalized form internally, the case you use does not matter
-    (``Content-Type`` is considered the same as ``content-type``). You can
-    also use underscores (``_``) instead of dashes (``-``) if you want.
+    Имена HTTP заголовков регистро-независимы. Так как Symfony2 внутренне 
+    конвертирует их в нормализированную форму, регистр ввода значения не имеет
+    (``Content-Type`` рассматривается идентично с ``content-type``). Вы также 
+    можете использовать нижние подчеркивания (``_``) вместо дефисов (``-``), если захотите.
 
-If you use the Controller shortcut method ``render`` to render a template and
-create a Response object for you, you can still manipulate the Response
-headers easily::
+Если вы используете укороченный метод класса Controller ``render`` для формирования шаблона и 
+создания объекта Response, вы также можете легко манипулировать заголовками Response::
 
-    // Create a Response and set headers first...
+    // Сперва создайте объект Response и установите заголовки...
     $response = new Response();
     $response->headers->set('Content-Type', 'text/plain');
 
-    // ...and then pass it as the third argument to the render method
+    // ...и потом установите их как третий аргумент в метод render
     return $this->render($name, $vars, $response);
 
-    // Or, call render first...
+    // Или, вызовите render сначала...
     $response = $this->render($name, $vars);
 
-    // ...and manipulate the Response headers afterwards
+    // ...и манипулируйте заголовками Response потом
     $response->headers->set('Content-Type', 'text/plain');
 
     return $response;
 
 .. index::
-   single: Cache; HTTP
+   single: Кэш; HTTP
 
-Understanding HTTP Cache
-------------------------
+Понимание HTTP Кэша
+-------------------
 
-The HTTP specification (aka `RFC 2616`_) defines two caching models:
+HTTP спецификация (aka `RFC 2616`_) определяет две модели кэширования:
 
-* *Expiration*: You specify how long a response should be considered "fresh"
-  by including a ``Cache-Control`` and/or an ``Expires`` header. Caches that
-  understand expiration will not make the same request until the cached
-  version reaches its expiration time and becomes "stale".
+* *Истечение*: Вы указываете как долго ответ считается "свежим" путем установки
+  ``Cache-Control`` и/или ``Expires`` заголовков. При кэшировании помните, 
+  что истечение не будет делать одинаковый запрос пока кэшируемая версия 
+  не достигнет своего времени истечения срока и станет "старой".
 
-* *Validation*: When some pages are really dynamic (meaning that their
-  representation changes often), the validation model uses a unique identifier
-  (the ``Etag`` header) and/or a timestamp (the ``Last-Modified`` headers) to
-  check if the page changed since last time.
+* *Валидация*: Когда некоторые страницы действительно динамичны (в смысле, что их 
+  содержимое часто изменяется), модель валидации использует уникальный идентификатор
+  (заголовок ``Etag``) и/или метку времени (заголовок ``Last-Modified``) для проверки, 
+  изменилась ли страница с последнего раза.
 
-The goal of both models is to never generate the same Response twice.
-
-.. tip::
-
-    There is an on-going effort (`HTTP Bis`_) to rewrite the RFC 2616. It does
-    not describe a new version of HTTP, but mostly clarifies the original HTTP
-    specification. The organization is also much better as the specification
-    is split into several parts; everything related to HTTP caching can be
-    found in two dedicated parts (`P4 - Conditional Requests`_ and `P6 -
-    Caching: Browser and intermediary caches`_).
+Целью обоих моделей является никогда не генерировать один и тот же Response дважды.
 
 .. tip::
 
-    The HTTP cache headers only work with "safe" HTTP methods (like GET and
-    HEAD). Being safe means that you must never change the application's state
-    of the server when serving such requests (but you can of course log
-    information, cache data, ...)
+    Принимаются усилия (`HTTP Bis`_) переписать RFC 2616. Он не описывает
+    новую версию HTTP, но преимущественно освещает первоначальную спецификацию HTTP.
+    Организация также намного лучше, так как спецификация разделена на несколько 
+    частей; все что касается HTTP кэширования может быть найдено в двух разделенных
+    частях (`P4 - Conditional Requests`_ and `P6 - Caching: Browser and intermediary caches`_).
+
+.. tip::
+
+    Заголовки HTTP кэша работают только с "безопасными" HTTP методами (такими как 
+    GET и HEAD). Быть безопасным означает, что вы никогда не должны изменять состояние 
+    приложения на сервере когда отрабатываются такие запросы (но вы, конечно же, можете 
+    логировать информацию, кэшировать данные, ...)
 
 .. index::
-   single: Cache; HTTP Expiration
+   single: Кэш; HTTP Истечение
 
-Expiration
-~~~~~~~~~~
+Истечение
+~~~~~~~~~
 
 Whenever possible, you should use the expiration caching model as your
 application will only be called for the very first request and it will never
@@ -174,13 +172,13 @@ be called again until it expires (it saves server CPU and allows for better
 scaling).
 
 .. index::
-   single: Cache; Expires header
-   single: HTTP headers; Expires
+   single: Кэш; заголовок Истечения
+   single: HTTP заголовки; Истечение
 
-Expiration with the ``Expires`` Header
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Истечение с заголовком ``Expires``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-According to RFC 2616, "the ``Expires`` header field gives the date/time after
+В соответствии с RFC 2616, "the ``Expires`` header field gives the date/time after
 which the response is considered stale." The ``Expires`` header can be set
 with the ``setExpires()`` Response method. It takes a ``DateTime`` instance as
 an argument::
