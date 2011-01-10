@@ -16,52 +16,53 @@ HTTP Кэш
 большей части системы кэширования Symfony2.
 
 .. index::
-   single: Cache; Types of
-   single: Cache; Proxy
-   single: Cache; Reverse Proxy
-   single: Cache; Gateway
+   single: Кэш; Типы
+   single: Кэш; Прокси
+   single: Кэш; Обратный Прокси
+   single: Кэш; Шлюз
 
 Разновидности Кэша
 ------------------
 
-HTTP cache headers are consumed and interpreted by three different kind of
-caches:
+Заголовки HTTP кэша обрабатываются и интерпретируются тремя различными видами 
+кэша:
 
 * *Кэширование браузером*: Каждый браузер включает в себя собственный локальный кэш, 
   который наиболее полезен, когда вы нажимаете кнопку "back" или когда изображения 
   используются на web сайте неоднократно;
 
-* *Proxy caches*: A proxy is a *shared* cache as many people can be behind a
-  single one. It's usually installed by large corporations and ISPs to reduce
-  latency and network traffic.
+* *Proxy кэширование*: Прокси это *распределенный* кэш, так как много людей могут 
+  использовать один и тот же кэш. Он всегда устанавливается большими корпорациями 
+  и ISP для уменьшения латентности и сетевого трафика.
 
-* *Gateway caches*: Like a proxy, it's also a shared cache but on the server
-  side. Installed by network administrators, it makes websites more scalable,
-  reliable and performing better (CDNs like Akamaï are gateway caches).
+* *Gateway кэширование*: Как и прокси, тоже является распределенным кэшем, но на 
+  серверной стороне. Установленный сетевыми администраторами, он делает web сайты 
+  более масштабируемыми, надежными и более продуктивными (CDN-ы такие как Akamaï 
+  являются gateway кэшами).
 
 .. note::
 
-    Gateway caches are sometimes referred to as reverse proxy caches,
-    surrogate caches, or even HTTP accelerators.
+    Gateway кэш иногда упоминается как обратный прокси кэш,
+    кэш-заместитель, или даже HTTP акселератор.
 
-HTTP 1.1 allows caching anything by default unless there is an explicit
-``Cache-Control`` header. In practice, most caches do nothing when requests
-have a cookie, an authorization header, or come with a non-safe method, and
-when responses have a redirect status code.
+Протокол HTTP 1.1 по умолчанию позволяет кэшировать все, за исключением  
+явно указанного в заголовке ``Cache-Control``. На практике, большинство кэшей 
+ничего не делают если в запросе установлены cookies, заголовок авторизации, или 
+передача ведется по защищенному методу и когда у ответа есть статус кода редиректа.
 
-Symfony2 automatically sets a sensible and conservative ``Cache-Control``
-header when none is set by the developer by following these rules:
+Symfony2 автоматически устанавливает рациональный и умеренный заголовок 
+``Cache-Control`` когда он не указан разработчиком, следуя таким правилам:
 
-* If no cache header is defined (``Cache-Control``, ``ETag``,
-  ``Last-Modified``, and ``Expires``), ``Cache-Control`` is set to
+* Если не указан заголовок кэша (``Cache-Control``, ``ETag``,
+  ``Last-Modified``, и ``Expires``), ``Cache-Control`` устанавливается как 
   ``no-cache``;
 
-* If ``Cache-Control`` is empty, its value is set to ``private, max-age=0,
-  must-revalidate``;
+* Если ``Cache-Control`` пустой, его значение устанавливается в ``private, 
+  max-age=0, must-revalidate``;
 
-* But if at least one ``Cache-Control`` directive is set, and no 'public' or
-  ``private`` directives have been explicitly added, Symfony2 adds the
-  ``private`` directive automatically (except when ``s-maxage`` is set).
+* Но когда установлена хотя бы одна директива ``Cache-Control``, и явно не 
+  добавлены директивы 'public' или ``private``, Symfony2 добавляет директиву 
+  ``private`` автоматически (кроме случая, когда установлено ``s-maxage``).
 
 .. tip::
 
@@ -70,7 +71,7 @@ header when none is set by the developer by following these rules:
     response to the browser (that's useful for cookies that do not change the
     resource representation like tracking cookies).
 
-Manipulating Response Headers
+Модификация Заголовков Ответа
 -----------------------------
 
 Before we start our tour of the different HTTP headers you can use to enable
