@@ -1,5 +1,5 @@
 .. index::
-   single: Cache
+   single: Кэш
 
 HTTP Кэш
 ========
@@ -66,10 +66,10 @@ Symfony2 автоматически устанавливает рационал�
 
 .. tip::
 
-    Most gateway caches have the ability to remove cookies before forwarding a
-    request to the backend application, and add them back when they send the
-    response to the browser (that's useful for cookies that do not change the
-    resource representation like tracking cookies).
+    Большинство gateway кэшей могут удалять cookies перед перенаправлением 
+    запроса к серверному приложению, и добавлять их обратно при отправке 
+    ответа браузеру (это полезно для cookies, которые не изменяют 
+    представление ресурса, такие как отслеживающие cookies).
 
 Модификация Заголовков Ответа
 -----------------------------
