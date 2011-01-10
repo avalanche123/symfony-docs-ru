@@ -3,7 +3,7 @@
 
 
 Форматирование
-==========================
+==============
 
 * http://docs.symfony-reloaded.org/contributing/documentation/format.html
 * http://sphinx.pocoo.org/rest.html
@@ -11,7 +11,7 @@
 
 
 Публикация патча
-==========================
+================
 
 1. Создайте новый бранч в своём репозитории `git checkout -b patchN`
 
@@ -45,28 +45,28 @@
 
 
 Не переводятся
-==========================
+==============
 
 1. Служебная разметка
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
-    ::
+::
 
-        :orphan:
+    :orphan:
 
-        .. glossary::
+    .. glossary::
 
-        .. note::
+    .. note::
 
-        .. tip::
+    .. tip::
 
-        .. toctree::
-            :maxdepth: 2
-            :glob:
-            :numbered:
+    .. toctree::
+        :maxdepth: 2
+        :glob:
+        :numbered:
 
 2. Служебные слова
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 * API
 * bundle - бандл?
