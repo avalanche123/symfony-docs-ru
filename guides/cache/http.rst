@@ -294,88 +294,90 @@ Response полностью, перед тем как вы сможете рас
 Оптимизация вашего Кода при помощи Валидации
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The main goal of any caching strategy is to lighten the load on the
-application; put another way, the less you do in your application to return a
-304 response, the better. The Symfony2 ``Response::isNotModified()`` method
-does exactly that by exposing a simple and efficient pattern::
+Главной целью любой стратегии кэширования является облегчение загрузки 
+приложения; следуя другим путем, минимум что можно сделать в вашем 
+приложении - вернуть ответ 304, что еще лучще. Метод Symfony2 
+``Response::isNotModified()`` делает именно это через использование 
+простого и производительного паттерна::
 
-    // Get the minimum information to compute
-    // the ETag or the Last-Modified value
-    // (based on the Request, data are retrieved from
-    // a database or a key-value store for instance)
+    // Получаем минимум информации для вычисления
+    // ETag или значение Last-Modified
+    // (базируясь на Request, данные получены, например, из
+    // базы банных или хранилища ключ-значение)
     $article = Article::get(...);
 
-    // create a Response with a ETag and/or a Last-Modified header
+    // создадим объект Response с заголовком ETag и/или a Last-Modified
     $response = new Response();
     $response->setETag($article->computeETag());
     $response->setLastModified($article->getPublishedAt());
 
-    // Check that the Response is not modified for the given Request
+    // Проверяем что Response не изменился для заданного Request
     if ($response->isNotModified($request)) {
-        // send the 304 Response immediately
+        // сразу же отсылаем 304 Response
         $response->send();
     } else {
-        // do some more heavy stuff here
-        // like getting more stuff from the DB
-        // and rendering a template
+        // делаем здесь что-нибудь трудоемкое
+        // такое как работа с БД
+        // или рендеринг шаблона
     }
 
-When the Response is not modified, the ``isNotModified()`` automatically sets
-the response status code to ``304``, remove the content, and remove some
-headers that must not be present for ``304`` responses (see
-:method:`Symfony\\Component\\HttpFoundation\\Response::setNotModified`).
+Когда Response не был изменен, ``isNotModified()`` автоматически 
+устанавливает статус кода ответа ``304``, удалите содержимое, и удалите 
+некоторые заголовки которые не должны присутствовать в ответах ``304`` 
+(смотрите :method:`Symfony\\Component\\HttpFoundation\\Response::setNotModified`).
 
 .. index::
-   single: Cache; Vary
-   single: HTTP headers; Vary
+   single: Кэш; Vary
+   single: HTTP заголовки; Vary
 
-Varying the Response
-~~~~~~~~~~~~~~~~~~~~
+Варьирование Response
+~~~~~~~~~~~~~~~~~~~~~
 
-Sometimes, the representation of a resource depends not only on its URI, but
-also on some other header values. For instance, if you compress pages when the
-client supports it, any given URI has two representations: one when the client
-supports compression, and one when it does not. For such cases, you must use
-the ``Vary`` header to help the cache determine whether a stored response can
-be used to satisfy a given request::
+Иногда, представление ресурса зависит не только от его URI, но также и от
+значений некоторых заголовков. Например, если вы сжимаете страницы, когда это 
+поддерживает клиент, каждый выдаваемый URI имеет два представления: одно когда 
+клиент поддерживает компрессию, и еще одно когда нет. Для таких случаев, вы 
+должны использовать заголовок ``Vary``, чтобы помочь кэшу определить, когда 
+хранимый ответ может быть использован в соответствии в полученным запросом::
 
     $response->setVary('Accept-Encoding');
 
     $response->setVary(array('Accept-Encoding', 'Accept'));
 
-The ``setVary()`` method takes a header name or an array of header names for
-which the response varies.
+Метод ``setVary()`` получает имя заголовка или массив имен заголовков от 
+которых изменяется ответ.
 
-Expiration and Validation
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-You can of course use both validation and expiration within the same Response.
-As expiration wins over validation, you can easily benefit from the best of
-both worlds. It gives you many ways to configure and tweak your caching
-strategy.
-
-.. index::
-    pair: Cache; Configuration
-
-More Response Methods
+Истечение и Валидация
 ~~~~~~~~~~~~~~~~~~~~~
 
-The Response class provides many more methods related to the cache. Here are
-the most useful ones::
+Конечно вы можете использовать одновременно и валидацию и истечение в 
+одинаковых Response. Так как истечение выигрывает у валидации, вы можете 
+легко взять лучшее из обоих миров. Это дает вам множество путей настройки 
+и корректировки вашей стратегии кэширования.
 
-    // Mark the Response as private
+.. index::
+    pair: Кэш; Конфигурация
+
+Больше Методов Response
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Класс Response предоставляет еще множество методов связанных с кэшем. Вот самые 
+полезные из них::
+
+    // Пометим Response как приватный
     $response->setPrivate();
 
-    // Mark the Response as public
+    // Пометим Response как публичный
     $response->setPublic();
 
-    // Marks the Response stale
+    // Пометим Response как устаревший
     $response->expire();
 
-Last but not the least, most cache-related HTTP headers can be set via the
-single ``setCache()`` method::
+Последнее но совсем не последнее по значимости, HTTP заголовки, 
+наиболее связанные с кэшем, могут быть установлены вызовом одного 
+метода ``setCache()``::
 
-    // Set cache settings in one call
+    // Установим настройки кэша в один вызов
     $response->setCache(array(
         'etag'          => $etag,
         'last_modified' => $date,
@@ -383,16 +385,17 @@ single ``setCache()`` method::
         'public'        => true,
     ));
 
-Configuring the Cache
+Конфигурирование Кэша
 ---------------------
 
-As you might have guessed, the best configuration to speed your application is
-by adding a gateway cache in front of your application. And as Symfony2 only
-uses standard HTTP headers to manage its cache, there is no need for a
-proprietary cache layer. Instead, you can use any reverse proxy you want like
-Apache mod_cache, Squid, or Varnish. If you don't want to install yet another
-software, you can also use the Symfony2 reverse proxy, which is written in PHP
-and does the same job as any other reverse proxy.
+Как вы уже догадались, наилучшей конфигурацией для ускорения вашего приложения 
+будет добавление gateway cache на входе вашего приложения. И так как Symfony2 
+использует только стандартные HTTP заголовки для управления его кэшем, здесь 
+нет необходимости в внутреннем слое кэша. Вместо этого, вы можете использовать 
+любой обратимый прокси какой захотите, такой как Apache mod_cache, Squid, или 
+Varnish. Если вы не хотите устанавливать дополнительное программное обеспечение, 
+вы можете использовать обратимый прокси встроенный в Symfony2, который написан на 
+PHP и делает ту же работу что и любой другой обратимый прокси.
 
 Public vs Private Responses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
