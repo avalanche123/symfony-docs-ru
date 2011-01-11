@@ -226,57 +226,59 @@ Symfony2 предоставляет методы, которые абстраг�
 
 Когда ресурс должен быть обновлен как только были изменены данные, модель 
 истечения терпит крах. Модель валидации решает эту задачу. В этой модели, 
-вы преимущественно сохраняете bandwidth as the representation is
-not sent twice to the same client (a 304 response is sent instead). But if you
-design your application carefully, you might be able to get the bare minimum
-data needed to send a 304 response and save CPU also; and if needed, perform
-the more heavy tasks (see below for an implementation example).
+вы преимущественно сохраняете пропускную способность, так как представление не 
+отсылается дважды одному и тому же клиенту (вместо этого отсылается ответ 304). 
+Но если вы внимательно проектируете дизайн вашего приложения, у вас должна быть 
+возможность получить минимальный объем данных, необходимый для отправки ответа 
+304, и сохранить также CPU; и если необходимо, выполнить более трудоемкие 
+задачи (смотрите ниже практический пример).
 
 .. index::
    single: Кэш; Etag заголовок
    single: HTTP заголовки; Etag
 
-Validation with the ``ETag`` Header
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Валидация с использованием заголовка ``ETag``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-According to the RFC, "The ``ETag`` response-header field provides the current
-value of the entity-tag for one representation of the target resource. An
-entity-tag is intended for use as a resource-local identifier for
-differentiating between representations of the same resource that vary over
-time or via content negotiation.". "An entity-tag MUST be unique across all
-versions of all representations associated with a particular resource."
+В соответствии с RFC, "Поле ответа-заголовка ``ETag`` обеспечивает текущее 
+значение entity-tag для одного представления рассматриваемого ресурса. 
+Entity-tag предполагается использовать в качестве локального для ресурса 
+идентификатора для дифференциации между представлениями одного и того же 
+ресурса, изменяющегося во времени или через согласование содержания.". 
+"Entity-tag ДОЛЖЕН быть уникальным во всех версиях всех представлений, 
+ассоциированных с конкретным ресурсом."
 
-A possible value for the "entity-tag" can be the hash of the response content
-for instance::
+Возможным значением для "entity-tag" может быть, например, хэш содержимого 
+ответа::
 
     $response->setETag(md5($response->getContent()));
 
-This algorithm is simple enough and very generic, but you need to create the
-whole Response before being able to compute the ETag, which is sub-optimal.
-This strategy is often used as a default algorithm in many frameworks, but you
-should use any algorithm that fits the way you create resources better (see
-the section below about optimizing validation).
+Этот алгоритм достаточно прост и очень универсален, но вам нужно создать 
+Response полностью, перед тем как вы сможете рассчитать ETag, что не совсем 
+оптимально. Эта стратегия часто используется как алгоритм по умолчанию во 
+многих фреймворках, но вам следует использовать какой-нибудь алгоритм, 
+который лучше учитывает путь создания ресурсов (смотрите секцию ниже про 
+оптимизацию валидации).
 
 .. tip::
 
-    Symfony2 also supports weak ETags by passing ``true`` as the second
-    argument to the
-    :method:`Symfony\\Component\\HttpFoundation\\Response::setETag` method.
+    Symfony2 также поддерживает слабые ETags путем передачи ``true`` в качестве 
+    второго аргумента в метод 
+    :method:`Symfony\\Component\\HttpFoundation\\Response::setETag`.
 
 .. index::
-   single: Cache; Last-Modified header
-   single: HTTP headers; Last-Modified
+   single: Кэш; Last-Modified заголовок
+   single: HTTP заголовки; Last-Modified
 
-Validation with the ``Last-Modified`` Header
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Валидация с использованием заголовка ``Last-Modified``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-According to the RFC, "The ``Last-Modified`` header field indicates the date
-and time at which the origin server believes the representation was last
-modified."
+В соответствии с RFC, "Поле заголовка ``Last-Modified`` отображает 
+дату и время, при которой, по мнению главного сервера, отображение было 
+последний раз изменено."
 
-For instance, you can use the latest update date for all the objects needed to
-compute the resource representation as the value for the ``Last-Modified``
-header value::
+Например, в качестве даты последнего изменения для всех объектов, требующих 
+расчета времени отображения, значение заголовка ``Last-Modified``::
 
     $articleDate = new \DateTime($article->getUpdatedAt());
     $authorDate = new \DateTime($author->getUpdatedAt());
@@ -289,8 +291,8 @@ header value::
    single: Cache; Conditional Get
    single: HTTP; 304
 
-Optimizing your Code with Validation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Оптимизация вашего Кода при помощи Валидации
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The main goal of any caching strategy is to lighten the load on the
 application; put another way, the less you do in your application to return a
