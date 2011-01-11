@@ -1,76 +1,41 @@
-Следует переводить наиболее стабильные части документации, в которых немного
-аннотаций к коду, т. к. код меняется и аннотации устаревают.
+Как предложить свой вариант перевода?
+=====================================
 
+1. Для начала, вам `нужно сделать Fork <http://help.github.com/forking/>`_ текущего `репозитория с переводом <https://github.com/avalanche123/symfony-docs-ru>`_
 
-Форматирование
-==============
+2. В своем репозитории перевода `создайте branch <http://www.kernel.org/pub/software/scm/git/docs/git-branch.html>`_ и внесите законченный набор изменений в перевод. Желательно, чтобы изменения касались не более чем 10 файлов на один ``Pull Request``
 
-* http://docs.symfony-reloaded.org/contributing/documentation/format.html
-* http://sphinx.pocoo.org/rest.html
-* http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html
+3. Актуальную версию английской документации берите с `репозитория symfony-docs <https://github.com/symfony/symfony-docs>`_
 
-
-Публикация патча
-================
-
-1. Создайте новый бранч в своём репозитории `git checkout -b patchN`
-
-2. Выберите файлы для перевода
-
-3. Скопируйте их последние версии на английском языке из репозитория
-   *symfony-docs*
-
-4. Выполните первичный коммит::
-
-    git add .
-    git commit -m "English version"
-
-5. Переведите :)
-
-6. Если переведено не всё::
-
-    git add .
-    git commit -m "partial"
-
-   Теперь можно обновить мастер до апстрима, например
-
-7. Когда всё переведено выполните финальный коммит::
-
-    git add .
-    git commit -m "Some files done"
-
-8. Добавьте бранч на github::
-
-    git push origin patch
+4. Когда вы закончили правки в переводе, из нужного ``branch`` `сделайте Pull Request <http://help.github.com/pull-requests/>`_
 
 Соглашения по переводу
 ======================
 
-1. Названия классов стараемся не переводить: "``Response object``" переводим как "``объект Response``", а не "``объект ответа``".
+1. Некоторые частные случаи:
 
++----------------------+------------------------+--------------------------+
+| **Исходный вариант** | **Правильный перевод** | **Неправильный перевод** |
++----------------------+------------------------+--------------------------+
+| **Response object**  | объект Response        | объект ответа            |
++----------------------+------------------------+--------------------------+
 Не переводятся
 ==============
 
-1. Служебная разметка
-~~~~~~~~~~~~~~~~~~~~~
+1. Служебная разметка::
 
-::
+    - :orphan:
+    - .. glossary::
+    - .. note::
+    - .. tip::
+    - .. toctree::
+         :maxdepth: 2
+         :glob:
+         :numbered:
 
-    :orphan:
+2. Служебные слова: "``API``", "``HTTP``", "``Symfony2``", "``Controller``", "``Responce``", etc.
 
-    .. glossary::
+Полезные ссылки
+===============
 
-    .. note::
-
-    .. tip::
-
-    .. toctree::
-        :maxdepth: 2
-        :glob:
-        :numbered:
-
-2. Служебные слова
-~~~~~~~~~~~~~~~~~~
-
-* API
-* bundle - бандл?
+* Правила форматирования документации: `Symfony2 Documentation Format <http://docs.symfony-reloaded.org/contributing/documentation/format.html>`_ и `reStructuredText Markup Specification <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_
