@@ -162,7 +162,7 @@ Symfony2 проводит маршрутизацию запроса, анали�
 
         # src/Application/HelloBundle/Resources/config/routing.yml
         hello:
-            pattern:  /hello/:name
+            pattern:  /hello/{name}
             defaults: { _controller: HelloBundle:Hello:index }
 
     .. code-block:: xml
@@ -174,7 +174,7 @@ Symfony2 проводит маршрутизацию запроса, анали�
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://www.symfony-project.org/schema/routing http://www.symfony-project.org/schema/routing/routing-1.0.xsd">
 
-            <route id="hello" pattern="/hello/:name">
+            <route id="hello" pattern="/hello/{name}">
                 <default key="_controller">HelloBundle:Hello:index</default>
             </route>
         </routes>
@@ -186,7 +186,7 @@ Symfony2 проводит маршрутизацию запроса, анали�
         use Symfony\Component\Routing\Route;
 
         $collection = new RouteCollection();
-        $collection->add('hello', new Route('/hello/:name', array(
+        $collection->add('hello', new Route('/hello/{name}', array(
             '_controller' => 'HelloBundle:Hello:index',
         )));
 

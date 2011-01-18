@@ -28,13 +28,13 @@
 
         # src/Application/HelloBundle/Resources/config/routing.yml
         hello:
-            pattern:  /hello/:name
+            pattern:  /hello/{name}
             defaults: { _controller: HelloBundle:Hello:index, _format: xml }
 
     .. code-block:: xml
 
         <!-- src/Application/HelloBundle/Resources/config/routing.xml -->
-        <route id="hello" pattern="/hello/:name">
+        <route id="hello" pattern="/hello/{name}">
             <default key="_controller">HelloBundle:Hello:index</default>
             <default key="_format">xml</default>
         </route>
@@ -42,7 +42,7 @@
     .. code-block:: php
 
         // src/Application/HelloBundle/Resources/config/routing.php
-        $collection->add('hello', new Route('/hello/:name', array(
+        $collection->add('hello', new Route('/hello/{name}', array(
             '_controller' => 'HelloBundle:Hello:index',
             '_format'     => 'xml',
         )));
@@ -67,14 +67,14 @@
 
         # src/Application/HelloBundle/Resources/config/routing.yml
         hello:
-            pattern:      /hello/:name.:_format
+            pattern:      /hello/{name}.{_format}
             defaults:     { _controller: HelloBundle:Hello:index, _format: html }
             requirements: { _format: (html|xml|json) }
 
     .. code-block:: xml
 
         <!-- src/Application/HelloBundle/Resources/config/routing.xml -->
-        <route id="hello" pattern="/hello/:name.:_format">
+        <route id="hello" pattern="/hello/{name}.{_format}">
             <default key="_controller">HelloBundle:Hello:index</default>
             <default key="_format">html</default>
             <requirement key="_format">(html|xml|json)</requirement>
@@ -83,7 +83,7 @@
     .. code-block:: php
 
         // src/Application/HelloBundle/Resources/config/routing.php
-        $collection->add('hello', new Route('/hello/:name.:_format', array(
+        $collection->add('hello', new Route('/hello/{name}.{_format}', array(
             '_controller' => 'HelloBundle:Hello:index',
             '_format'     => 'html',
         ), array(
