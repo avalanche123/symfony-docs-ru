@@ -94,26 +94,26 @@ header и footer. В Symfony2, мы смотрим на эту проблему 
 позволяет создать его базовый "макет", содержащий общие элементы вашего сайта и
 устанавливающий "блоки", которые могут быть переопределены дочерними шаблонами.
 
-Шаблон ``index.twig`` наследуется от ``layout.twig``, спасибо тегу ``extends``:
+Шаблон ``index.twig.html`` наследуется от ``layout.twig.html``, спасибо тегу ``extends``:
 
 .. code-block:: jinja
 
-    {# src/Application/HelloBundle/Resources/views/Hello/index.twig #}
-    {% extends "HelloBundle::layout.twig" %}
+    {# src/Application/HelloBundle/Resources/views/Hello/index.twig.html #}
+    {% extends "HelloBundle::layout.twig.html" %}
 
     {% block content %}
         Hello {{ name }}!
     {% endblock %}
 
-Обозначение ``HelloBundle::layout.twig`` выглядит знакомо, не так ли?
+Обозначение ``HelloBundle::layout.twig.html`` выглядит знакомо, не так ли?
 Обозначается так же как ссылка на шаблон. Эта часть ``::`` всего лишь обозначает
 что контроллер не указан, т. о. соотвествующий файл хранится прямо в ``views/``.
 
-Рассмотрим файл ``layout.twig``:
+Рассмотрим файл ``layout.twig.html``:
 
 .. code-block:: jinja
 
-    {% extends "::layout.twig" %}
+    {% extends "::layout.twig.html" %}
 
     {% block body %}
         <h1>Hello Application</h1>
@@ -123,18 +123,18 @@ header и footer. В Symfony2, мы смотрим на эту проблему 
 
 Тег ``{% block %}`` устанавливает два блока (``body`` и ``content``), которые
 дочерние шаблоны смогут заполнить. Всё что делает этот тег, это сообщает движку
-шаблонов, что дочерний шаблон может переопределить эти участки. Шаблон ``index.twig``
+шаблонов, что дочерний шаблон может переопределить эти участки. Шаблон ``index.twig.html``
 переопределяет блок ``content``, который указан в базовом макете, как если бы наш
 макет сам по себе был декорирован оным.
 
 Twig поддерживает много уровней декорирования: макет может быть декорирован
-другим. Когда бандл в имени шаблона не указан (``::layout.twig``), то виды
+другим. Когда бандл в имени шаблона не указан (``::layout.twig.html``), то виды
 ищутся в папке ``app/views/``.
 Эта папка хранит глобальные виды для всего проекта:
 
 .. code-block:: jinja
 
-    {# app/views/layout.twig #}
+    {# app/views/layout.twig.html #}
     <!DOCTYPE html>
     <html>
         <head>
@@ -159,23 +159,23 @@ Symfony2 поставляется со множеством специльных
 Лучший способ распределить фрагмент кода между несколькими различными шаблонами
 это определить шаблон, подключаемый в другие.
 
-Создайте шаблон ``hello.twig``:
+Создайте шаблон ``hello.twig.html``:
 
 .. code-block:: jinja
 
-    {# src/Application/HelloBundle/Resources/views/Hello/hello.twig #}
+    {# src/Application/HelloBundle/Resources/views/Hello/hello.twig.html #}
     Hello {{ name }}
 
-Измените шаблон ``index.twig`` таким образом, чтобы подключить его:
+Измените шаблон ``index.twig.html`` таким образом, чтобы подключить его:
 
 .. code-block:: jinja
 
-    {# src/Application/HelloBundle/Resources/views/Hello/index.twig #}
-    {% extends "HelloBundle::layout.twig" %}
+    {# src/Application/HelloBundle/Resources/views/Hello/index.twig.html #}
+    {% extends "HelloBundle::layout.twig.html" %}
 
-    {# override the body block from index.twig #}
+    {# override the body block from index.twig.html #}
     {% block body %}
-        {% include "HelloBundle:Hello:hello.twig" %}
+        {% include "HelloBundle:Hello:hello.twig.html" %}
     {% endblock %}
 
 Вложение других контроллеров
@@ -190,7 +190,7 @@ Symfony2 поставляется со множеством специльных
 
 .. code-block:: jinja
 
-    {# src/Application/HelloBundle/Resources/views/Hello/index.twig #}
+    {# src/Application/HelloBundle/Resources/views/Hello/index.twig.html #}
     {% render "HelloBundle:Hello:fancy" with { 'name': name, 'color': 'green' } %}
 
 Имеем строку ``HelloBundle:Hello:fancy``, обращающуюся к действию ``fancy``
@@ -206,7 +206,7 @@ Symfony2 поставляется со множеством специльных
             // create some object, based on the $color variable
             $object = ...;
 
-            return $this->render('HelloBundle:Hello:fancy.twig', array('name' => $name, 'object' => $object));
+            return $this->render('HelloBundle:Hello:fancy.twig.html', array('name' => $name, 'object' => $object));
         }
 
         // ...

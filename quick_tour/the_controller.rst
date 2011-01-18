@@ -47,14 +47,30 @@
             '_format'     => 'xml',
         )));
 
-Затем, наряду с ``index.php`` добавьте шаблон ``index.xml.php``:
+Затем, наряду с ``index.twig.html`` добавьте шаблон ``index.twig.xml``:
 
 .. code-block:: xml+php
 
-    # src/Application/HelloBundle/Resources/views/Hello/index.xml.php
+    # src/Application/HelloBundle/Resources/views/Hello/index.twig.xml
     <hello>
-        <name><?php echo $name ?></name>
+        <name>{{ name }}</name>
     </hello>
+
+
+И наконец, т.к. шаблон должен быть выбран в соответствии с форматом, внесите
+следующие изменения в контроллер:
+
+.. code-block:: php
+   :linenos:
+
+    // src/Application/HelloBundle/Controller/HelloController.php
+    public function indexAction($name, $_format)
+    {
+        return $this->render(
+            'HelloBundle:Hello:index.twig.'.$_format,
+            array('name' => $name)
+        );
+    }
 
 Вот и всё что для этого нужно. Нет нужды изменять контроллер. Для стандартных
 форматов Symfony2 автоматически подбирает заголовок ``Content-Type`` для ответа.
@@ -91,8 +107,7 @@
         )));
 
 Таким образом контроллер будет вызыван для следующих URL:: ``/hello/Fabien.xml``
-или ``/hello/Fabien.json``. ``html`` это первоначальное значение для ``_format``,
-т. е. ``/hello/Fabien`` и ``/hello/Fabien.html`` оба соотвествуют формату ``html``.
+или ``/hello/Fabien.json``
 
 Запись ``requirements`` устанавилвает регулярные выражения, которым должны
 соотвествовать заполнители. Если в этом примере запросить ресурс ``/hello/Fabien.js``
@@ -110,7 +125,7 @@
 
     public function indexAction($name)
     {
-        return $this->render('HelloBundle:Hello:index.php', array('name' => $name));
+        return $this->render('HelloBundle:Hello:index.twig.html', array('name' => $name));
     }
 
 Метод ``render()`` заполняет шаблон и возвращает объект ``Response``. Ответ может
@@ -119,7 +134,7 @@
 
     public function indexAction($name)
     {
-        $response = $this->render('HelloBundle:Hello:index.php', array('name' => $name));
+        $response = $this->render('HelloBundle:Hello:index.twig.html', array('name' => $name));
         $response->headers->set('Content-Type', 'text/plain');
 
         return $response;
