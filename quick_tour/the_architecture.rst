@@ -58,8 +58,7 @@ Web директория
 * ``registerBundleDirs()``: Возвращает массив, связывающий пространства имён и
   их домашние директории;
 
-* ``registerContainerConfiguration()``: Возвращает главный объект конфигурации
-  (об этом чуть позже);
+* ``registerContainerConfiguration()``: Загружает конфигурацию  (об этом чуть позже);
 
 Обратите внимание на типичную реализацию этих методов для того чтобы лучше
 понять гибкость фреймворка.
@@ -72,7 +71,8 @@ Web директория
 Папка с исходниками
 ~~~~~~~~~~~~~~~~~~~~
 
-Файл ``src/autoload.php`` ответственен за автозагрузку всех файлов из папки ``src/``::
+Файл ``src/autoload.php`` ответственен за автозагрузку всех PHP классов,
+которые используются в приложении::
 
     // src/autoload.php
     $vendorDir = __DIR__.'/vendor';
@@ -89,14 +89,16 @@ Web директория
         'Doctrine\\Common\\DataFixtures' => $vendorDir.'/doctrine-data-fixtures/lib',
         'Doctrine\\Common'               => $vendorDir.'/doctrine-common/lib',
         'Doctrine\\DBAL\\Migrations'     => $vendorDir.'/doctrine-migrations/lib',
-        'Doctrine\\ODM\\MongoDB'         => $vendorDir.'/doctrine-mongodb/lib',
+        'Doctrine\\MongoDB'              => $vendorDir.'/doctrine-mongodb/lib',
+        'Doctrine\\ODM\\MongoDB'         => $vendorDir.'/doctrine-mongodb-odm/lib',
         'Doctrine\\DBAL'                 => $vendorDir.'/doctrine-dbal/lib',
         'Doctrine'                       => $vendorDir.'/doctrine/lib',
         'Zend'                           => $vendorDir.'/zend/library',
     ));
     $loader->registerPrefixes(array(
-        'Swift_' => $vendorDir.'/swiftmailer/lib/classes',
-        'Twig_'  => $vendorDir.'/twig/lib',
+        'Swift_'           => $vendorDir.'/swiftmailer/lib/classes',
+        'Twig_Extensions_' => $vendorDir.'/twig-extensions/lib',
+        'Twig_'            => $vendorDir.'/twig/lib',
     ));
     $loader->register();
 
@@ -117,7 +119,7 @@ Web директория
 особенностей Symfony2, о системе бандлов :term:`bundle`.
 
 Бандл в некотором роде как плагин в других программах. Почему его назвали
-бандл, а не плагин? Потому что *всё что угодно* в Symfony2 это бандл, от
+*бандл*, а не *плагин*? Потому что *всё что угодно* в Symfony2 это бандл, от
 ключевых особенностей фреймворка до кода, который вы пишете для приложения.
 Бандлы это высшая каста в Symfony2. Это даёт вам гибкость в применении как уже
 встроенных особенностей сторонних бандлов, так и в написании своих собственных.
