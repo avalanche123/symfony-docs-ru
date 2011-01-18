@@ -51,7 +51,7 @@
 
 .. code-block:: xml+php
 
-    # src/Application/HelloBundle/Resources/views/Hello/index.twig.xml
+    <!-- src/Application/HelloBundle/Resources/views/Hello/index.twig.xml -->
     <hello>
         <name>{{ name }}</name>
     </hello>
@@ -61,7 +61,6 @@
 следующие изменения в контроллер:
 
 .. code-block:: php
-   :linenos:
 
     // src/Application/HelloBundle/Controller/HelloController.php
     public function indexAction($name, $_format)
@@ -145,7 +144,7 @@
 
     public function indexAction($name)
     {
-        return $this->createResponse('Hello '.$name);
+        return new Response('Hello '.$name);
     }
 
 Это действительно полезно, когда контроллер должен отправить JSON ответ на Ajax
@@ -184,7 +183,7 @@
 Если вы хотите переместить пользователя на другую страницу, используйте метод
 ``redirect()``::
 
-    $this->redirect($this->generateUrl('hello', array('name' => 'Lucas')));
+    return $this->redirect($this->generateUrl('hello', array('name' => 'Lucas')));
 
 ``generateUrl()`` такой же метод как и ``generate()``, который мы применяли ранее в
 хелпере ``router``. Он получает имя маршрута и массив параметров как аргументы
@@ -192,8 +191,7 @@
 
 Также вы можете легко переместить одно действие на другое с помощью метода
 ``forward()``. Как и для хелпера ``actions``, он применяет внутренний подзапрос,
-но возвращает объект ``Response``, что позволяет в дальнейшем его изменить если
-возникнет необходимость::
+но возвращает объект ``Response``, что позволяет в дальнейшем его изменить::
 
     $response = $this->forward('HelloBundle:Hello:fancy', array('name' => $name, 'color' => 'green'));
 
@@ -218,11 +216,13 @@
 
     $request->request->get('page'); // get a $_POST parameter
 
-В шаблоне получить доступ к объекту ``Request`` можно через хелпер ``request``::
+В шаблоне получить доступ к объекту ``Request`` можно через хелпер ``app.request``::
 
 .. code-block:: html+php
 
-    <?php echo $view['request']->getParameter('page') ?>
+    {{ app.request.query.get('page') }}
+
+    {{ app.request.parameter('page') }}
 
 Сессия
 -----------
@@ -253,12 +253,13 @@
     $session->setFlash('notice', 'Congratulations, your action succeeded!');
 
     // display the message back in the next request (in a template)
-    <?php echo $view['session']->getFlash('notice') ?>
+    {{ app.session.flash('notice') }}
 
 Заключительное слово
 --------------------
 
 Вот и всё что хотелось рассказать, и я даже уверен, что мы не использовали все
-отведённые 10 минут. В предыдущей части мы рассмотрели как расширить систему
-шаблонов при помощи хелперов. Но в Symfony2 всё может быть расширено или
-заменено с помощью бандлов. Это и есть тема следующей части руководства.
+отведённые 10 минут. Мы коротко рассмотрели бандлы в первой части, и все 
+особенности о которых мы узнали являются частью бандлов ядра фреймворка.
+Но благодаря бандлам, в Symfony2 всё может быть
+расширено или заменено. Это и есть тема следующей части руководства.
