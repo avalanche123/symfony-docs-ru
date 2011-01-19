@@ -523,51 +523,50 @@ Symfony2 поставляется со встроенным обратным п�
 Apache mod_cache
 ~~~~~~~~~~~~~~~~
 
-If you use Apache, it can act as a simple gateway cache when the mod_cache
-extension is enabled.
+Если вы используете Apache, он может выступать как простой gateway кэш, когда
+расширение mod_cache включено.
 
 Squid
 ~~~~~
 
-Squid is a "regular" proxy server that can also be used as a reverse proxy
-server. If you already use Squid in your architecture, you can probably
-leverage its power for your Symfony2 applications. If not, we highly recommend
-you to use Varnish as it has many advantages over Squid and because it
-supports features needed for advanced Symfony2 caching strategies (like ESI
-support).
+Squid это "обычный" прокси сервер, который также может выступать в роли обратного прокси.
+Если вы уже используете Squid в вашей архитектуре, вы вероятно будете использовать
+его мощь для вашего Symfony2 приложения. Если нет, мы настоятельно рекомендуем
+вам использовать Varnish, так как он имеет множество преимуществ перед Squid и протому что
+он поддерживает функции необходимые для продвинутых стратегий кэширования Symfony2 (таких как
+поддержка ESI).
 
 Varnish
 ~~~~~~~
 
-Varnish is our preferred choice for three main reasons:
+Varnish это наш предпочтительный выбор, из-за трех главных причин:
 
-* It has been designed as a reverse proxy from day one so its configuration is
-  really straightforward;
+* Он был изначально разработан как обратный прокси, его настройка предельно прота;
 
-* Its modern architecture means that it is insanely fast;
+* Его современная архитектура означает что, он невероятно быстр;
 
-* It supports ESI, a technology used by Symfony2 to allow different elements
-  of a page to have their own caching strategy (read the next section for more
-  information).
+* Он поддерживает ESI, технология которая используется Symfony2 для того, что бы
+  разные части страници имели свою собственную стратегию кэширования.
+  Прочтите следующий раздел для подробной информации.
 
 .. index::
   single: Cache; ESI
   single: ESI
 
-Using Edge Side Includes
+Использование Edge Side Includes
 ------------------------
 
-Gateway caches are a great way to make your website performs better. But they
-have one limitation: they can only cache whole pages. So, if you cannot cache
-whole pages or if a page has "more" dynamic parts, you are out of luck.
-Fortunately, Symfony2 provides a solution for these cases, based on a
-technology called `ESI`_, or Edge Side Includes. Akamaï wrote this
-specification almost 10 years ago, and it allows specific parts of a page to
-have a different caching strategy that the main page.
+Gateway кэши хороший способ сделать ваш сайт лучше. Но они имеют одно ограничени:
+они могут кэшировать страницы только полностью. Что ж, если вы не можете кэшировать
+страницы полностью или если страница имеет "много" динамичестих частей, вам не повезло.
+К щастью, Symfony2 предлагает решение на этот случай, основанное на технологии
+называемой `ESI`_, or Edge Side Includes. Akamaï написал эту спецификацию почти
+10 лет назад, она позволяет определить части страницы которые будут иметь стратегии
+кэширования отличные от основной страницы.
 
-The ESI specification describes tags you can embed in your pages to
-communicate with the gateway cache. Only one tag is implemented in Symfony2,
-``include``, as this is the only useful one outside of Akamaï context:
+ESI спецификация описывает тэги которые вы можете вставить в ваши страницы для
+связи с gateway кэшем. Только один тэг реализован в Symfony2,
+``include``, так как он один полезен вне контекста Akamaï:
 
 .. code-block:: html
 
@@ -575,24 +574,24 @@ communicate with the gateway cache. Only one tag is implemented in Symfony2,
         <body>
             Some content
 
-            <!-- Embed the content of another page here -->
+            <!-- Вставте содержание другой страницы тут -->
             <esi:include src="http://..." />
 
             More content
         </body>
     </html>
 
-When a request comes in, the gateway cache gets the page from its cache or
-calls the backend application. If the response contains one or more ESI tags,
-the proxy behaves like for the main request. It gets the included page content
-from its cache or calls the backend application again. Then it merges all the
-included content in the main page and sends it back to the client.
+Когда приходит request, gateway кэш берет страницу из своего кэша или
+вызывает приложение. Если response содержит один или более ESI тэга,
+proxy ведет себя как для основного request. Он берет содержимое вложенной страницы
+из своего кэша или снова вызывает приложение. Потом он проводит слияние всего вложенного,
+в основную страницу, содержимого и отправляет назад клиенту.
 
 .. index::
     single: Helper; actions
 
-As the embedded content comes from another page (or controller for that
-matter), Symfony2 uses the standard ``render`` helper to configure ESI tags:
+Так как вложенное содержимое приходит с другой страницы (в данном случае
+с другого контроллера), Symfony2 использует стандартный хелпер ``render`` для настройки ESI тэгов:
 
 .. configuration-block::
 
@@ -604,28 +603,28 @@ matter), Symfony2 uses the standard ``render`` helper to configure ESI tags:
 
         {% render '...:list' with [], ['standalone': true] %}
 
-By setting ``standalone`` to ``true``, you tell Symfony2 that the action
-should be rendered as an ESI tag. You might be wondering why you would want to
-use a helper instead of just writing the ESI tag yourself. That's because
-using a helper makes your application works even if there is no gateway cache
-installed. Let's see how it works.
+С установкой настройки ``standalone`` в значение ``true``, вы говорите Symfony2 что
+это действие должно быть отабражено как ESI тэг. Вы можете быть удивлены, почему вам стоит
+использовать helper, а не просто писать теги ESI самостоятельно.
+Это потому что используя helper, вы делаете приложение работоспособным даже если
+gateway кэш не установлен. Давайте посмотрим как это работает.
 
-When standalone is ``false`` (the default), Symfony2 merges the included page
-content within the main one before sending the response to the client. But
-when standalone is ``true`` and if Symfony 2 detects that it talks to a
-gateway cache that supports ESI, it generates an ESI include tag. But if there
-is no gateway cache or if it does not support ESI, Symfony2 will just merge
-the included page content within the main one as it would have done when
-standalone is ``false``.
+Когда настройка ``standalone`` установлена как ``false`` (по умолчанию), Symfony2
+объединяет содержимое вложенных страниц в основную страницу, перед тем как послать response
+клиенту. Но Когда настройка ``standalone`` установлена как ``true`` и если Symfony2
+обнаруживает что она связывается с gateway кэшем, который поддерживает ESI, она генерирует
+ESI тэг ``include``. Но если gateway кэш отсутствует или он не поддерживает ESI,
+Symfony2 будет объединять содержимое вложенных страниц в основную страницу, так как если бы
+``standalone`` был бы``false``.
 
 .. note::
 
-    Symfony2 detects if a gateway cache supports ESI via another Akamaï
-    specification that is supported out of the box by the Symfony2 reverse
-    proxy (a working configuration for Varnish is also provided below).
+    Symfony2 обнаруживает поддерживает ли gateway кэш ESI с помощью другой Akamaï
+    спецификации, которая поддерживается "из коробки" в обратном прокси Symfony2
+    (рабочая коняигурация для Varnish также приведена ниже).
 
-For the ESI include tag to work properly, you must define the ``_internal``
-route:
+Для того что бы ESI тэг ``include`` работал коректно, вы должны определить ``_internal``
+роутинг:
 
 .. configuration-block::
 
@@ -660,9 +659,9 @@ route:
 
 .. tip::
 
-    You might want to protect this route by either choosing a non easily
-    guessable prefix, or by protecting them using the Symfony2 firewall
-    feature (by allowing access to your reverse proxies IP range).
+    Возможно вы захотите защитить этот роутинг, либо выбрав нелегко угадываемый префикс,
+    или защитив его используя возможности Symfony2 firewall
+    (разрешая доступ к диапазону IP вашего обратного прокси).
 
 One great advantage of this caching strategy is that you can make your
 application as dynamic as needed and at the same time, hit the application as
