@@ -398,25 +398,24 @@ Varnish. Если вы не хотите устанавливать дополн
 вы можете использовать обратный прокси встроенный в Symfony2, который написан на
 PHP и делает ту же работу что и любой другой обратный прокси.
 
-Public vs Private Responses
+Публичный Response против Приватного Response
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As explained at the beginning of this document, Symfony2 is very conservative
-and makes all Responses private by default (the exact rules are described
-there).
+Как показано в начале этой статьи, Symfony2 очень консервативна
+и делает все Response приватными по умолчанию (точные правила описаны тут).
 
-If you want to use a shared cache, you must remember to explicitly add the
-``public`` directive to ``Cache-Control``::
+Если вы хотите использовать shared кэш, вы должны помнить явно добавлять
+``public`` директиву к ``Cache-Control``::
 
-    // The Response is private by default
+    // Response приватный по умолчанию
     $response->setEtag($etag);
     $response->setLastModified($date);
     $response->setMaxAge(10);
 
-    // Change the Response to be public
+    // Меняем Response что бы сделать его публичным
     $response->setPublic();
 
-    // Set cache settings in one call
+    // Устанавливаем настройки кэша в один вызов
     $response->setCache(array(
         'etag'          => $etag,
         'last_modified' => $date,
@@ -424,15 +423,14 @@ If you want to use a shared cache, you must remember to explicitly add the
         'public'        => true,
     ));
 
-Symfony2 Reverse Proxy
+Обратный прокси Symfony2
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Symfony2 comes with a reverse proxy written in PHP. Enable it and it will
-start to cache your application resources right away. Installing it is as easy
-as it can get. Each new Symfony2 application comes with a pre-configured
-caching Kernel (``AppCache``) that wraps the default one (``AppKernel``).
-Modify the code of a front controller so that it reads as follows to enable
-caching::
+Symfony2 поставляется со встроенным обратным прокси написаным на PHP. Вкличите его и он
+начнет кэшировать ресурсы вашего приложениея правильно. Его установка проста настолько
+насколько это возможно. Каждое Symfony2 приложение идет с пред-настройками кэширующего
+Ядра (``AppCache``) которое обрамляет стандартное ядро (``AppKernel``).
+Измените код фронт-контроллера, что бы включить кэширование::
 
     // web/app.php
 
@@ -440,21 +438,20 @@ caching::
 
     use Symfony\Component\HttpFoundation\Request;
 
-    // wrap the default AppKernel with the AppCache one
+    // оберните стандартное Ядро AppKernel в кэширующее Ядро AppCache
     $kernel = new AppCache(new AppKernel('prod', false));
     $kernel->handle(new Request())->send();
 
 .. tip::
 
-    The cache kernel has a special ``getLog()`` method that returns a string
-    representation of what happened in the cache layer. In the development
-    environment, use it to debug and validate your cache strategy::
+    В кэширующеем ядре есть специальный ``getLog()`` метод который возвращает строку,
+    представление того что произошло на уровне кэша. В окружении разработки (dev environment)
+    используйте его для отладки и проверки стратегии кэша:
 
         error_log($kernel->getLog());
 
-The ``AppCache`` object has a sensible default configuration, but it can be
-finely tuned via a set of options you can set by overriding the
-``getOptions()`` method::
+Объект ``AppCache`` имеет разумную конфигурацию по умолчанию, но она может быть
+тонко настроена с помощью установки параметров. Вы можете перегрузить ``getOptions()`` method::
 
     // app/AppCache.php
     class AppCache extends Cache
@@ -473,12 +470,12 @@ finely tuned via a set of options you can set by overriding the
         }
     }
 
-Here is a list of the main options:
+Ниже перечень главных настроек:
 
-* ``default_ttl``: The number of seconds that a cache entry should be
-  considered fresh when no explicit freshness information is provided in a
-  response. Explicit ``Cache-Control`` or ``Expires`` headers override this
-  value (default: ``0``);
+* ``default_ttl``: Число секунд в течении которых вхождение в кэш должно
+  считаться свежим, когда информация о "свежести" явно не приведена в response.
+  Явное указание ``Cache-Control`` или ``Expires`` заголовков перегружает это
+  значение (по умолчанию: ``0``);
 
 * ``private_headers``: Set of request headers that trigger "private"
   ``Cache-Control`` behavior on responses that don't explicitly state whether
@@ -504,24 +501,24 @@ Here is a list of the main options:
   error is encountered (default: ``60``). This setting is overridden by the
   ``stale-if-error`` HTTP ``Cache-Control`` extension (see RFC 5861).
 
-If ``debug`` is ``true``, Symfony2 automatically adds a ``X-Symfony-Cache``
-header to the Response containing useful information about cache hits and
-misses.
+Если опция ``debug`` установлена как ``true``, Symfony2 автоматически добавляет
+заголовок ``X-Symfony-Cache`` к Response, который содержит полезную информацию
+касательно попаданий и промахов в кэш.
 
-The Symfony2 reverse proxy is a great tool to use when developing your website
-on your local network or when you deploy your website on a shared host where
-you cannot install anything beyond PHP code. But being written in PHP, it
-cannot be as fast as a proxy written in C. That's why we highly recommend you
-to use Squid or Varnish on your production servers if possible. The good news
-is that the switch from one proxy server to another is easy and transparent as
-no code modification is needed in your application; start easy with the
-Symfony2 reverse proxy and upgrade later to Varnish when your traffic raises.
+Обратный прокси Symfony2 хорощий инструмент для разработки вашего сайта
+в вашей локальной сети или когда вы разворачиваете ваш сайт на shared хостинг где
+вы не можете установить ничего кроме PHP. Но написанный на PHP, он не может
+быть быстрым как прокси написанный на C. Поэтому мы настоятельно рекомендуем
+использовать Squid или Varnish на вашем боевом сервере если это возможно. Хорошие
+новости то что, переключение с одного прокси сервера на другой является легким и
+прозрачным, так как не требует модификации кода в вашем приложении; легко начать со
+встроенным в Symfony2 обратным прокси и позже перейти на Varnish когда нагрузки возростут.
 
 .. note::
 
-    The performance of the Symfony2 reverse proxy is independent of the
-    complexity of the application; that's because the application kernel is
-    only booted when the request needs to be forwarded to it.
+    Производительность обратного прокси Symfony2 не зависит от сложности
+    приложения; это потому что ядро приложения запускается только тогда, когда
+    запрос должен быть передан в него.
 
 Apache mod_cache
 ~~~~~~~~~~~~~~~~
