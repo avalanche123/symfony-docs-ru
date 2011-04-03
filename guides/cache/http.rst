@@ -304,7 +304,7 @@ Response полностью, перед тем как вы сможете рас
     // Получаем минимум информации для вычисления
     // ETag или значение Last-Modified
     // (базируясь на Request, данных полученных из
-    // базы банных или хранилища ключ-значение)
+    // базы данных или хранилища ключ-значение)
     $article = Article::get(...);
 
     // создадим объект Response с заголовком ETag и/или a Last-Modified
@@ -477,29 +477,29 @@ Symfony2 поставляется со встроенным обратным п�
   Явное указание ``Cache-Control`` или ``Expires`` заголовков перегружает это
   значение (по умолчанию: ``0``);
 
-* ``private_headers``: Set of request headers that trigger "private"
-  ``Cache-Control`` behavior on responses that don't explicitly state whether
-  the response is ``public`` or ``private`` via a ``Cache-Control`` directive.
-  (default: ``Authorization`` and ``Cookie``);
+* ``private_headers``: Набор заголовков запроса который вызывает "private" поведение ``Cache-Control``,
+  в ответах которые не имеют явного состояния ``public`` или ``private``,
+  с помощью директивы ``Cache-Control``.
+  (по умолчинию: ``Authorization`` и ``Cookie``);
 
-* ``allow_reload``: Specifies whether the client can force a cache reload by
-  including a ``Cache-Control`` "no-cache" directive in the request. Set it to
-  ``true`` for compliance with RFC 2616 (default: ``false``);
+* ``allow_reload``: Указывает может ли клиент заставить перезагрузить кэш
+  путем включения ``Cache-Control`` директивы "no-cache" в запрос. Установите в
+  ``true`` для соответствия RFC 2616 (по умолчинию: ``false``);
 
-* ``allow_revalidate``: Specifies whether the client can force a cache
-  revalidate by including a ``Cache-Control`` "max-age=0" directive in the
-  request. Set it to ``true`` for compliance with RFC 2616 (default: false);
+* ``allow_revalidate``: Указывает может ли клиент заставить перезагрузить кэш
+  путем включения ``Cache-Control`` директивы "max-age=0" в запрос.
+  Установите в ``true`` для соответствия RFC 2616 (по умолчинию: ``false``);
 
-* ``stale_while_revalidate``: Specifies the default number of seconds (the
-  granularity is the second as the Response TTL precision is a second) during
-  which the cache can immediately return a stale response while it revalidates
-  it in the background (default: ``2``); this setting is overridden by the
-  ``stale-while-revalidate`` HTTP ``Cache-Control`` extension (see RFC 5861);
+* ``stale_while_revalidate``:  Определяет стандартное количество секунд (с точностью до
+  секунды, так как точность времени жизни Response измеряется в секундах) в течении
+  которых кэш может немедленно возвращать устаревший ответ, пока он обновляется в фоне
+  (по умолчинию: ``2``); эта настройка перекрывается
+  ``stale-while-revalidate`` HTTP расширением ``Cache-Control`` (смотри RFC 5861);
 
-* ``stale_if_error``: Specifies the default number of seconds (the granularity
-  is the second) during which the cache can serve a stale response when an
-  error is encountered (default: ``60``). This setting is overridden by the
-  ``stale-if-error`` HTTP ``Cache-Control`` extension (see RFC 5861).
+* ``stale_if_error``: Определяет стандартное количество секунд (с точностью до
+  секунды) в течении которых кэш может отдавать устаревший ответ если возникла
+  ошибка (по умолчинию: ``60``). Эта настройка перекрывается
+  ``stale-if-error`` HTTP расширением ``Cache-Control`` (смотри RFC 5861).
 
 Если опция ``debug`` установлена как ``true``, Symfony2 автоматически добавляет
 заголовок ``X-Symfony-Cache`` к Response, который содержит полезную информацию
@@ -663,45 +663,44 @@ Symfony2 будет объединять содержимое вложенных
     или защитив его используя возможности Symfony2 firewall
     (разрешая доступ к диапазону IP вашего обратного прокси).
 
-One great advantage of this caching strategy is that you can make your
-application as dynamic as needed and at the same time, hit the application as
-less as possible.
+Одно большое приемущество этой стратегии кэширования то, что вы можете сделать ваше
+приложение настолько динамичным насколько это необходимо и в тоже время, "дергать" приложение
+как можно меньше.
 
 .. note::
 
-    Once you start using ESI, remember to always use the ``s-maxage``
-    directive instead of ``max-age``. As the browser only ever receives the
-    aggregated resource, it is not aware of the sub-components, and so it will
-    obey the ``max-age`` directive and cache the entire page. And you don't
-    want that.
+    Однажды начав использовать ESI, не забывайте всегда использовать директиву
+    ``s-maxage`` вместо ``max-age``. Так как браузер всегда получает собраный ресурс,
+    он никогда не будет беспокоится о суб-компонентах, браузер будет придерживаться
+    директивы ``max-age`` и кэша всей страницы. А вы не хотите этого, не так ли.
 
 .. tip::
 
-    The ``render`` helper supports two other useful options, ``alt`` and
-    ``ignore_errors``. They are automatically converted to ``alt`` and
-    ``onerror`` attributes when an ESI include tag is generated.
+    Хелпер ``render`` поддерживает две других полезных опции, ``alt`` и
+    ``ignore_errors``. Они автоматичести конвертируются в ``alt`` и
+    ``onerror`` атрибуты, когда ESI тэг ``include`` генерируется.
 
 .. index::
     single: Cache; Varnish
 
-Varnish Configuration
+Конфигурация Varnish
 ~~~~~~~~~~~~~~~~~~~~~
 
-As seen previously, Symfony2 is smart enough to detect whether it talks to a
-reverse proxy that understands ESI or not. It works out of the box when you
-use the Symfony2 reverse proxy, but you need a special configuration to make
-it work with Varnish. Thankfully, Symfony2 relies on yet another standard
-written by Akamaï (`Edge Architecture`_), so the configuration tips in this
-chapter can be useful even if you don't use Symfony2.
+Как было показано ранее, Symfony2 достаточно умна для определения работает она с
+обрантым-прокси который поддерживает ESI или нет. Это работает прямо из коробки,
+когда вы используете обратный прокси Symfony2, но вам неоходима особая настройка для
+того, что бы работать с Varnish. К счастью, Symfony2 опирается на еще один стандарт
+описанный Akamaï (`Edge Architecture`_), подсказки по настройке в этой главе могут
+быть полезны даже если вы не используете Symfony2.
 
 .. note::
 
-    Varnish only supports the ``src`` attribute for ESI tags (``onerror`` and
-    ``alt`` attributes are ignored).
+    Varnish поддерживает только атрибут ``src`` для ESI тэгов (атрибуты ``onerror`` и
+    ``alt`` будут проигнорированы).
 
-First, configure Varnish so that it advertises its ESI support by adding a
-``Surrogate-Capability`` header to requests forwarded to the backend
-application:
+Первое, настройте Varnish так что бы он сообщал то, что он поддерживает ESI, путем добавления
+заголовка ``Surrogate-Capability`` к запросам направляемым к
+приложению:
 
 .. code-block:: text
 
@@ -709,9 +708,9 @@ application:
         set req.http.Surrogate-Capability = "abc=ESI/1.0";
     }
 
-Then, optimize Varnish so that it only parses the Response contents when there
-is at least one ESI tag by checking the ``Surrogate-Control`` header that
-Symfony2 adds automatically:
+Потом, оптимизируйте Varnish так, что бы он обрабатывал содержимое Response только когда есть
+хотя бы один ESI тэг, путем проверки заголовка ``Surrogate-Control``, который
+Symfony2 добавляет автоматически:
 
 .. code-block:: text
 
@@ -724,39 +723,38 @@ Symfony2 adds automatically:
 
 .. caution::
 
-    Don't use compression with ESI as Varnish won't be able to parse the
-    response content. If you want to use compression, put a web server in
-    front of Varnish to do the job.
+    Не используйте сжатие всесте с ESI так как Varnish не сможет обработать
+    содержимое ответа. Если вы хотите использовать компрессию, установите веб-сервер
+    перед Varnish для этого.
 
 .. index::
     single: Cache; Invalidation
 
-Invalidation
+Анулирование
 ------------
 
-"There are only two hard things in Computer Science: cache invalidation and
-naming things." --Phil Karlton
+"Есть только две сложных вещи в Компьютерной Науке: анулирование кэша и
+именование вещей." --Phil Karlton
 
-You never need to invalidate cached data because invalidation is already taken
-into account natively in the HTTP cache models. If you use validation, you
-never need to invalidate anything by definition; and if you use expiration and
-need to invalidate a resource, it means that you set the expires date too far
-away in the future.
+Вам нет необходимости анулировать кэш потому что, это уже сделано в
+модели HTTP кэширования. Если вы используете валидацию, вам никогда не нужно
+использовать анулирование по определению; а если вы используете устаревания и
+хотите анулировать ресурс, это значит что вы установили слишком далекую дату устаревания.
 
 .. note::
 
-    It's also because there is no invalidation mechanism that you can use any
-    reverse proxy without changing anything in your application code.
+    Это потому что нет такого механизма устаревания который вы могли бы использовать
+    вместе с обратным прокси без изменения кода вашего приложения.
 
-Actually, all reverse proxies provide ways to purge cached data, but you
-should avoid them as much as possible. The most standard way is to purge the
-cache for a given URL by requesting it with the special ``PURGE`` HTTP method.
+На самом деле, все обратные прокси предоставляют способы для очистки кэша, но вы
+должны избегать этого насколько это возможно. Более стандартный способ очистить кэш,
+это специальный URL, который нужно запросить со специальным HTTP методом ``PURGE``.
 
 .. index::
     single: Cache; Invalidation with Varnish
 
-Here is how you can configure the Symfony2 reverse proxy to support the
-``PURGE`` HTTP method::
+Вот как вы можете настроить обратный кэш Symfony2 для поддержки
+HTTP метода ``PURGE``::
 
     // app/AppCache.php
     class AppCache extends Cache
@@ -778,7 +776,7 @@ Here is how you can configure the Symfony2 reverse proxy to support the
         }
     }
 
-And the same can be done with Varnish too:
+То же самое можно сделать с помощью Varnish:
 
 .. code-block:: text
 
@@ -797,8 +795,8 @@ And the same can be done with Varnish too:
 
 .. caution::
 
-    You must protect the ``PURGE`` HTTP method somehow to avoid random people
-    purging your cached data.
+    Вы должны защитить HTTP метод ``PURGE`` любым способом, во избежании
+    очистки вашего кэша случайными людьми.
 
 .. _`RFC 2616`: http://www.ietf.org/rfc/rfc2616.txt
 .. _`HTTP Bis`: http://tools.ietf.org/wg/httpbis/
