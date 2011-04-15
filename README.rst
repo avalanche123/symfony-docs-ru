@@ -39,7 +39,7 @@ symfony-docs <https://github.com/symfony/symfony-docs>`_
          :glob:
          :numbered:
 
-2. Служебные слова: "``API``", "``HTTP``", "``Symfony2``", "``Controller``", "``Responce``", etc.
+2. Служебные слова: "``API``", "``HTTP``", "``Symfony2``", "``Controller``", "``Response``", etc.
 
 Полезные ссылки
 ===============
