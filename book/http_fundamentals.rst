@@ -38,44 +38,37 @@
 расположением является ``/index.html``, HTTP методом - GET. Другими словами, запрос клиента - получить ресурс
 с идентификатором ``/index.html``.
 
-Методы HTTP являются *глаголами* HTTP запрса и определяют несколько путей взаимодействия с ресурсами:
+Методы HTTP являются *глаголами* HTTP запроса и определяют несколько путей взаимодействия с ресурсами:
 
 * *GET*  Получить ресурс с сервера;
 * *POST* Создать ресурс на сервере;
 * *PUT*  Обновить ресурс на сервер;
 * *DELETE* Удалить ресурс с сервера.
 
-With this in mind, we can imagine what an HTTP request might look like to
-delete a specific, say, a specific blog entry:
+Теперь мы можем представить, как может выглядеть HTTP запрос на удаление, к примеру, записи в блоге:
 
 .. code-block:: text
 
     DELETE /blog/15 HTTP/1.1
 
 .. note::
+    На самом деле существуют девять HTTP методов, определенных спецификацией HTTP,
+    но многие из них не распространены широко или не спользуются популярностью.
+    В реальности многие современные браузеры не поддерживают методы ``PUT`` и ``DELETE``.
+    Один дополнительно *поддерживаемый* метод - это ``HEAD`` метод, ответ на который идентичен ``GET``,
+    но только без тела ответа.
 
-    There are actually nine HTTP methods defined by the HTTP specification,
-    but many of them are not widely used or supported. In reality, many modern
-    browsers don't support the ``PUT`` and ``DELETE`` methods. One additional
-    header that *is* commonly supported is the ``HEAD`` method, which asks
-    for the response of an identical GET request, but without the response
-    body.
+HTTP-запрос также может содержать и другую информацию - HTTP заголовки. Они
+могут предоставлять много дополнительной информации, такой как запрошенный узел (``Host``),
+форматы отвеьа, которые может принимать клиент (``Accept``) и приложение, которое используется клиентом
+для передачи запроса (``User-Agent``). Другие заголовки описаны в материале из Википедии `Список заголовков HTTP`_.
 
-In addition to the first line, an HTTP request commonly contains other lines
-of information known as HTTP request headers. The headers can supply a wide
-array of additional information such as the requested ``Host``, the response
-formats the client accepts (``Accept``) and the application the client is
-using to make the request (``User-Agent``). Many other headers exist and
-can be found on Wikipedia's `List of HTTP header fields`_ article.
+Сервер возвращает Ответ
+-----------------------
 
-The Server returns the Response
--------------------------------
-
-Now that the server has read the HTTP-formatted request from the client, it
-knows exactly which resource the client has identified (the URI) and what
-the client would like to do with that resource (HTTP method). In the case
-of a GET request, the server prepares the resource and returns it as an HTTP
-response:
+Теперь сервер, прочитав заголовки запроса, обернутые в формат HTTP, знает,
+какой конкретно ресурс нужен клиенту (по URI) и что клиент собирается с ним делать (метод HTTP).
+В случае с GET-запросом, сервер подготиавливает ресурс и возвращает его как HTTP-ответ.
 
 .. code-block:: text
 
