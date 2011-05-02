@@ -59,8 +59,8 @@
 .. tip::
     Полный список стандартных шаблонов ошибок находится  в каталоге
     ``Resources/views/Exception``, пакета ``FrameworkBundle``. В стандартной поставке
-    Symfony2, пакет ``FrameworkBundle`` может быть найден в  каталоге
+    Symfony2, пакет ``FrameworkBundle`` находится в  каталоге
     ``vendor/symfony/src/Symfony/Bundle/FrameworkBundle``. Чаще всего, самым простым 
     способом настройки страницы ошибок, является её копирование из пакета 
     ``FrameworkBundle`` в каталог ``vendor/symfony/src/Symfony/Bundle/FrameworkBundle``,
-    с её последующим редактированием.
+    с последующим редактированием.
