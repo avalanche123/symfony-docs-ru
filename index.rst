@@ -9,11 +9,6 @@
 .. toctree::
     :hidden:
 
-    quick_tour/index_twig
-
-.. toctree::
-    :hidden:
-
     quick_tour/index
 
 * :doc:`quick_tour/the_big_picture` >
@@ -29,9 +24,31 @@
 .. toctree::
     :hidden:
 
-    guides/index
+    book/index
 
-.. include:: guides/map.rst.inc
+.. include:: /book/map.rst.inc
+
+Рецепты
+-------
+
+.. toctree::
+    :hidden:
+
+    cookbook/index
+
+Прочитайте :doc:`Рецепты </cookbook/index>`.
+
+Справочные документы
+--------------------
+
+С ними вы быстро получите ответы:
+
+.. toctree::
+    :hidden:
+
+    reference/index
+
+.. include:: /reference/map.rst.inc
 
 Участие в проекте
 -----------------
@@ -43,4 +60,4 @@
 
     contributing/index
 
-.. include:: contributing/map.rst.inc
+.. include:: /contributing/map.rst.inc
