@@ -28,20 +28,20 @@
 
 .. include:: /book/map.rst.inc
 
-Cookbook
---------
+Рецепты
+-------
 
 .. toctree::
     :hidden:
 
     cookbook/index
 
-Read the :doc:`Cookbook </cookbook/index>`.
+Прочитайте :doc:`Рецепты </cookbook/index>`.
 
-Reference Documents
--------------------
+Справочные документы
+--------------------
 
-Get answers quickly with reference documents:
+С ними вы быстро получите ответы:
 
 .. toctree::
     :hidden:
