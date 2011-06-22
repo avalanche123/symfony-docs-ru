@@ -372,89 +372,91 @@ HTTP слой.
     $client->followRedirects(false);
 
 .. index::
-   single: Tests; Crawler
+   single: Тесты; Crawler
 
-The Crawler
------------
+Crawler
+-------
 
-A Crawler instance is returned each time you make a request with the Client.
-It allows you to traverse HTML documents, select nodes, find links and forms.
+Экземпляр Crawler возвращается каждый раз когда выполняется запрос посредством
+клиента. Он позволяет перемещаться по HTML документам, выбирать узлы, искать
+ссылки и формы.
 
-Creating a Crawler Instance
+Создание экземпляра Crawler
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A Crawler instance is automatically created for you when you make a request
-with a Client. But you can create your own easily::
+Экземпляр Crawler автоматически создаётся когда выполняется запрос через клиента.
+Также легко можно создать его своими руками::
 
     use Symfony\Component\DomCrawler\Crawler;
 
     $crawler = new Crawler($html, $url);
 
-The constructor takes two arguments: the second one is the URL that is used to
-generate absolute URLs for links and forms; the first one can be any of the
-following:
+Конструктор принимает два аргумента: из которых второй это URL, используемый для
+создания абсолютных URL-ов для ссылок и форм, а первый может принимать следующие
+значения:
 
-* An HTML document;
-* An XML document;
-* A ``DOMDocument`` instance;
-* A ``DOMNodeList`` instance;
-* A ``DOMNode`` instance;
-* An array of the above elements.
+* HTML документ;
+* XML документ;
+* экземпляр ``DOMDocument``;
+* экземпляр ``DOMNodeList``;
+* экземпляр ``DOMNode``;
+* либо массив из перечисленных элементов.
 
-After creation, you can add more nodes:
+После создания, можно добавить ещё узлов:
 
 +-----------------------+----------------------------------+
-| Method                | Description                      |
+| Метод                 | Описание                         |
 +=======================+==================================+
-| ``addHTMLDocument()`` | An HTML document                 |
+| ``addHTMLDocument()`` | HTML документ                    |
 +-----------------------+----------------------------------+
-| ``addXMLDocument()``  | An XML document                  |
+| ``addXMLDocument()``  | XML документ                     |
 +-----------------------+----------------------------------+
-| ``addDOMDocument()``  | A ``DOMDocument`` instance       |
+| ``addDOMDocument()``  | экземпляр ``DOMDocument``        |
 +-----------------------+----------------------------------+
-| ``addDOMNodeList()``  | A ``DOMNodeList`` instance       |
+| ``addDOMNodeList()``  | экземпляр ``DOMNodeList``        |
 +-----------------------+----------------------------------+
-| ``addDOMNode()``      | A ``DOMNode`` instance           |
+| ``addDOMNode()``      | экземпляр ``DOMNode``            |
 +-----------------------+----------------------------------+
-| ``addNodes()``        | An array of the above elements   |
+| ``addNodes()``        | массив перечисленных элементов   |
 +-----------------------+----------------------------------+
-| ``add()``             | Accept any of the above elements |
+| ``add()``             | принимает любые перечисленные    |
+|                       | выше элементы                    |
 +-----------------------+----------------------------------+
 
-Traversing
-~~~~~~~~~~
+Перемещения
+~~~~~~~~~~~
 
-Like jQuery, the Crawler has methods to traverse the DOM of an HTML/XML
-document:
+Как и jQuery, Crawler имеет методы для перемещения по DOM документа HTML/XML:
 
 +-----------------------+----------------------------------------------------+
-| Method                | Description                                        |
+| Метод                 | Описание                                           |
 +=======================+====================================================+
-| ``filter('h1')``      | Nodes that match the CSS selector                  |
+| ``filter('h1')``      | Узлы, соотвествующие CSS селектору                 |
 +-----------------------+----------------------------------------------------+
-| ``filterXpath('h1')`` | Nodes that match the XPath expression              |
+| ``filterXpath('h1')`` | Узлы, соотвествующие выражению XPath               |
 +-----------------------+----------------------------------------------------+
-| ``eq(1)``             | Node for the specified index                       |
+| ``eq(1)``             | Узел с определённым индексом                       |
 +-----------------------+----------------------------------------------------+
-| ``first()``           | First node                                         |
+| ``first()``           | Первый узел                                        |
 +-----------------------+----------------------------------------------------+
-| ``last()``            | Last node                                          |
+| ``last()``            | Последний узел                                     |
 +-----------------------+----------------------------------------------------+
-| ``siblings()``        | Siblings                                           |
+| ``siblings()``        | Дочерние узлы                                      |
 +-----------------------+----------------------------------------------------+
-| ``nextAll()``         | All following siblings                             |
+| ``nextAll()``         | Все последующие дочерние узлы                      |
 +-----------------------+----------------------------------------------------+
-| ``previousAll()``     | All preceding siblings                             |
+| ``previousAll()``     | Все предшествующие дочерние узлы                   |
 +-----------------------+----------------------------------------------------+
-| ``parents()``         | Parent nodes                                       |
+| ``parents()``         | Родительские узлы                                  |
 +-----------------------+----------------------------------------------------+
-| ``children()``        | Children                                           |
+| ``children()``        | Дети                                               |
 +-----------------------+----------------------------------------------------+
-| ``reduce($lambda)``   | Nodes for which the callable does not return false |
+| ``reduce($lambda)``   | Узлы, для которых вызываемая функция не            |
+|                       | возвращает false                                   |
 +-----------------------+----------------------------------------------------+
 
-You can iteratively narrow your node selection by chaining method calls as
-each method returns a new Crawler instance for the matching nodes::
+Можно постепенно сузить выборку из узлов, объединяя вызовы методов в цепочки
+т. к. методы возвращают экземпляр Crawler для соотвествующих узлов::
 
     $crawler
         ->filter('h1')
@@ -468,42 +470,42 @@ each method returns a new Crawler instance for the matching nodes::
 
 .. tip::
 
-    Use the ``count()`` function to get the number of nodes stored in a Crawler:
-    ``count($crawler)``
+    Используйте функцию ``count()`` чтобы получить количество узлов, хранящихся
+    в Crawler: ``count($crawler)``
 
-Extracting Information
-~~~~~~~~~~~~~~~~~~~~~~
+Извлечение информации
+~~~~~~~~~~~~~~~~~~~~~
 
-The Crawler can extract information from the nodes::
+Crawler может извлечь информацию из узлов::
 
-    // Returns the attribute value for the first node
+    // Возвращает значение атрибута для первого узла
     $crawler->attr('class');
 
-    // Returns the node value for the first node
+    // Возвращает значение узла для первого узла
     $crawler->text();
 
-    // Extracts an array of attributes for all nodes (_text returns the node value)
+    // Извлекает массив атрибутов для всех узлов (_text возвращает значение узла)
     $crawler->extract(array('_text', 'href'));
 
-    // Executes a lambda for each node and return an array of results
+    // Выполняет lambda для каждого узла и возвращает массив результатов
     $data = $crawler->each(function ($node, $i)
     {
         return $node->getAttribute('href');
     });
 
-Links
-~~~~~
+Ссылки
+~~~~~~
 
-You can select links with the traversing methods, but the ``selectLink()``
-shortcut is often more convenient::
+Можно выбирать ссылки с помощью методов обхода, но сокращение ``selectLink()``
+часто более удобно::
 
     $crawler->selectLink('Click here');
 
-It selects links that contain the given text, or clickable images for which
-the ``alt`` attribute contains the given text.
+Оно выбирает ссылки, содержащие указанный текст, либо изображения, по которым
+можно кликать, содержащие этот текст в атрибуте ``alt``.
 
-The Client ``click()`` method takes a ``Link`` instance as returned by the
-``link()`` method::
+Клиентский метод ``click()`` принимает экземпляр ``Link``, возвращаемый методом
+``link()``::
 
     $link = $crawler->link();
 
@@ -511,7 +513,7 @@ The Client ``click()`` method takes a ``Link`` instance as returned by the
 
 .. tip::
 
-    The ``links()`` method returns an array of ``Link`` objects for all nodes.
+    Метод ``links()`` возвращает массив объектов ``Link`` для всех узлов.
 
 Forms
 ~~~~~
