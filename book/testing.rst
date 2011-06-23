@@ -515,107 +515,108 @@ Crawler может извлечь информацию из узлов::
 
     Метод ``links()`` возвращает массив объектов ``Link`` для всех узлов.
 
-Forms
+Формы
 ~~~~~
 
-As for links, you select forms with the ``selectButton()`` method::
+Как и ссылки, формы выбирайте методом ``selectButton()``::
 
     $crawler->selectButton('submit');
 
-Notice that we select form buttons and not forms as a form can have several
-buttons; if you use the traversing API, keep in mind that you must look for a
-button.
+Заметьте что выбирается кнопка на форме, а не сама форма, т. к. она может иметь
+несколько кнопок; если используются API перемещений, то помните что надо искать
+кнопку.
 
-The ``selectButton()`` method can select ``button`` tags and submit ``input``
-tags; it has several heuristics to find them:
+Метод ``selectButton()`` может выбрать теги ``button`` и ``input`` с типом submit;
+в нём заложено несколько эвристик для их нахождения по:
 
-* The ``value`` attribute value;
+* значению атрибута ``value``;
 
-* The ``id`` or ``alt`` attribute value for images;
+* значению атрибута ``id`` или ``alt`` для изображений;
 
-* The ``id`` or ``name`` attribute value for ``button`` tags.
+* значению атрибута ``id`` или ``name`` для тегов ``button``.
 
-When you have a node representing a button, call the ``form()`` method to get a
-``Form`` instance for the form wrapping the button node::
+Когда имеется узел, описывающий кнопку, вызовите метод ``form()`` чтобы получить
+экземпляр ``Form``, формы обёртывающей его::
 
     $form = $crawler->form();
 
-When calling the ``form()`` method, you can also pass an array of field values
-that overrides the default ones::
+При вызове метода ``form()`` можно передать массив значений для полей,
+перезаписывающих начальные значения::
 
     $form = $crawler->form(array(
         'name'         => 'Fabien',
         'like_symfony' => true,
     ));
 
-And if you want to simulate a specific HTTP method for the form, pass it as a
-second argument::
+А если надо симулировать определённый HTTP метод для формы, передайте его вторым
+аргументом::
 
     $form = $crawler->form(array(), 'DELETE');
 
-The Client can submit ``Form`` instances::
+Клиент может отправлять эзкемпляры ``Form``::
 
     $client->submit($form);
 
-The field values can also be passed as a second argument of the ``submit()``
-method::
+Значения полей могут быть переданы вторым аргументом метода ``submit()``::
 
     $client->submit($form, array(
         'name'         => 'Fabien',
         'like_symfony' => true,
     ));
 
-For more complex situations, use the ``Form`` instance as an array to set the
-value of each field individually::
+В более сложных случаях, используйте экземпляр ``Form`` как массив чтобы задать
+значения каждого поля индивидуально::
 
-    // Change the value of a field
+    // Изменяет значение поля
     $form['name'] = 'Fabien';
 
-There is also a nice API to manipulate the values of the fields according to
-their type::
+Здесь тоже есть красивый API для управления значениями полей в зависимости от
+их типов::
 
-    // Select an option or a radio
+    // Выбирает option или radio
     $form['country']->select('France');
 
-    // Tick a checkbox
+    // Ставит галочку в checkbox
     $form['like_symfony']->tick();
 
-    // Upload a file
+    // Загружает файл
     $form['photo']->upload('/path/to/lucas.jpg');
 
 .. tip::
 
-    You can get the values that will be submitted by calling the ``getValues()``
-    method. The uploaded files are available in a separate array returned by
-    ``getFiles()``. The ``getPhpValues()`` and ``getPhpFiles()`` also return
-    the submitted values, but in the PHP format (it converts the keys with
-    square brackets notation to PHP arrays).
+    Можно получить значения, которые будут отправлены, вызвав метод ``getValues()``.
+    Загружаемые файлы доступны в отдельном массиве, возвращаемом через
+    ``getFiles()``. ``getPhpValues()`` и ``getPhpFiles()`` тоже возвращают
+    значения для отправки, но в формате PHP (он преобразует ключи с квадратными
+    скобками в PHP массивы).
 
 .. index::
-   pair: Tests; Configuration
+   pair: Тесты; Конфигурация
 
-Testing Configuration
+Тестовая конфигурация
 ---------------------
 
 .. index::
-   pair: PHPUnit; Configuration
+   pair: PHPUnit; Конфигурация
 
-PHPUnit Configuration
-~~~~~~~~~~~~~~~~~~~~~
+PHPUnit конфигурация
+~~~~~~~~~~~~~~~~~~~~
 
-Each application has its own PHPUnit configuration, stored in the
-``phpunit.xml.dist`` file. You can edit this file to change the defaults or
-create a ``phpunit.xml`` file to tweak the configuration for your local machine.
+Каждое приложение имеет свою конфигурацию PHPUnit, хранящуюся в файле
+``phpunit.xml.dist``. Можете отредактировать его чтобы изменить начальные
+установки или создать файл ``phpunit.xml``, чтобы подстроить конфигурацию под
+локальную машину.
 
 .. tip::
 
-    Store the ``phpunit.xml.dist`` file in your code repository, and ignore the
-    ``phpunit.xml`` file.
+    Храните файл ``phpunit.xml.dist`` в своём репозитории кода и игнорируйте
+    файл ``phpunit.xml``.
 
-By default, only the tests stored in "standard" bundles are run by the
-``phpunit`` command (standard being tests under Vendor\\*Bundle\\Tests
-namespaces). But you can easily add more namespaces. For instance, the
-following configuration adds the tests from the installed third-party bundles:
+Только тесты, хранящиеся в "стандартных" бандлах, запускаются через
+``phpunit`` по умолчанию (стандартными будут тесты из пространства имён
+Vendor\\*Bundle\\Tests). Хотя легко можно добавить ещё пространства имён.
+Например, следующая конфигурация добавляет тесты из установленных third-party
+бандлов:
 
 .. code-block:: xml
 
@@ -627,8 +628,8 @@ following configuration adds the tests from the installed third-party bundles:
         </testsuite>
     </testsuites>
 
-To include other namespaces in the code coverage, also edit the ``<filter>``
-section:
+Чтобы включить другие пространства имён в покрытие кода, подправьте раздел
+``<filter>``:
 
 .. code-block:: xml
 
@@ -644,11 +645,12 @@ section:
         </whitelist>
     </filter>
 
-Client Configuration
+Конфигурация клиента
 ~~~~~~~~~~~~~~~~~~~~
 
-The Client used by functional tests creates a Kernel that runs in a special
-``test`` environment, so you can tweak it as much as you want:
+Клиент, используемый в функциональныйх тестах, создаёт Kernel, который
+запускается в специальной среде ``test``, т. о. можно настроить его так, как это
+будет необходимо:
 
 .. configuration-block::
 
@@ -722,24 +724,23 @@ The Client used by functional tests creates a Kernel that runs in a special
            
         )));
 
-You can also change the default environment (``test``) and override the
-default debug mode (``true``) by passing them as options to the
-``createClient()`` method::
+Также можно изменить среду (``test``) и режим отладки (``true``), заданные по
+умолчанию, передав их методу ``createClient()`` в виде опций::
 
     $client = static::createClient(array(
         'environment' => 'my_test_env',
         'debug'       => false,
     ));
 
-If your application behaves according to some HTTP headers, pass them as the
-second argument of ``createClient()``::
+Если приложение зависит от каких-либо HTTP заголовков, передайте их вторым
+аргументом ``createClient()``::
 
-    $client = static::createClient(array(
+    $client = static::createClient(array(), array(
         'HTTP_HOST'       => 'en.example.com',
         'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
     ));
 
-You can also override HTTP headers on a per request basis::
+Также можно изменять HTTP заголовки для каждого запроса::
 
     $client->request('GET', '/', array(), array(
         'HTTP_HOST'       => 'en.example.com',
@@ -748,11 +749,11 @@ You can also override HTTP headers on a per request basis::
 
 .. tip::
 
-    To provide your own Client, override the ``test.client.class`` parameter,
-    or define a ``test.client`` service.
+    Чтобы указать своего собственного клиента, измените параметр
+    ``test.client.class`` или установите службу ``test.client``.
 
-Learn more from the Cookbook
-----------------------------
+Узнайте больше из Рецептов
+--------------------------
 
 * :doc:`/cookbook/testing/http_authentication`
 * :doc:`/cookbook/testing/insulating_clients`
