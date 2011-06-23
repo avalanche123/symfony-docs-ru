@@ -27,12 +27,12 @@
             // ...
 
             // Проверяет, доступен ли профилировщик
-            if ($profiler = $client->getProfiler()) {
+            if ($profile = $client->getProfile()) {
                 // проверяет количество запросов
-                $this->assertTrue($profiler->get('db')->getQueryCount() < 10);
+                $this->assertTrue($profile->get('db')->getQueryCount() < 10);
 
                 // проверяет время, затраченное фреймворком
-                $this->assertTrue( $profiler->get('timer')->getTime() < 0.5);
+                $this->assertTrue( $profile->get('timer')->getTime() < 0.5);
             }
         }
     }
