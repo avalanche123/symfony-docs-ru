@@ -391,12 +391,12 @@ Doctrine точно знает как сохранить. Конечно, пок
     данные в проект (т. н. "fixture data"). Информацию можно узнать в
     :doc:`/cookbook/doctrine/doctrine_fixtures`.
 
-Fetching Objects from the Database
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Получение объектов из базы данных
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fetching an object back out of the database is even easier. For example,
-suppose you've configured a route to display a specific ``Product`` based
-on its ``id`` value::
+Получение объекта назад из базы данных ещё проще. Например, представим что
+настроен маршрут, отображающий определённый ``Product``, основываясь на его
+значении ``id``::
 
     public function showAction($id)
     {
@@ -408,51 +408,51 @@ on its ``id`` value::
             throw $this->createNotFoundException('No product found for id '.$id);
         }
 
-        // do something, like pass the $product object into a template
+        // делает что-нибудь, например передаёт объект $product в шаблон
     }
 
-When you query for a particular type of object, you always use what's known
-as its "repository". You can think of a repository as a PHP class whose only
-job is to help you fetch entities of a certain class. You can access the
-repository object for an entity class via::
+Когда запрашивается объект определённого типа, всегда используется так
+называемый "репозиторий". Можно представить репозиторий как PHP класс, чья
+работа состоит в предоставлении помощи в получении сущностей определённого
+класса. Можно получить доступ к объекту-репозиторию для класса-сущности через::
 
     $repository = $this->getDoctrine()
         ->getRepository('AcmeStoreBundle:Product');
 
 .. note::
 
-    The ``AcmeStoreBundle:Product`` string is a shortcut you can use anywhere
-    in Doctrine instead of the full class name of the entity (i.e. ``Acme\StoreBundle\Entity\Product``).
-    As long as your entity lives under the ``Entity`` namespace of your bundle,
-    this will work.
+    Строка ``AcmeStoreBundle:Product`` - это сокращение, которое можно
+    использовать в Doctrine вместо полного имени класса для сущности (например,
+    ``Acme\StoreBundle\Entity\Product``). Оно будет работать пока сущность
+    находится в простанстве имён ``Entity`` вашего бандла.
 
-Once you have your repository, you have access to all sorts of helpful methods::
+Когда имеется репозиторий, у вас есть доступ ко всем видам полезных методов::
 
-    // query by the primary key (usually "id")
+    // запрос по первичному ключу (обычно "id")
     $product = $repository->find($id);
 
-    // dynamic method names to find based on a column value
+    // динамические имена методов, использующиеся для поиска по значению столбцов
     $product = $repository->findOneById($id);
     $product = $repository->findOneByName('foo');
 
-    // find *all* products
+    // ищет *все* продукты
     $products = $repository->findAll();
 
-    // find a group of products based on an abitrary column value
+    // ищет группу продуктов, основываясь на произвольном значении столбца
     $products = $repository->findByPrice(19.99);
 
 .. note::
 
-    Of course, you can also issue complex queries, which you'll learn more
-    about in the :ref:`book-doctrine-queries` section.
+    Конечно, также можно задавать сложные запросы, о которых вы узнаете больше
+    в разделе :ref:`book-doctrine-queries`.
 
-You can also take advantage of the useful ``findBy`` and ``findOneBy`` methods
-to easily fetch objects based on multiple conditions::
+Также можно использовать преимущества полезных методов ``findBy`` и ``findOneBy``
+для лёгкого извлечения объектов, основываясь на многочисленных условиях::
 
-    // query for one product matching be name and price
+    // запрос одного продукта, подходящего по заданным имени и цене
     $product = $repository->findOneBy(array('name' => 'foo', 'price' => 19.99));
 
-    // query for all prdocuts matching the name, ordered by price
+    // запрос всех продуктов, подходящих по имени и отсортированных по цене
     $product = $repository->findBy(
         array('name' => 'foo'),
         array('price', 'ASC')
@@ -460,22 +460,22 @@ to easily fetch objects based on multiple conditions::
 
 .. tip::
 
-    When you render any page, you can see how many queries were made in the
-    bottom right corner of the web debug toolbar.
+    Когда выдаётся любая страница, можно увидеть сколько запросов было сделано в
+    нижнем правом углу на панели инструментов web debug.
 
     .. image:: /images/book/doctrine_web_debug_toolbar.png
        :align: center
        :scale: 50
        :width: 350
 
-    If you click the icon, the profiler will open, showing you the exact
-    queries that were made.
+    Если кликнуть на иконке, откроется профилировщик, показывающий точные
+    запросы, которые были сделаны.
 
-Updating an Object
+Обновление объекта
 ~~~~~~~~~~~~~~~~~~
 
-Once you've fetched an object from Doctrine, updating it is easy. Suppose
-you have a route that maps a product id to an update action in a controller::
+Когда вы получили объект из Doctrine, обновить его также просто. Предположим,
+есть маршрут, связывающий id продукта с действием обновления в контроллере::
 
     public function updateAction($id)
     {
@@ -492,49 +492,49 @@ you have a route that maps a product id to an update action in a controller::
         return $this->redirect($this->generateUrl('homepage'));
     }
 
-Updating an object involves just three steps:
+Обновление объекта включает три шага:
 
-1. fetching the object from Doctrine;
-2. modifying the object;
-3. calling ``flush()`` on the entity manager
+1. получение объкта из Doctrine;
+2. изменение объекта;
+3. вызов ``flush()`` из entity manager
 
-Notice that calling ``$em->persist($product)`` isn't necessary. Recall that
-this method simply tells Doctrine to manage or "watch" the ``$product`` object.
-In this case, since you fetched the ``$product`` object from Doctrine, it's
-already managed.
+Заметьте, что в вызове ``$em->persist($product)`` нет необходимости. Вспомните,
+что этот метод лишь сообщает Doctrine что нужно управлять или "наблюдать" за
+объектом ``$product``. В данной же ситуации, т. к. объект ``$product`` получен
+из Doctrine, он уже является управляемым.
 
-Deleting an Object
-~~~~~~~~~~~~~~~~~~
+Удаление объекта
+~~~~~~~~~~~~~~~~
 
-Deleting an object is very similar, but requires a call to the ``remove()``
-method of the entity manager::
+Удаление объекта очень похоже, но требует вызова метода ``remove()`` из entity
+manager::
 
     $em->remove($product);
     $em->flush();
 
-As you might expect, the ``remove()`` method notifies Doctrine that you'd
-like to remove the given entity from the database. The actual ``DELETE`` query,
-however, isn't actually executed until the ``flush()`` method is called.
+Как и ожидалось, метод ``remove()`` уведомляет Doctrine о том, что вам хочется
+удалить указанную сущность из базы данных. Тем не менее, фактический запрос
+``DELETE`` не вызывается до тех пор, пока метод ``flush()`` не запущен.
 
 .. _`book-doctrine-queries`:
 
-Querying for Objects
---------------------
+Запрашивание объектов
+---------------------
 
-You've already seen how the repository object allows you to run basic queries
-without any work::
+Вы уже видели как объект-репозиторий позволяет запускать простые запросы без
+како-либо работы::
 
     $repository->find($id);
     
     $repository->findOneByName('Foo');
 
-Of course, Doctrine also allows you to write more complex queries using the
-Doctrine Query Language (DQL). DQL is similar to SQL except that you should
-imagine that you're querying for one or more objects of an entity class (e.g. ``Product``)
-instead of querying for rows on a table (e.g. ``product``).
+Конечно, Doctrine также позволяет писать более сложные запросы, используя
+Doctrine Query Language (DQL). DQL похож на SQL за исключением того, что следует
+представить что запрашиваются один или несколько объектов из класса-сущности
+(например, ``Product``) вместо строк из таблицы (например, ``product``).
 
-When querying in Doctrine, you have two options: writing pure Doctrine queries
-or using Doctrine's Query Builder.
+Запрашивать из Doctrine можно двумя способами: написанием чистых Doctrine
+запросов либо использованием Doctrine-ового Query Builder.
 
 Querying for Objects with DQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
