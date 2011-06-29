@@ -252,49 +252,49 @@ Doctrine позволяет выбирать из широкого разноо�
     ``use Doctrine\ORM\Mapping as ORM;`` утверждение, которое *импортирует*
     ``ORM`` префикс для аннотаций.
 
-Generating Getters and Setters
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Создание геттеров и сеттеров
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Even though Doctrine now knows how to persist a ``Product`` object to the
-database, the class itself isn't really useful yet. Since ``Product`` is just
-a regular PHP class, you need to create getter and setter methods (e.g. ``getName()``,
-``setName()``) in order to access its properties (since the properties are
-``protected``). Fortunately, Doctrine can do this for you by running:
+Теперь, когда Doctrine знает как сохранить объект ``Product`` в базу данных,
+сам класс пока ещё бесполезен. Так как ``Product`` всего лишь обычный PHP класс,
+необходимо создать геттер и сеттер методы (например, ``getName()``,
+``setName()``) чтобы получить доступ к его свойствам (т. к. свойства являются
+``protected``). К счастью, Doctrine может сделать это по команде:
 
 .. code-block:: bash
 
     php app/console doctrine:generate:entities Acme/StoreBundle/Entity/Product
 
-This command makes sure that all of the getters and setters are generated
-for the ``Product`` class. This is a safe command - you can run it over and
-over again: it only generates getters and setters that don't exist (i.e. it
-doesn't replace your existing methods).
+Эта команда удостоверяется что все геттеры и сеттеры созданы для класса ``Product``.
+Она безопасна - можно запускать её снова и снова: команда лишь создаёт геттеры и
+сеттеры, которых ещё нет (т. о. она не изменит существующие методы).
 
 .. note::
 
-    Doctrine doesn't care whether your properties are ``protected`` or ``private``,
-    or whether or not you have a getter or setter function for a property.
-    The getters and setters are generated here only because you'll need them
-    to interact with your PHP object.
+    Doctrine не интересует являются ли свойства ``protected`` или ``private``,
+    или имеются либо нет функции геттеров или сеттеров для свойства. Геттеры и
+    сеттеры создаются здесь только потому что они понадобятся для взаимодействия
+    с PHP объектом.
 
 .. tip::
 
-    You can also generate all known entities (i.e. any PHP class with Doctrine
-    mapping information) of a bundle or an entire namespace:
+    Также можно создать все известные сущности (например, любой PHP класс с
+    информацией для отображения Doctrine) для бандла или целого пространства
+    имён:
 
     .. code-block:: bash
 
         php app/console doctrine:generate:entities AcmeStoreBundle
         php app/console doctrine:generate:entities Acme
 
-Creating the Database Tables/Schema
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Создание таблиц/схемы для базы данных 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You now have a usable ``Product`` class with mapping information so that
-Doctrine knows exactly how to persist it. Of course, you don't yet have the
-corresponding ``product`` table in your database. Fortunately, Doctrine can
-automatically create all the database tables needed for every known entity
-in your application. To do this, run:
+Теперь есть удобный класс ``Product`` с информацией для отображения, который
+Doctrine точно знает как сохранить. Конечно, пока нет соотвествующей таблицы
+``product`` в базе данных. К счастью, Doctrine может автоматически создать все
+таблицы базы данных, необходимые для всех известных сущностей приложения. Чтобы
+создать их, выполните:
 
 .. code-block:: bash
 
@@ -302,30 +302,29 @@ in your application. To do this, run:
 
 .. tip::
 
-    Actually, this command is incredibly powerful. It compares what
-    your database *should* look like (based on the mapping information of
-    your entities) with how it *actually* looks, and generates the SQL statements
-    needed to *update* the database to where it should be. In other words, if you add
-    a new property with mapping metadata to ``Product`` and run this task
-    again, it will generate the "alter table" statement needed to add that
-    new column to the existing ``products`` table.
+    Эта команда необычайно мощная. Она сравнивает как *должна* выглядеть база
+    данных (основываясь на информации об отображении для сущностей) с тем, как
+    она выглядит *на самом деле*, и создаёт SQL выражения, необходимые для
+    *обновления* базы данных до того вида, какой она должна быть. Другими
+    словами, добавив новое свойство с метаданными отображения в ``Product`` и
+    запустив её снова, она создаст выражение "alter table", необходимое для
+    добавления этого нового столбца к существующей таблице ``products``.
 
-    An even better way to take advantage of this functionality is via
-    :doc:`migrations</cookbook/doctrine/migrations>`, which allow you to
-    generate these SQL statements and store them in migration classes that
-    can be run systematically on your production server in order to track
-    and migrate your database schema safely and reliably.
+    Лучший способ получить преимущества от её функциональности это
+    :doc:`миграции</cookbook/doctrine/migrations>`, которые позволяют создавать
+    эти SQL выражения и хранить их в миграционных классах, которые могут
+    систематически запускаться на продакшн сервере чтобы соотвествовать схеме
+    базы данных и изменять её безопасно и надёжно.
 
-Your database now has a fully-functional ``product`` table with columns that
-match the metadata you've specified.
+Теперь база данных имеет полноценную таблицу ``product`` со столбцами,
+соотвествующими указанным метаданным.
 
-Persisting Objects to the Database
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Сохранение объектов в базе данных
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now that you have a mapped ``Product`` entity and corresponding ``product``
-table, you're ready to persist data to the database. From inside a controller,
-this is pretty easy. Add the following method to the ``DefaultController``
-of the bundle:
+Теперь, когда есть отображённая сущность ``Product`` и соотвествующая таблица
+``product``, всё готово к сохранению данных в базу. Внутри контроллера это
+очень просто. Добавьте следующий метод в ``DefaultController`` бандла:
 
 .. code-block:: php
     :linenos:
@@ -351,44 +350,45 @@ of the bundle:
 
 .. note::
 
-    If you're following along with this example, you'll need to create a
-    route that points to this action to see it in work.
+    Если вы следуете этому примеру, необходимо создать маршрут, указывающий на
+    это действие, чтобы увидеть его в работе.
 
-Let's walk through this example:
+Пройдёмся по примеру:
 
-* **lines 7-10** In this section, you instantiate and work with the ``$product``
-  object like any other, normal PHP object;
+* **строки 7-10** В этой части, берётся экземпляр объекта ``$product`` и с ним
+  проводится работа как с любым другим нормальным PHP объектом;
 
-* **line 12** This line fetches Doctrine's *entity manager* object, which is
-  responsible for handling the process of persisting and fetching objects
-  to and from the database;
+* **строка 12** Эта строка получает Doctrine-овый объект *entity manager*,
+  отвественный за управление процессами сохранения и получения объектов из базы
+  данных;
 
-* **line 13** The ``persist()`` method tells Doctrine to "manage" the ``$product``
-  object. This does not actually cause a query to be made to the database (yet).
+* **строка 13** Метод ``persist()`` сообщает Doctrine команду на "управление"
+  объектом ``$product``. Она не вызывает создание запроса к базе данных (пока).
 
-* **line 14** When the ``flush()`` method is called, Doctrine looks through
-  all of the objects that it's managing to see if they need to be persisted
-  to the database. In this example, the ``$product`` object has not been
-  persisted yet, so the entity manager executes an ``INSERT`` query and a
-  row is created in the ``product`` table.
+* **строка 14** Когда вызывается метод ``flush()``, Doctrine просматривает все
+  объекты, которыми она управляет, чтобы узнать, надо ли сохранить их в базу
+  данных. В этом примере объект ``$product`` ещё не был сохранён, поэтому
+  entity manager выполнит запрос ``INSERT`` и будет создана строка в таблице
+  ``product``.
 
 .. note::
 
-  In fact, since Doctrine is aware of all your managed entities, when you
-  call the ``flush()`` method, it calculates an overall changeset and executes
-  the most efficient query/queries possible. For example, if you're persist
-  100 ``Product`` objects and then call ``persist()``, Doctrine will create
-  a *single* prepared statement and re-use it for each insert. This pattern
-  is called *Unit of Work*, and it's used because it's fast and efficient.
+  Фактически, т. к. Doctrine знает обо всех управляемых сущностях, когда
+  вызывается метод ``flush()``, она прощитывает общий набор изменений и
+  выполняет наиболее эффективный и возможный запрос или запросы. Например, если
+  сохраняется 100 объектов ``Product`` и затем вызывается ``persist()``, то
+  Doctrine создаст *единственное* подготовленное выражение и повторно использует
+  его для каждой вставки. Этот паттерн называется *Unit of Work* и используется
+  потомучто быстр и эффективен.
 
-When creating or updating objects, the workflow is always the same. In the
-next section, you'll see how Doctrine is smart enough to automatically issue
-an ``UPDATE`` query if the record already exists in the database.
+При создании или обновлении объектов рабочий процесс всегда одинаков. В
+следующем разделе вы увидите что Doctrine достаточно умна чтобы автоматически
+выдать запрос ``UPDATE`` если запись уже существует в базе данных.
 
 .. tip::
 
-    Doctrine provides a library that allows you to programmatically load testing
-    data into your project (i.e. "fixture data"). For information, see
+    Doctrine предлагает библиотеку, позволяющую программно загружать тестовые
+    данные в проект (т. н. "fixture data"). Информацию можно узнать в
     :doc:`/cookbook/doctrine/doctrine_fixtures`.
 
 Fetching Objects from the Database
