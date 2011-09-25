@@ -265,6 +265,7 @@ PHP-функций (``ob_start()``, ``ob_get_clean()``) в шаблоне. Symfo
 Для начала, создадим новую функцию в файле ``model.php``, которая получает
 одиночную запись по её id:
 
+.. code-block:: php
     // model.php
     function get_post_by_id($id)
     {
@@ -389,6 +390,9 @@ front controller (далее просто фронт-контроллер) URI �
 
 .. code-block:: php
 
+    <?php
+    // controllers.php
+
     function list_action()
     {
         $posts = get_all_posts();
@@ -496,7 +500,9 @@ Symfony2 идёт на помощь. Перед тем, как начать ис
 
 .. code-block:: php
 
+    <?php
     // controllers.php
+
     use Symfony\Component\HttpFoundation\Response;
 
     function list_action()
