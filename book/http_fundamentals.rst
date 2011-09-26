@@ -1,183 +1,261 @@
 .. index::
-   single: Symfony2 Fundamentals
+   single: Основы Symfony2
 
-Спецификация протокола HTTP и основы Symfony2
-=============================================
+Symfony2 и основы HTTP
+==============================
 
-Прежде, чем перейти к Symfony2, поговорим о протоколе HTTP - простом формате
-сообщений, используемом клиентами (например, веб-браузерами) и серверами для
-коммуникации между собой.
-Это важно, так как архитектура ядра Symfony2, как мы увидим позже, разработана
-для использования протокола HTTP, без изобретения очередного «велосипеда».
-Конечный продукт - это фреймворк, который отличается от других тем, что является
-абстракцией основополагающих норм и правил Всемирной Сети. Понимаете вы это или нет,
-но протокол HTTP используется Вами каждый день. С помощью Symfony2 Вы научитесь управлять им.
+Поздравляем! Начав изучение Symfony2, вы встали на правильный путь, чтобы
+стать более *продуктивным*, *всесторонне развитым* и *популярным* веб-разработчиком
+(хотя последнее - на ваше усмотрение). Symfony2 создан, чтобы предоставлять базовые,
+низкоуровневые инструменты, позволяющие вам разрабатывать быстрее, создавать более
+надёжные приложения, но при этом быть в строне от вашего собственного пути.
+Symfony построен на лучших идеях, заимствованных из различных технологий: инструменты
+и концепции, которые вы готовитесь изучить - представлены усилиями тысяч и тысяч людей
+на протяжении многих лет. Другими словами, вы не только изучаете "Symfony", вы изучаете
+основы web, лучшие практики разработки, а также способы использования многих замечательных
+PHP-библиотек в составе Symfony2 или не зависимо от него. Итак, приготовьтесь.
+
+Следуя философии Symfony2, эта глава начинается с объяснения основной концепции,
+типичной для web-разработки: HTTP. Не зависимо от вашего опыта или любимого
+языка программирования, эта глава **обязательна к прочтению** всем.
+
+HTTP это Просто
+--------------
+
+HTTP (Hypertext Transfer Protocol или просто Протокол Передачи Гипертекста) - это
+текстовый язык, позволяющий двум компьютерам обмениваться сообщениями друг с
+другом. Вот и всё! Например, когда мы хотим посмотреть новенький комикс `xkcd`_,
+имеет место (примерно) такой диалог:
+
+.. image:: /images/http-xkcd.png
+   :align: center
+
+И пока используется реальный язык, хотя он и несколько более формальный, он
+остаётся предельно простым. HTTP - это термин, используемый для описания этого
+простого текстового языка. И не важно, как именно вы разрабатываете в web, целью
+вашего сервера *всегда* является понять простой текстовый запрос и вернуть простой
+текстовый ответ.
+
+Symfony2 возвышается над этой реальностью. Что бы вы ни делали, HTTP - это то, что
+вы используете ежедневно. С помощью Symfony2 вы узнаете, как управлять им.
 
 .. index::
-   single: HTTP; Request-response paradigm
+   single: HTTP; Принцип запрос-ответ
 
-Клиент отправляет запрос
-------------------------
+Шаг 1: Клиент отправляет запрос
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Всемирная сеть построена на идее о том, что любая коммуникация начинается с того, что
-клиент делает *запрос* к серверу. Запрос - это простое текстовое сообщение, создаваемое
-клиентом в специальном формате протокола HTTP. Хотя и существует большое разнообразие
-клиентских программ - веб-браузеры, веб-сервисы, программы чтения RSS-лент, и т.д. - каждая
-из них работает с одним базовым форматом. Например:
+Любой диалог в сети начинается с *запроса*. Запрос - это текстовое сообщение,
+создаваемое клиентом (например браузером или iPhone приложением и т.д.) в особом
+формате, также известном как HTTP. Клиент отправляет этот запрос серверу, и
+ожидает ответ.
+
+Взгляните на первую часть взаимодействия (запрос) между браузером и веб-сервером
+xkcd:
+
+.. image:: /images/http-xkcd-request.png
+   :align: center
+
+На языке HTTP этот запрос будет выглядеть примерно так:
 
 .. code-block:: text
 
-    GET /index.html HTTP/1.1
-    Host: www.example.com
+    GET / HTTP/1.1
+    Host: xkcd.com
     Accept: text/html
-    User-Agent: Mozilla/5.0 (Linux; X11)
+    User-Agent: Mozilla/5.0 (Macintosh)
 
-Первая строка HTTP запроса является самой важной (и в сущности является единственной обязательной строкой).
-В ней содержатся две вещи: URI и метод HTTP. URI (URL, если содержит заголовки host) идентифицирует расположение
-ресурса, тогда как метод HTTP определяет, что Вы хотите *сделать* с ресурсом. В нашем примере этим уникальным
-расположением является ``/index.html``, HTTP методом - GET. Другими словами, запрос клиента - получить ресурс
-с идентификатором ``/index.html``.
+Это простое сообщение содержит *всю* необходимую информацию о том, какой
+именно ресурс запрашивает клиент. Первая строка HTTP запроса наиболее
+важна - она содержит 2 вещи: запрошенный URI и HTTP-метод.
 
-Методы HTTP являются *глаголами* HTTP запроса и определяют несколько путей взаимодействия с ресурсами:
+URI (например ``/``, ``/contact``, и т.д.) - это уникальный адрес или место,
+которое определяет запрошенный клиентом ресурс. HTTP-метод (например ``GET``)
+определяет, что именно вы хотите сделать с запрошенным ресурсом. HTTP методы
+это *глаголы* в запросе и они определяют несколько типичных путей, которыми
+вы можете взаимодействовать с запрошенным ресурсом:
 
-* *GET*  Получить ресурс с сервера;
-* *POST* Создать ресурс на сервере;
-* *PUT*  Обновить ресурс на сервер;
-* *DELETE* Удалить ресурс с сервера.
++----------+----------------------------+
+| *GET*    | Получить ресурс с сервера  |
++----------+----------------------------+
+| *POST*   | Создать ресурс на сервере  |
++----------+----------------------------+
+| *PUT*    | Обновить ресурс на сервере |
++----------+----------------------------+
+| *DELETE* | Удалить ресурс с сервера   |
++----------+----------------------------+
 
-Теперь мы можем представить, как может выглядеть HTTP запрос на удаление, к примеру, записи в блоге:
+Запомнив эти типы HTTP-методов, вы можете представить себе, как будет
+выглядеть HTTP-запрос на удаление записи в блоге:
 
 .. code-block:: text
 
     DELETE /blog/15 HTTP/1.1
 
 .. note::
-    На самом деле существуют девять HTTP методов, определенных спецификацией HTTP,
-    но многие из них не распространены широко или не спользуются популярностью.
-    В реальности многие современные браузеры не поддерживают методы ``PUT`` и ``DELETE``.
-    Один дополнительно *поддерживаемый* метод - это ``HEAD`` метод, ответ на который идентичен ``GET``,
-    но только без тела ответа.
 
-HTTP-запрос также может содержать и другую информацию - HTTP заголовки. Они
-могут предоставлять много дополнительной информации, такой как запрошенный узел (``Host``),
-форматы отвеьа, которые может принимать клиент (``Accept``) и приложение, которое используется клиентом
-для передачи запроса (``User-Agent``). Другие заголовки описаны в материале из Википедии `Список заголовков HTTP`_.
+    На самом деле всего существует девять HTTP-методов, определённых в
+    спецификации протокола HTTP, но многие из них очень мало распространены
+    или же ограниченно поддерживаются. К примеру, многие современные браузеры
+    не поддерживают методы ``PUT`` и ``DELETE``.
 
-Сервер возвращает Ответ
------------------------
+В дополнение к первой строке, HTTP-запрос всегда содержит несколько
+информационных строк, именуемых заголовками (headers). Заголовки могут
+предоставлять различную информацию, такую как запрошенный ``Host``,
+форматы ответа, которые поддерживает клиент (``Accept``) и приложение,
+используемое клиентом для выполнения запроса (``User-Agent``). Существует
+также много других заголовков, перечень которых вы можете найти в Википедии
+на странице `List of HTTP header fields`_.
 
-Теперь сервер, прочитав заголовки запроса, обернутые в формат HTTP, знает,
-какой конкретно ресурс нужен клиенту (по URI) и что клиент собирается с ним делать (метод HTTP).
-В случае с GET-запросом, сервер подготиавливает ресурс и возвращает его как HTTP-ответ.
+Шаг 2: Сервер возвращает ответ
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+С того момента как сервер получил запрос, он точно знает, какой ресурс нужен
+клиенту (основываясь на URI) и что клиент хочет с этим ресурсом сделать - на
+основании HTTP-метода. Например, в случае GET-запроса, сервер подготовит
+запрошенный ресурс и возвратит его в виде HTTP-ответа. Рассмотрим ответ
+от web сервера xkcd:
+
+.. image:: /images/http-xkcd.png
+   :align: center
+
+Переведённый в формат HTTP, ответ, отправленный обратно в браузер, будет выглядеть
+примерно так:
 
 .. code-block:: text
 
     HTTP/1.1 200 OK
-    Date: Fri, 12 Nov 2010 12:43:38 GMT
-    Server: Apache/2.2.14 (Ubuntu)
-    Connection: Keep-Alive
-    Content-Length: 563
+    Date: Sat, 02 Apr 2011 21:05:05 GMT
+    Server: lighttpd/1.4.19
     Content-Type: text/html
 
-    <html><body>Hello Symfony2 World!</body></html>
+    <html>
+      <!-- HTML for the xkcd comic -->
+    </html>
 
-The HTTP response returned by the server to the client contains not only
-the requested resource (the HTML content in this case), but also other information
-about the response. Like the HTTP request, the first line of the response
-is especially important and contains the HTTP response status code (200 in
-this case). The status code is extremely important and communicates the overall
-outcome of the request back to the client. Different status codes exist for
-successful requests, failed requests, and requests that require action from
-the client (e.g. a redirect). A full list can be found on Wikipedia's
-`List of HTTP status codes`_ article.
+HTTP-ответ содержит запрошенный ресурс (в данном случае это HTML-код страницы),
+а также дополнительные данные о самом ответе. Первая строка особенно важна - она
+содержит HTTP статус-код (в данном случае 200). Статус-код сообщает о результате
+выполнения запроса, направляемом клиенту. Был ли запрос успешен? Была ли в ходе
+выполнения запроса ошибка? Одни статус-коды обозначают успешные запросы, другие
+- ошибки, третьи сообщают, что клиент должен выполнить что-либо (например
+перенаправление на другую страницу). Полный список вы можете найти странице
+`List of HTTP status codes`_ в Википедии.
 
-Also like the request, an HTTP response message may contain additional pieces
-of information. These are known as HTTP headers and sit between the first line
-(the status code) and the response content.
+Подобно запросу, HTTP-ответ содержит дополнительную информацию, называемую
+HTTP-заголовками. Например, важным заголовком HTTP-ответа является  ``Content-Type``.
+Тело одного и того же ресурса может быть возвращено во множестве различных форматов,
+включая HTML, XML или JSON. Заголовок ``Content-Type`` сообщает клиенту, какой именно
+формат используется в данном ответе.
 
-One important HTTP response header is the ``Content-Type``. The body of the
-same resource may be returned in multiple different formats including HTML,
-XML, or JSON to name a few. The ``Content-Type`` header tells the client
-which format is being returned.
+Существует много различных заголовков, некоторые из них предоставляют большие
+возможности. Например, некоторые заголовки могут быть использованы для
+создания системы кэширования.
 
-As we'll find out, many other headers exist. Many are very powerful and can
-be used, for example, to manage a powerful caching system.
+Запросы, Ответы и Web-разработка
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-HTTP and Client-Server Communication
-------------------------------------
+Обмен запросами-ответами - это фундаментальный процесс, который движет все
+коммуникации во всемирной сети. И насколько важен этот процесс, настолько он
+прост.
 
-This request-response exchange is the fundamental process that drives all
-communication on the World Wide Web. And as important and powerful as this
-process is, it's inescapably simple. In fact, the rapid client-server communication
-mirrors the way in which we send and receive email messages everyday. HTTP
-is simply a commonly-understood language for these messages so that a disparate
-set of applications and machines can communicate.
+Наиболее важным является следующий факт: вне зависимости от того, какой
+языка программирования вы используете, какое приложение создаёте (web,
+мобильное, JSON API) и даже какой философии следуете в разработке ПО,
+конечной целью приложения **всегда** будет приём и разбор запроса и создание
+соответствующего ответа.
 
-But why is a book about Symfony going to such lengths to explain requests,
-responses, and the HTTP messaging format? Regardless of the framework you
-choose, the type of application you build (web, mobile, JSON API), or the
-development philosophy you follow, the end goal of the server is *always*
-to understand each request and create and return the appropriate response.
-Symfony is architected to match this reality.
+Symfony спроектирован исходя из этих реалий.
 
 .. tip::
 
-    To learn more about the HTTP specification, we highly recommend reading
-    the original `HTTP 1.1 RFC`_ or the `HTTP Bis`_, which is an active
-    effort to clarify the original specification. A great tool to check
-    both the request and response headers while browsing is the `Live HTTP Headers`_
-    extension for Firefox.
+    Для того чтобы узнать больше про спецификацию HTTP, прочитайте оригинал
+    `HTTP 1.1 RFC`_ или же `HTTP Bis`_, который является инициативой по
+    разъяснению оригинальной спецификации. Замечательный инструмент для
+    проверки заголовков запроса и ответа при сёрфинге - это расширение для
+    Firefox `Live HTTP Headers`_.
 
 .. index::
-   single: Symfony2 Fundamentals; Requests and responses
+   single: Основы Symfony2 Fundamentals; Запросы и ответы
 
-Requests and Responses in Symfony
+Запросы и ответы в PHP
+-----------------------------
+
+Как же вы обрабатываете "запрос" и создаете "ответ" при использовании PHP?
+На самом деле PHP немного абстрагирует вас от процесса:
+
+.. code-block:: php
+
+    <?php
+    $uri = $_SERVER['REQUEST_URI'];
+    $foo = $_GET['foo'];
+
+    header('Content-type: text/html');
+    echo 'The URI requested is: '.$uri;
+    echo 'The value of the "foo" parameter is: '.$foo;
+
+Как бы странно это ни звучало, но это крохотное приложение получает
+информацию из HTTP-запроса и использует её для создания HTTP-ответа.
+Вместо того, чтобы парсить необработанный HTTP-запрос, PHP подготавливает
+суперглобальные переменные, такие как ``$_SERVER`` и ``$_GET``, которые содержат
+всю информацию о запросе. Аналогично, вместо того, чтобы возвращать текст
+ответа, форматированный по правилам HTTP, вы можете использовать функции
+``header()`` для создания заголовков ответов и просто вывести на печать
+основной контент, который станет контентным блоком ответа. В заключении
+PHP создаст правильный HTTP-ответ и вернет его клиенту:
+
+.. code-block:: text
+
+    HTTP/1.1 200 OK
+    Date: Sat, 03 Apr 2011 02:14:33 GMT
+    Server: Apache/2.2.17 (Unix)
+    Content-Type: text/html
+
+    The URI requested is: /testing?foo=symfony
+    The value of the "foo" parameter is: symfony
+
+Запросы и ответы в Symfony
 ---------------------------------
 
-PHP comes packaged with an array of variables and methods that allow the developer
-to understand each request and send a response. For request information,
-PHP prepares superglobal variables such as ``$_SERVER`` and ``$_GET``.
-Recall that each raw request is simply an HTTP-formatted block of text.
-The transformation of the request message into the superglobal variables
-is done behind the scenes by PHP and your web server. The end result is that
-the request message information is now available in PHP, but as a scattered
-collection of different superglobals.
+Symfony предоставляет альтернативу прямолинейному подходу из PHP посредством
+двух классов, которые позволяют взаимодействовать с HTTP-запросом и ответом
+самым простейшим способом. Класс :class:`Symfony\\Component\\HttpFoundation\\Request` - это
+простое объектно-ориентированное представление сообщения HTTP-запроса. С его помощью
+вы имеете все данные из запроса "на кончиках пальцев":
 
-As object-oriented developers, we need a better (object-oriented) way to
-access our request information. Symfony provides a ``Request`` class for
-just that purpose. The ``Request`` class is simply an object-oriented
-representation of an HTTP request message. With it, you have all the
-request information at your fingertips::
+.. code-block:: php
+
+    <?php
 
     use Symfony\Component\HttpFoundation\Request;
 
     $request = Request::createFromGlobals();
 
-    // the URI being requested ((e.g. /about) minus any query parameters
+    // запрошенный URI (на пример /about) без query parameters
     $request->getPathInfo();
 
-    // retrieve GET and POST variables respectively
+    // получаем GET и POST переменные соответственно
     $request->query->get('foo');
     $request->request->get('bar');
 
-    // retrieves an instance of UploadedFile identified by foo
+    // получаем экземпляр UploadedFile определяемый идентификатором foo
     $request->files->get('foo');
 
     $request->getMethod();          // GET, POST, PUT, DELETE, HEAD
-    $request->getLanguages();       // an array of accepted languages
+    $request->getLanguages();       // массив языков, принимаемых клиентом
 
-The ``getPathInfo()`` method is especially important as it returns the URI
-being requested relative to your application. For example, suppose an
-application is being executed from the ``foo`` subdirectory of a server. In
-that case::
+В качестве бонуса, класс ``Request`` выполняет большой объём работы в фоновом
+режиме, так что вам не придется заботиться о многих вещах. Например, метод
+``isSecure()`` проверяет *три* различных значения в PHP, которые указывают,
+что пользователь подключается по защищенному протоколу (``https``).
 
-    // http://example.com/foo/index.php/bar
-    $request->getPathInfo();  // returns "bar"
+Symfony также предоставляет класс ``Response``: простое РHP-представление
+HTTP-ответа. Это позволяет вашему приложению использовать объектно-ориентированный
+интерфейс для конструирования ответа, который нужно вернуть клиенту:
 
-Symfony also provides a ``Response`` class, which is simply a PHP abstraction
-of the raw HTTP response message. This allows your application to use an
-object-oriented interface to construct response that needs to be returned
-to the client::
+.. code-block:: php
+
+    <?php
 
     use Symfony\Component\HttpFoundation\Response;
     $response = new Response();
@@ -186,219 +264,278 @@ to the client::
     $response->setStatusCode(200);
     $response->headers->set('Content-Type', 'text/html');
 
-    // echos the headers followed by the content
+    // prints the HTTP headers followed by the content
     $response->send();
 
-At this point, if Symfony did nothing else, you would already have a
-framework for accessing request information and an object-oriented
-interface for creating the response. Symfony provides you with a rich toolset,
-without obscuring the reality that *the end goal of any web application is
-to process an HTTP request and return the appropriate HTTP response based on
-the application-specific business logic*. Even as we discuss the many features
-in Symfony, this goal will remain fundamental and transparent.
+Если бы Symfony ничего вам не предлагала, вы всегда должны были бы иметь набор
+инструментов для того чтобы можно было просто и быстро получить доступ к информации
+из запроса и объектно-ориентированный интерфейс для создания ответа. Даже
+если вы освоите более мощные возможности в Symfony, всегда держите в голове,
+что цель вашего приложения всегда заключается в том, чтобы *интерпретировать
+запрос и создать соответствующий ответ, основываясь на логике вашего
+приложения*
 
 .. tip::
 
-    The ``Request`` and ``Response`` classes are part of a standalone component
-    included with Symfony called ``HttpFoundation``. This component can be
-    used entirely independent of Symfony and also provides classes for handling
-    sessions and file uploads.
+    Классы ``Request`` и ``Response`` являются частью самостоятельного
+    компонента ``HttpFoundation``. Этот компонент может быть использован
+    независимо от Symfony и он также предоставляет классы для работы с
+    сессиями и загрузки файлов.
 
-The Journey from the Request to the Response
+Путешествие от Запроса до Ответа
 --------------------------------------------
 
-We know now that the end goal of any application is to use the HTTP
-request to create and return the appropriate HTTP response. Symfony provides
-``Request`` and ``Response`` classes that allow this to be done through
-an object-oriented interface. So far, we're only leveraging a small
-piece of Symfony. But we already have the tools to write a simple application!
-Let's dive in:
+Как и HTTP-протокол, объекты ``Request`` и ``Response`` достаточно просты.
+Самая сложная часть создания приложения заключается в написании процессов,
+которые происходят между получением запроса и отправкой ответа. Другими
+словами, реальная работа заключается в написании кода, который интерпретирует
+информацию запроса и создает ответ (логика приложения).
+
+Ваше приложение может иметь много функций, например, отправлять email'ы,
+обрабатывать отправленные формы, сохранять что-то в базу данных, отображать
+HTML-страницы и защищать контент правилами безопасности. Как управляться со
+всем этим и чтобы при этом код оставался хорошо организованным и поддерживаемым?
+
+Symfony создана специально для решения этих проблем, значит, вам не придется
+их решать.
+
+Фронт-контроллер
+~~~~~~~~~~~~~~~~~~~~
+
+Традиционно приложения создавались таким образом, чтобы каждая "страница"
+имела свой собственный файл:
+
+.. code-block:: text
+
+    index.php
+    contact.php
+    blog.php
+
+При таком подходе имеется целый ряд проблем, включая жёсткие URLы (что если
+вам потребуется изменить ``blog.php`` на ``news.php`` и при этом сохранить
+все ваши ссылки?), а также необходимость вручную включать в каждый файл
+кучу файлов, включающих безопасность, работу с базами данных.
+
+Много более удачным является подход с использованием :term:`front controller`,
+единственного PHP-файла, который отвечает за каждый запрос к вашему приложению.
+Например:
+
++------------------------+-------------------------+
+| ``/index.php``         | выполняет ``index.php`` |
++------------------------+-------------------------+
+| ``/index.php/contact`` | выполняет ``index.php`` |
++------------------------+-------------------------+
+| ``/index.php/blog``    | выполняет ``index.php`` |
++------------------------+-------------------------+
+
+.. tip::
+
+    С использованием модуля ``mod_rewrite`` для Apache (или эквивалента
+    для других web-серверов) URLы легко очистить от упоминания фронт-контроллера,
+    т.е. останется лишь ``/``, ``/contact`` и ``/blog``.
+
+Теперь, каждый запрос обрабатывается однообразно. Вместо того чтобы
+каждый URL соответствовал отдельному PHP-файлу - фронт-контроллер выполняется
+*всегда* и посредством маршрутизатора вызывает различные части вашего
+приложения, в зависимости от URL. Это решает многие проблемы, которые
+порождал традиционный подход. Практически все современные приложения
+используют этот подход, например WordPress.
+
+Будьте организованы
+~~~~~~~~~~~~~~
+
+Итак, мы внутри вашего фронт-контроллера. Но как мы узнаем, какая страница
+должна быть отображена и как её сформировать? В любом случае вам нужно
+проверить входящий URI и выполнить какую-то из частей вашего кода, в зависимости
+от этого значения. Это можно сделать быстро и весьма коряво:
 
 .. code-block:: php
 
-    $request = Request::createFromGlobals();
-    $path = $request->getPathInfo(); // the URL being requested
-    $method = $request->getMethod();
+    <?php
+    // index.php
 
-    if (in_array($path, array('', '/') && $method == 'GET') {
+    $request = Request::createFromGlobals();
+    $path = $request->getPathInfo(); // запрошенный URL
+
+    if (in_array($path, array('', '/')) {
         $response = new Response('Welcome to the homepage.');
-    } elseif ($path == '/about' && $method == 'GET') {
-        $response = new Response('About us');
+    } elseif ($path == '/contact') {
+        $response = new Response('Contact us');
     } else {
         $response = new Response('Page not found.', 404);
     }
     $response->send();
 
-In this simple example, the application correctly processes the request and
-returns an appropriate response. From a very technical standpoint, our
-application does exactly what it should.
+Решить же эту проблему достаточно сложно. К счастью, Symfony создана *именно*
+для этого.
 
-An Application without a Framework
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Как устроено Symfony приложение
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-But what if the application needs to grow? Imagine this same application if it
-were now forced to handle hundreds or even thousands of different pages! In
-order to keep things maintainable (i.e. not all in one file), we'd need to do
-some reorganization. For starters, we might move the work of creating the
-``Response`` into a set of different functions. These functions are commonly
-known as *controllers* and allow us to further organize our code::
+Когда вы даёте возможность Symfony обрабатывать запросы, жизнь становится много
+проще. Symfony следует простому шаблону при обработке каждого запроса:
 
-    if (in_array($path, array('', '/') && $method == 'GET') {
-        $response = main_controller($request);
-    } elseif ($path == '/about' && $method == 'GET') {
-        $response = about_controller($request);
-    } else {
-        $response = error404_controller($request);
-    }
+.. _request-flow-figure:
 
-    function main_controller(Request $request)
+.. figure:: /images/request-flow.png
+   :align: center
+   :alt: Symfony2 request flow
+
+   Входящие запросы интерпретируются маршрутизатором и передаются в
+   функцию-контроллер, которая возвращает объект ``Response``.
+
+Каждая "страница" вашего сайта должна быть определена в конфигурации
+маршрутизатора, чтобы распределять различные URL по различным PHP-функциям.
+Обязанность каждой такой функции, называемой :term:`controller`, используя
+информацию из запроса - а также используя прочий инструментарий, доступный в
+Symfony, создать и вернуть объект ``Response``. Другими словами, контроллер
+содержит *ваш* код: именно там вы должны превратить запрос в ответ.
+
+Это не сложно! Давайте-ка взглянем:
+
+* Каждый запрос обрабатывается фронт-контроллером;
+
+* Система маршрутизации определяет, какую именно PHP-функцию необходимо
+  выполнить, основываясь на информации из запроса и конфигурации маршрутизатора,
+  которую вы создали;
+
+* Вызывается необходимая функция, в которой написанный вами код создаёт и возвращает
+  соответствующий логике приложения объект ``Response``.
+
+Symfony Request в действии
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Не закапываясь глубоко в детали, давайте посмотрим на этот процесс в
+действии. Предположим, вы хотите добавить страницу ``/contact`` к вашему
+Symfony приложению. Во-первых, надо добавить конфигурацию маршрутизатора для
+``/contact`` URI:
+
+.. code-block:: yaml
+
+    contact:
+        pattern:  /contact
+        defaults: { _controller: AcmeDemoBundle:Main:contact }
+
+.. note::
+
+   Этот пример использует :doc:`YAML</reference/YAML>` для того чтобы определить
+   конфигурацию маршрутизатора. Конфигурацию можно также задавать и в других
+   форматах - таких как XML или PHP.
+
+Когда кто-либо посещает страницу ``/contact``, URI совпадает с маршрутом и
+указанный нами ранее контроллер выполняется. Как вы узнаете в из главы :doc:`Маршрутизация</book/routing>`,
+строка ``AcmeDemoBundle:Main:contact`` это короткая форма записи, которая указывает на
+особый метод ``contactAction``, определённый в классе ``MainController``:
+
+.. code-block:: php
+
+    <?php
+
+    class MainController
     {
-        return new Response('Welcome to the homepage.');
-    }
-
-    function about_controller(Request $request)
-    {
-        return new Response('About us');
-    }
-
-    function error404_controller(Request $request)
-    {
-        return new Response('Page not found.', 404);
-    }
-
-Next, our growing application still contains a long ``if`` ``elseif`` block
-that routes the creation of the ``Response`` object to a different controller
-(i.e. PHP method). We might consider building a configuration-based routing
-system that maps each request to a specific controller based on the URI and
-HTTP method of the request.
-
-Obvious or not, the application is beginning to spin out of control. Recall
-that the goal of any application is to apply the custom application logic and
-information from the request to create an appropriate response. In our
-application, these proposed changes are **not** to the business logic. Instead,
-the necessary refactoring means inventing a system of controllers and a custom
-routing system. As we continue development, we'll inevitably spend some time
-developing our application and some time developing and enhancing the framework
-around it.
-
-We need a better solution - one where the developer spends his/her time developing
-the application logic for creating ``Response`` objects instead of on so many
-low-level details.
-
-The Symfony framework does just this by allowing you to focus on your most
-valuable deliverables without sacrificing the power and organization of a
-framework. Of course, a popular framework like Symfony comes with a long
-list of "bonuses" such as free maintenance, documentation, standardization,
-and a community-driven group of open source bundles (i.e. plugins) available
-for use.
-
-.. index::
-   single: Symfony2 Fundamentals; The Kernel
-   single: Kernel; Introduction
-
-Introducing the Symfony Kernel
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Symfony is based around a ``Kernel`` object whose single responsibility is to facilitate
-the journey from the ``Request`` object to the final ``Response`` object.
-The ``Kernel`` is what handles each request and actually executes your application
-code.
-
-The "application code" executed by the ``Kernel`` is called a "controller",
-a special term for what's actually a basic PHP callable (most commonly,
-an object method). The controller is where your application code lives -
-it's where you create the final ``Response`` object. The ``Kernel`` works by
-determining and then calling a "Controller" for each request:
-
-.. code-block:: text
-
-    Request -> Kernel::handle() -> Controller (your code) -> Response (returned by controller)
-
-Our original sample application could be refactored into two "controllers",
-which, in this example, are PHP methods in some ``myController`` class.
-The code needed to determine and execute these controllers is isolated
-elsewhere and handled by the ``Kernel``::
-
-    class myController
-    {
-        public function homepageAction()
+        public function contactAction()
         {
-            return new Response('Welcome to the homepage.');
-        }
-
-        public function aboutAction()
-        {
-            return new Response('About us');
+            return new Response('<h1>Contact us!</h1>');
         }
     }
 
-.. tip::
+В этом очень простом примере, контроллер создает объект ``Response``,
+содержащий лишь простенький HTML-код "<h1>Contact us!</h1>". В главе
+:doc:`Контроллер</book/controller>`, вы узнаете, как контроллер может
+отображать шаблоны, позволяя "представлению" существовать раздельно от кода
+в файлах шаблонов. Это дает возможность сосредоточиться в контроллере на
+работе с базами данных, обработке отправленных пользователем данных или
+отправке email сообщений.
 
-    Notice that each controller returns a ``Response`` object. This is the
-    basic job of your controllers: to apply complex business logic and
-    ultimately construct and return the final ``Response``.
+Symfony2: Создавайте приложение, а не инструменты.
+-----------------------------------------
 
-But how does the ``Kernel`` know which controller to call for each request?
-Though this process is entirely configurable, Symfony2 integrates a ``Router``
-that uses a "map" to connect path info from the ``Request`` to a specific
-controller.
+Теперь вы знаете, что цель вашего приложения заключается в интерпретации
+входящих запросов и создании адекватного ситуации ответа. По мере роста
+приложения становится все труднее содержать свой код в порядке. Без сомнений,
+эта же задача будет повторяться снова и снова: сохранение данных в базу,
+отображение и повторное использование шаблонов, обработка форм, отправка emails,
+валидация данных, введённых пользователем и безопасность.
 
-.. code-block:: text
-
-    Request -> Kernel::handle() -> Controller -> Response
-                        |    ^
-                        | controller
-                        |    |
-                        v    |
-                        Routing
-
-We'll talk a lot more about :doc:`Controllers </book/controller>` and the
-:doc:`Router </book/routing>` in later chapters.
-
-.. tip::
-
-    The ``Kernel`` class is part of a standalone component used by Symfony2
-    called ``HttpKernel``. This component provides functionality related to
-    Bundles, Security, Caching and more. The ``Router`` is also part of a
-    standalone component called ``Routing``.
+Хорошие новости заключаются в том, что эти проблемы не уникальны. Symfony
+предоставляет Фреймворк, полный инструментов, которые позволят вам создать
+ваше собственное приложение, а не ваши инструменты. При помощи Symfony2 вы
+использовать Фреймворк целиком или же только его часть.
 
 .. index::
    single: Symfony2 Components
 
-Symfony2 *Components* versus the Symfony2 *Framework*?
-------------------------------------------------------
+Автономные библиотеки: *Компоненты* Symfony2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By now, we've seen the most basic components that make up the Symfony2 framework.
-In reality, everything we've talked about so far (the ``Request``, ``Response``,
-``Kernel`` and ``Router``) lives in three different standalone components
-used by Symfony. In fact, each feature in Symfony2 belongs to one of over
-twenty independent libraries (called the "Symfony Components")! Even if you
-decided to build your own PHP framework (an unwise idea), you could use the
-Symfony Components as the building blocks for many layers of functionality.
-And if you do use Symfony2, but need to replace a component entirely, you have
-the ability to do that. Symfony2 is decoupled and relies on interface-driven
-dependency injection. In other words, the developer has complete control.
+Что же собой представляет Symfony2? Прежде всего, Symfony2 - это коллекция
+более чем 20 независимых библиотек, которые могут быть использованы *в любом*
+PHP-проекте. Эти библиотеки, называемые *Symfony2 Components*, содержат полезные
+методы практически на любой случай жизни, не зависимо от того как именно ваш проект
+разрабатывается. Вот некоторые из них:
 
-So then, what *is* the Symfony2 **Framework**? The *Symfony2 Framework* is
-a PHP framework that accomplishes two distinct tasks:
+* `HttpFoundation`_ - Содержит классы ``Request`` и ``Response``, а также
+  классы для работы с сессиями и загрузкой файлов;
 
-#. Provides a selection of components (i.e. the Symfony2 Components) and
-   third-party libraries.
+* `Routing`_ - мощная система маршрутизации, которая позволяет вам ставить
+  в соответствие некоторому URI (например ``/contact``) информацию о том, как
+  этот запрос должен быть обработан (например вызвать метод ``contactAction()``);
 
-#. Provides sensible configuration that nicely ties everything together.
+* `Form`_ - многофункциональный и гибкий фреймворк для создания форм обработки
+  их сабмита;
 
-The goal of the framework is to integrate many independent tools in order
-to provide a consistent experience for the developer. Even the framework
-itself is a Symfony2 bundle that can be configured or replaced entirely.
+* `Validator`_ - система, предназначенная для создания правил для данных
+  и последующей валидации - соответствуют ли данные, отправленные пользователями
+  этим правилам;
 
-Basically, Symfony2 provides a powerful set of tools for rapidly developing
-web applications without imposing on your application. Normal users can
-quickly start development by using a Symfony2 distribution, which provides
-a project skeleton with sensible defaults. For more advanced users, the sky
-is the limit.
+* `ClassLoader`_ - библиотека, позволяющая использовать PHP-классы без
+  использования явного ``require`` для файлов, включающих требуемые классы.
 
+* `Templating`_ - тулкит для рендеринга шаблонов, поддерживает наследование
+  шаблонов (например, декорирование шаблонов при помощи родительского шаблона aka layout),
+  а также прочие типичные для шаблонов операции (escaping, условия, циклы и т.д.);
+
+* `Security`_ мощная библиотека для обеспечения всех типов безопасности
+  внутри приложения;
+
+* `Translation`_ - Фреймворк для поддержки переводов в вашем приложении.
+
+Каждый из этих компонентов независим и может быть использован в *любом*
+PHP-проекте, не зависимо от Symfony2.
+
+Комплексное решение: Symfony2 *Framework*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ну так что же это *такое* - Symfony2 *Framework*? *Symfony2 Framework*
+это PHP библиотека, которая решает 2 различных задачи:
+
+#. Предоставляет набор отобранных компонент (Symfony2 Components) и
+   сторонних библиотек (например ``Swiftmailer`` для отправки почты);
+
+#. Предоставляет возможности по конфигурированию всего этого добра и "клей",
+   который скрепляет все библиотеки в единое целое.
+
+Цель фреймворка - интеграция независимых инструментов и обеспечение их
+совместной работы. Сам фреймворк представляет собой Symfony Bundle
+(плагин), который можно конфигурировать или даже заменить.
+
+Symfony2 предоставляет замечательный набор инструментов для быстрой разработки
+web-приложений, ничего не навязывающий непосредственно вашему приложению.
+Разработчик может быстро приступить к разработке, используя дистрибутив Symfony2,
+который предоставляет скелетон с типовыми настройками. А для пытливых умов...
+у неба нет потолка! )
+
+.. _`xkcd`: http://xkcd.com/
 .. _`HTTP 1.1 RFC`: http://www.w3.org/Protocols/rfc2616/rfc2616.html
 .. _`HTTP Bis`: http://datatracker.ietf.org/wg/httpbis/
 .. _`Live HTTP Headers`: https://addons.mozilla.org/en-US/firefox/addon/3829/
 .. _`List of HTTP status codes`: http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 .. _`List of HTTP header fields`: http://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+.. _`HttpFoundation`: https://github.com/symfony/HttpFoundation
+.. _`Routing`: https://github.com/symfony/Routing
+.. _`Form`: https://github.com/symfony/Form
+.. _`Validator`: https://github.com/symfony/Validator
+.. _`ClassLoader`: https://github.com/symfony/ClassLoader
+.. _`Templating`: https://github.com/symfony/Templating
+.. _`Security`: https://github.com/symfony/Security
+.. _`Translation`: https://github.com/symfony/Translation
