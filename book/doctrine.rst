@@ -846,10 +846,10 @@ holds массив объектов ``Product`` и объект ``Product`` мо
     способ систематических обновлений производственной базы данных описан в
     :doc:`Миграциях Doctrine</cookbook/doctrine/migrations>`.
 
-Saving Related Entities
-~~~~~~~~~~~~~~~~~~~~~~~
+Сохранение связанных сущностей
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now, let's see the code in action. Imagine you're inside a controller::
+Теперь давайте посмотрим код в действии. Представьте, что вы внутри контроллера::
 
     // ...
     use Acme\StoreBundle\Entity\Category;
@@ -867,7 +867,7 @@ Now, let's see the code in action. Imagine you're inside a controller::
             $product = new Product();
             $product->setName('Foo');
             $product->setPrice(19.99);
-            // relate this product to the category
+            // Связывает этот продукт с категорией
             $product->setCategory($category);
             
             $em = $this->getDoctrine()->getEntityManager();
@@ -881,16 +881,16 @@ Now, let's see the code in action. Imagine you're inside a controller::
         }
     }
 
-Now, a single row is added to both the ``category`` and ``product`` tables.
-The ``product.category_id`` column for the new product is set to whatever
-the ``id`` is of the new category. Doctrine manages the persistence of this
-relationship for you.
+Итак, одна строка добавлена в таблицы ``category`` и ``product``.
+В столбец ``product.category_id`` для нового продукта установлен тот ``id``,
+который соотвествует новой категории. Doctrine осуществляет сохранение этой
+связи для вас.
 
-Fetching Related Objects
-~~~~~~~~~~~~~~~~~~~~~~~~
+Получение связанных объектов
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When you need to fetch associated objects, your workflow looks just like it
-did before. First, fetch a ``$product`` object and then access its related
+Когда необходимо получить объединённые объекты, рабочий процесс выглядит также
+как и раньше. Сначала получаете объект ``$product``, а затем доступ к связанной
 ``Category``::
 
     public function showAction($id)
@@ -904,21 +904,21 @@ did before. First, fetch a ``$product`` object and then access its related
         // ...
     }
 
-In this example, you first query for a ``Product`` object based on the product's
-``id``. This issues a query for *just* the product data and hydrates the
-``$product`` object with that data. Later, when you call ``$product->getCategory()->getName()``,
-Doctrine silently makes a second query to find the ``Category`` that's related
-to this ``Product``. It prepares the ``$category`` object and returns it to
-you.
+В этом примере, сначала запрашивается объект ``Product`` по ``id`` продукта.
+Этот запрос выдаёт ответ *только* для данных о продукте и гидратирует (hydrate)
+объект ``$product`` с этими данными. Затем, когда вызовется
+``$product->getCategory()->getName()``, Doctrine без лишнего шума сделает второй
+запрос, чтобы найти ``Category``, которая связана с этим ``Product``. Она
+подготовит объект ``$category`` и возвратит его вам.
 
 .. image:: /images/book/doctrine_image_3.png
    :align: center
 
-What's important is the fact that you have easy access to the product's related
-category, but the category data isn't actually retrieved until you ask for
-the category (i.e. it's "lazily loaded").
+Важен тот факт, что у вас есть простой доступ к категории, связанной с
+продуктом, но её данные не извлекаются, пока она вам не понадобится (т. е. это
+"ленивая загрузка").
 
-You can also query in the other direction::
+Также можно запросить в другом направлении::
 
     public function showProductAction($id)
     {
@@ -931,17 +931,18 @@ You can also query in the other direction::
         // ...
     }
 
-In this case, the same things occurs: you first query out for a single ``Category``
-object, and then Doctrine makes a second query to retrieve the related ``Product``
-objects, but only once/if you ask for them (i.e. when you call ``->getProducts()``).
-The ``$products`` variable is an array of all ``Product`` objects that relate
-to the given ``Category`` object via their ``category_id`` value.
+В этом случае происходят похожие дела: сначала запрашиваете один объект
+``Category``, затем Doctrine делает второй запрос для получения связанных
+объектов ``Product``, но только однажды - когда они вам понадобятся (т. е. когда
+вызывается ``->getProducts()``). Переменная ``$products`` является массивом всех
+объектов ``Product``, связанных с данным объектом ``Category`` через значение их
+``category_id``.
 
-.. sidebar:: Relationships and Proxy Classes
+.. sidebar:: Связи и proxy классы
 
-    This "lazy loading" is possible because, when necessary, Doctrine returns
-    a "proxy" object in place of the true object. Look again at the above
-    example::
+    Эта "ленивая загрузка" возможна, когда необходима, потому, что Doctrine
+    возвращает "proxy" объект вместо настоящего объекта. Взгляните снова на
+    пример, приведённый ранее::
     
         $product = $this->getDoctrine()
             ->getRepository('AcmeStoreBundle:Product')
@@ -952,34 +953,33 @@ to the given ``Category`` object via their ``category_id`` value.
         prints "Proxies\AcmeStoreBundleEntityCategoryProxy"
         echo get_class($category);
 
-    This proxy object extends the true ``Category`` object, and looks and
-    acts exactly like it. The difference is that, by using a proxy object,
-    Doctrine can delay querying for the real ``Category`` data until you
-    actually need that data (e.g. until you call ``$category->getName()``).
+    Этот proxy объект расширяет настоящий объект ``Category``, и выглядит и
+    действует так же как и он. Отличие лишь в том, что используя proxy объект,
+    Doctrine может отложить запрос действительных данных о ``Category`` пока
+    они вам не понадобятся (т. е. пока не вызовете ``$category->getName()``).
 
-    The proxy classes are generated by Doctrine and stored in the cache directory.
-    And though you'll probably never even notice that your ``$category``
-    object is actually a proxy object, it's important to keep in mind.
+    Proxy классы создаются Doctrine и хранятся в папке cache. И хотя вам,
+    вероятно, никогда не придётся принимать во внимание что объект ``$category``
+    на самом деле является proxy объектом, но важно знать об этом.
 
-    In the next section, when you retrieve the product and category data
-    all at once (via a *join*), Doctrine will return the *true* ``Category``
-    object, since nothing needs to be lazily loaded.
+    В следующем разделе будем получать данные о продукте и категории за один
+    заход (через *join*), а Doctrine будет возвращать *настоящий* объект
+    ``Category``, т. к. не будет нужды в ленивой загрузке.
 
-Joining to Related Records
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Объединение со связанными записями
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the above examples, two queries were made - one for the original object
-(e.g. a ``Category``) and one for the related object(s) (e.g. the ``Product``
-objects).
+В предыдущих примерах выполнялось по два запроса - один для исходного объекта
+(например, ``Category``) и один для связанного (например, объекты ``Product``).
 
 .. tip::
 
-    Remember that you can see all of the queries made during a request via
-    the web debug toolbar.
+    Вспомните, что можно увидеть все запросы к базе данных, сделанные во время
+    веб-запроса, через панель инструментов web debug.
 
-Of course, if you know up front that you'll need to access both objects, you
-can avoid the second query by issuing a join in the original query. Add the
-following method to the ``ProductRepository`` class::
+Конечно, если заранее известно что будет необходим доступ к обоим объектам, то
+можно избежать второго запроса, используя join в исходном запросе. Добавьте
+следующий метод к классу ``ProductRepository``::
 
     // src/Acme/StoreBundle/Repository/ProductRepository.php
     
@@ -999,8 +999,8 @@ following method to the ``ProductRepository`` class::
         }
     }
 
-Now, you can use this method in your controller to query for a ``Product``
-object and its related ``Category`` with just one query::
+Теперь можете использовать этот метод в контроллере чтобы получать объект
+``Product`` и связанную ``Category`` за один запрос::
 
     public function showAction($id)
     {
@@ -1013,36 +1013,37 @@ object and its related ``Category`` with just one query::
         // ...
     }    
 
-More Information on Associations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Подробнее об объединениях
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section has been an introduction to one common type of entity relationship,
-the one-to-many relationship. For more advanced details and examples of how
-to use other types of relations (e.g. ``one-to-one``, ``many-to-many``), see
-Doctrine's `Association Mapping Documentation`_.
+Этот раздел является введением к одному общему типу связи сущностей - связи
+один-ко-многим. За более продвинутыми подробностями и примерами использования
+других типов связей (напр., ``один-к-одному``, ``многие-ко-многим``), обращайтесь
+к `Отображениям объединений`_ для Doctrine.
 
 .. note::
 
-    If you're using annotations, you'll need to prepend all annotations with
-    ``ORM\`` (e.g. ``ORM\OneToMany``), which is not reflected in Doctrine's
-    documentation. You'll also need to include the ``use Doctrine\ORM\Mapping as ORM;``
-    statement, which *imports* the ``ORM`` annotations prefix.
+    Если использовать аннотации, необходимо предварять их упоминаниями об
+    ``ORM\`` (напр., ``ORM\OneToMany``), про это не говорится в документации
+    Doctrine. Также необходимо включить выражение
+    ``use Doctrine\ORM\Mapping as ORM;``, которое *внедряет* префикс аннотации
+    ``ORM``.
 
-Configuration
--------------
+Конфигурация
+------------
 
-Doctrine is highly configurable, though you probably won't ever need to worry
-about most of its options. To find out more about configuring Doctrine, see
+Doctrine очень гибка, хотя вам, вероятно, никогда не придёться беспокоиться о
+большей части её опций. Чтобы узнать больше о настройке Doctrine, see
 the Doctrine section of the :doc:`reference manual</reference/configuration/doctrine>`.
 
 Lifecycle Callbacks
 -------------------
 
-Sometimes, you need to perform an action right before or after an entity
-is inserted, updated, or deleted. These types of actions are known as "lifecycle"
-callbacks, as they're callback methods that you need to execute during different
-stages of the lifecycle of an entity (e.g. the entity is inserted, updated,
-deleted, etc).
+Иногда требуется выполнить действия сразу же перед или после того как сущность
+будет вставлена, обновлена или же удалена. Такие типы действий известны как
+"lifecycle" callbacks, т. к. они вызывают методы, которые необходимо выполнить
+во время различных стадий жизненного цикла сущности (напр., сущность вставлена,
+обновлена, удалена и т. д.).
 
 If you're using annotations for your metadata, start by enabling the lifecycle
 callbacks. This is not necessary if you're using YAML or XML for your mapping:
