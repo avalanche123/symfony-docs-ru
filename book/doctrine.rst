@@ -536,12 +536,12 @@ Doctrine Query Language (DQL). DQL похож на SQL за исключение
 Запрашивать из Doctrine можно двумя способами: написанием чистых Doctrine
 запросов либо использованием Doctrine-ового Query Builder.
 
-Querying for Objects with DQL
+Запрос объектов с помощью DQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Imaging that you want to query for products, but only return products that
-cost more than ``19.99``, ordered from cheapest to most expensive. From inside
-a controller, do the following::
+Представим, что необходимо запросить продукты, но вернуть только те, что стоят
+дороже чем ``19.99``, отсортированные от дешёвых до самых дорогих. Внутри
+контроллера сделайте следующее::
 
     $em = $this->getDoctrine()->getEntityManager();
     $query = $em->createQuery(
@@ -550,24 +550,25 @@ a controller, do the following::
     
     $products = $query->getResult();
 
-If you're comfortable with SQL, then DQL should feel very natural. The biggest
-difference is that you need to think in terms of "objects" instead of rows
-in a database. For this reason, you select *from* ``AcmeStoreBundle:Product``
-and then alias it as ``p``.
+Если вам удобно с SQL, то DQL должен быть также понятен. Наибольшее различие
+в том, что надо думать терминами "объектов", а не строк в базе данных. По этой
+причине, вы выбираете *из* ``AcmeStoreBundle:Product`` и присваиваете ему
+псевдоним ``p``.
 
-The ``getResult()`` method returns an array of results. If you're querying
-for just one object, you can use the ``getSingleResult()`` method instead::
+Метод ``getResult()`` возвращает массив результатов. Если же нужен лишь один
+объект можно воспользоваться методом ``getSingleResult()``::
 
     $product = $query->getSingleResult();
 
 .. caution::
 
-    The ``getSingleResult()`` method throws a ``Doctrine\ORM\NoResultException``
-    exception if no results are returned and a ``Doctrine\ORM\NonUniqueResultException``
-    if *more* than one result is returned. If you use this method, you may
-    need to wrap it in a try-catch block and ensure that only one result is
-    returned (if you're querying on something that could feasibly return
-    more than one result)::
+    Метод ``getSingleResult()`` выбрасывает исключение
+    ``Doctrine\ORM\NoResultException`` если нет результатов и
+    ``Doctrine\ORM\NonUniqueResultException`` если возвращается *больше* одного
+    результата. Если используется этот метод, возможно придётся обернуть его
+    в try-catch блок и убедиться в том, что возвращается только один результат 
+    (если запрашивается что-то, что может вероятно вернуть более одного
+    результата)::
     
         $query = $em->createQuery('SELECT ....')
             ->setMaxResults(1);
@@ -579,10 +580,10 @@ for just one object, you can use the ``getSingleResult()`` method instead::
         }
         // ...
 
-The DQL syntax is incredibly powerful, allowing you to easily join between
-entities (the topic of :ref:`relations<book-doctrine-relations>` will be
-covered later), group, etc. For more information, see the official Doctrine
-`Doctrine Query Language`_ documentation.
+Синтаксис DQL невероятно мощный, позволяет легко устанавливать объединения между
+сущностями (тема :ref:`отношений<book-doctrine-relations>` будет раскрыта
+позже), группами и т. д. Дополнительная информация в документации Doctrine
+`Doctrine Query Language`_.
 
 .. sidebar:: Setting Parameters
 
@@ -639,12 +640,12 @@ For more information on Doctrine's Query Builder, consult Doctrine's
 Custom Repository Classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the previous sections, you began constructing and using more complex queries
-from inside a controller. In order to isolate, test and reuse these queries,
-it's a good idea to create a custom repository class for your entity and
-add methods with your query logic there.
+В предыдущих разделах вы начали создавать и использовать более сложные запросы
+изнутри контроллера. Чтобы изолировать, тестировать и повторно использовать
+их, хорошим тоном будет создать custom repository class для сущности и добавить
+туда методы с запросами.
 
-To do this, add the name of the repository class to your mapping definition.
+Чтобы сделать это добавьте имя репозиторного класса в отбражение.
 
 .. configuration-block::
 
@@ -683,16 +684,16 @@ To do this, add the name of the repository class to your mapping definition.
             </entity>
         </doctrine-mapping>
 
-Doctrine can generate the repository class for you by running the same command
-used earlier to generate the missing getter and setter methods:
+Doctrine может создать репозиторный класс с помощью команды, использованной
+ранее для создания пропущенных getter и setter методов:
 
 .. code-block:: bash
 
     php app/console doctrine:generate:entities Acme
 
-Next, add a new method - ``findAllOrderedByName()`` - to the newly generated
-repository class. This method will query for all of the ``Product`` entities,
-ordered alphabetically.
+Затем добавьте новый метод - ``findAllOrderedByName()`` - к только что
+созданному репозитороному классу. Он будет запрашивать все сущности ``Product``,
+сортированные в алфавитном порядке.
 
 .. code-block:: php
 
@@ -713,10 +714,11 @@ ordered alphabetically.
 
 .. tip::
 
-    The entity manager can be accessed via ``$this->getEntityManager()``
-    from inside the repository.
+    Менеджер сущностей доступен через ``$this->getEntityManager()`` внутри
+    репозитория.
 
-You can use this new method just like the default finder methods of the repository::
+Можете использовать этот новый метод как и ранее доступные по умолчанию
+поисковые методы репозитория::
 
     $em = $this->getDoctrine()->getEntityManager();
     $products = $em->getRepository('AcmeStoreBundle:Product')
@@ -724,32 +726,32 @@ You can use this new method just like the default finder methods of the reposito
 
 .. note::
 
-    When using a custom repository class, you still have access to the default
-    finder methods such as ``find()`` and ``findAll()``.
+    Когда используется custom repository class, всё ещё есть доступ к таким
+    поисковым методам как ``find()`` и ``findAll()``.
 
 .. _`book-doctrine-relations`:
 
-Entity Relationships/Associations
----------------------------------
+Связи/объединения сущностей
+---------------------------
 
-Suppose that the products in your application all belong to exactly one "category".
-In this case, you'll need a ``Category`` object and a way to relate a ``Product``
-object to a ``Category`` object. Start by creating the ``Category`` entity.
-Since you know that you'll eventually need to persist the class through Doctrine,
-you can let Doctrine create the class for you:
+Предположим что все продукты в приложении принадлежат единственной "категории".
+В этом случае, необходим объект ``Category`` и способ связывания его с объектом
+``Product``. Начнём с соаздания сущности ``Category``. Так как известно что в
+конечном счёте понадобится сохранить класс с помощью Doctrine, то можно
+позволить Doctrine создать его для вас:
 
 .. code-block:: bash
 
     php app/console doctrine:generate:entity AcmeStoreBundle:Category "name:string(255)" --mapping-type=yml
 
-This task generates the ``Category`` entity for you, with an ``id`` field,
-a ``name`` field and the associated getter and setter functions.
+Это задание создаст сущность ``Category`` с полями ``id``, ``name`` и связанными
+getter и setter функциями.
 
-Relationship Mapping Metadata
+Метаданные отображения связей
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To relate the ``Category`` and ``Product`` entities, start by creating a
-``products`` property on the ``Category`` class::
+Чтобы связать сущности ``Category`` и ``Product``, начните с создания свойства
+``products`` в классе ``Category``::
 
     // src/Acme/StoreBundle/Entity/Category.php
     // ...
@@ -770,22 +772,22 @@ To relate the ``Category`` and ``Product`` entities, start by creating a
         }
     }
 
-First, since a ``Category`` object will relate to many ``Product`` objects,
-a ``products`` array property is added to hold those ``Product`` objects.
-Again, this isn't done because Doctrine needs it, but instead because it
+Во-первых, т. к. объект ``Category`` связан со множеством объектов ``Product``,
+то добавленное свойство ``products`` будет массивом для хранения объектов
+``Product``. Далее, this isn't done because Doctrine needs it, but instead because it
 makes sense in the application for each ``Category`` to hold an array of
 ``Product`` objects.
 
 .. note::
 
-    The code in the ``__construct()`` method is important because Doctrine
-    requires the ``$products`` property to be an ``ArrayCollection`` object.
-    This object looks and acts almost *exactly* like an array, but has some
-    added flexibility. If this makes you uncomfortable, don't worry. Just
-    imagine that it's an ``array`` and you'll be in good shape.
+    Код в методе ``__construct()`` важен, потому что Doctrine необходимо
+    чтобы свойство ``$products`` было объектом ``ArrayCollection``. Этот объект
+    выглядит и работает почти *также* как массив, но имеет расширенную гибкость.
+    Если это заставляет вас чувствовать неудобство, то не переживайте.
+    Представьте что это просто ``массив`` и вы будете снова в хорошей форме.
 
-Next, since each ``Product`` class can relate to exactly one ``Category``
-object, you'll want to add a ``$category`` property to the ``Product`` class::
+Далее, т. к. каждый класс ``Product`` может связываться только с одним объектом
+``Category``, необходимо добавить свойство ``$category`` к классу ``Product``::
 
     // src/Acme/StoreBundle/Entity/Product.php
     // ...
@@ -801,38 +803,38 @@ object, you'll want to add a ``$category`` property to the ``Product`` class::
         protected $category;
     }
 
-Finally, now that you've added a new property to both the ``Category`` and
-``Product`` classes, tell Doctrine to generate the missing getter and setter
-methods for you:
+Наконец, когда добавлены новые свойства к обоим классам ``Category`` и
+``Product``, сообщите Doctrine что надо создать отсутствующие методы getter и
+setter:
 
 .. code-block:: bash
 
     php app/console doctrine:generate:entities Acme
 
-Ignore the Doctrine metadata for a moment. You now have two classes - ``Category``
-and ``Product`` with a natural one-to-many relationship. The ``Category``
-class holds an array of ``Product`` objects and the ``Product`` object can
-hold one ``Category`` object. In other words - you've built your classes
-in a way that makes sense for your needs. The fact that the data needs to
-be persisted to a database is always secondary.
+Забудьте о метаданных Doctrine на секунду. Имеется два класса - ``Category``
+и ``Product`` with a natural one-to-many relationship. Класс ``Category``
+holds массив объектов ``Product`` и объект ``Product`` может hold один объект
+``Category``. Другими словами - классы построены таким способом, который имеет
+смысл для вашей задачи. А тот факт, что данные должны быть сохранены в базу
+данных, всегда второстепенен.
 
-Now, look at the metadata above the ``$category`` property on the ``Product``
-class. The information here tells doctrine that the related class is ``Category``
-and that it should store the ``id`` of the category record on a ``category_id``
-field that lives on the ``product`` table. In other words, the related ``Category``
-object will be stored on the ``$category`` property, but behind the scenes,
-Doctrine will persist this relationship by storing the category's id value
-on a ``category_id`` column of the ``product`` table.
+Теперь взгляните на метаданные над свойством ``$category`` в классе ``Product``.
+Эта информация сообщает doctrine что связанным классом является ``Category`` и
+что он должен хранить ``id`` от записи категории в поле ``category_id``,
+находящемся в таблице ``product``. Другими словами, связанный объект ``Category``
+будет хранится в свойстве ``$category``, но, за кулисами, Doctrine будет хранить
+эту связь, записывая значение id категории в столбец ``category_id`` таблицы
+``product``.
 
 .. image:: /images/book/doctrine_image_2.png
    :align: center
 
-The metadata above the ``$products`` property of the ``Category`` object
-is less important, and simply tells Doctrine to look at the ``Product.category``
-property to figure out how the relationship is mapped.
+Метаданные над свойством ``$products`` объекта ``Category`` менее важны и
+попросту сообщают Doctrine что нужно посмотреть свойство ``Product.category``
+чтобы вычислить как отображается связь.
 
-Before you continue, be sure to tell Doctrine to add the new ``category``
-table, and ``product.category_id`` column, and new foreign key:
+Перед тем как продолжить, убедитесь что сообщили Doctrine добавить новые таблицу
+``category`` и столбец ``product.category_id``, а также новый внешний ключ:
 
 .. code-block:: bash
 
@@ -840,9 +842,9 @@ table, and ``product.category_id`` column, and new foreign key:
 
 .. note::
 
-    This task should only be really used during development. For a more robust
-    method of systematically updating your production database, read about
-    :doc:`Doctrine migrations</cookbook/doctrine/migrations>`.
+    Эта задача должна выполняться только во время разработки. Более надёжный
+    способ систематических обновлений производственной базы данных описан в
+    :doc:`Миграциях Doctrine</cookbook/doctrine/migrations>`.
 
 Saving Related Entities
 ~~~~~~~~~~~~~~~~~~~~~~~
