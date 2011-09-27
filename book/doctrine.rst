@@ -1045,8 +1045,9 @@ Lifecycle Callbacks
 во время различных стадий жизненного цикла сущности (напр., сущность вставлена,
 обновлена, удалена и т. д.).
 
-If you're using annotations for your metadata, start by enabling the lifecycle
-callbacks. This is not necessary if you're using YAML or XML for your mapping:
+Если для метаданных вы используете аннотации, то начните с включения lifecycle
+callbacks. В этом нет необходимости если для отображений используются YAML или
+XML:
 
 .. code-block:: php-annotations
 
@@ -1059,9 +1060,9 @@ callbacks. This is not necessary if you're using YAML or XML for your mapping:
         // ...
     }
 
-Now, you can tell Doctrine to execute a method on any of the available lifecycle
-events. For example, suppose you want to set a ``created`` date column to
-the current date, only when the entity is first persisted (i.e. inserted):
+Теперь можно дать задание Doctrine выполнить метод для любого доступного события
+жизненного цикла. Например, надо установить текущую дату в колонку ``created``
+только во время первого сохранения сущности (т. е. во время вставки):
 
 .. configuration-block::
 
@@ -1100,13 +1101,14 @@ the current date, only when the entity is first persisted (i.e. inserted):
 
 .. note::
 
-    The above example assumes that you've created and mapped a ``created``
-    property (not shown here).
+    Предыдущие примеры предполагают что свойство ``created`` уже создано и
+    отображено (здесь это не было показано).
 
-Now, right before the entity is first persisted, Doctrine will automatically
-call this method and the ``created`` field will be set to the current date.
+Сразу же перед первым сохранением сущности, Doctrine автоматически вызовет этот
+метод и в поле ``created`` будет установлена текущая дата.
 
-This can be repeated for any of the other lifecycle events, which include:
+То же самое можно проделать для любого другого события жизненного цикла, среди
+которых:
 
 * ``preRemove``
 * ``postRemove``
@@ -1117,32 +1119,32 @@ This can be repeated for any of the other lifecycle events, which include:
 * ``postLoad``
 * ``loadClassMetadata``
 
-For more information on what these lifecycle events mean and lifecycle callbacks
-in general, see Doctrine's `Lifecycle Events documentation`_
+Дополнительная информация о том, что из себя представляют эти события и вызовы
+внутри жизненного цикла в общем виде, находится в `Документации по Lifecycle Events`_
 
-.. sidebar:: Lifecycle Callbacks and Event Listeners
+.. sidebar:: Lifecycle Callbacks и Event Listeners
 
-    Notice that the ``setCreatedValue()`` method receives no arguments. This
-    is always the case for lifecylce callbacks and is intentional: lifecycle
-    callbacks should be simple methods that are concerned with internally
-    transforming data in the entity (e.g. setting a created/updated field,
-    generating a slug value).
+    Обратите внимание что метод ``setCreatedValue()`` не получает аргументов.
+    Это необходимость для lifecylce callbacks и это сделано преднамеренно:
+    lifecycle callbacks должны быть простыми методами, занимающимися внутренними
+    изменениями данных для сущности (напр., установка значений для полей
+    created/updated, создание slug).
     
-    If you need to do some heavier lifting - like perform logging or send
-    an email - you should register an external class as an event listener
-    or subscriber and give it access to whatever resources you need. For
-    more information, see :doc:`/cookbook/doctrine/event_listeners_subscribers`.
+    Если планируется делать более тяжёлую работу - запись логов или отправка
+    email - необходимо зарегистрировать внешний класс как event listener
+    или subscriber и дать ему доступ к необходимым ресурсам. Дополнительную
+    информацию найдёте в :doc:`/cookbook/doctrine/event_listeners_subscribers`.
 
-Doctrine Extensions: Timestampable, Sluggable, etc.
----------------------------------------------------
+Расширения для Doctrine: Timestampable, Sluggable и другие
+----------------------------------------------------------
 
-Doctrine is quite flexible, and a number of third-party extensions are available
-that allow you to easily perform repeated and common tasks on your entities.
-These include thing such as *Sluggable*, *Timestampable*, *Loggable*, *Translatable*,
-and *Tree*.
+Doctrine расширяема, поэтому доступно множество сторонних решений, позволяющих с
+лёгкостью выполнять повторяющиеся и общие задачи над сущностями.
+Среди них есть следующие: *Sluggable*, *Timestampable*, *Loggable*,
+*Translatable* и *Tree*.
 
-For more information on how to find and use these extensions, see the cookbook
-article about :doc:`using common Doctrine extensions</cookbook/doctrine/common_extensions>`.
+Подробнее о том где найти и как использвать эти расширения расказывает статья
+:doc:`Использование общих расширений Doctrine</cookbook/doctrine/common_extensions>`.
 
 .. _book-doctrine-field-types:
 
