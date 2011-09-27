@@ -521,8 +521,8 @@ manager::
 Запрашивание объектов
 ---------------------
 
-Вы уже видели как объект-репозиторий позволяет запускать простые запросы без
-како-либо работы::
+Вы уже видели как объект-репозиторий позволяет выполнять простые запросы без
+какой-либо работы::
 
     $repository->find($id);
     
@@ -536,12 +536,12 @@ Doctrine Query Language (DQL). DQL похож на SQL за исключение
 Запрашивать из Doctrine можно двумя способами: написанием чистых Doctrine
 запросов либо использованием Doctrine-ового Query Builder.
 
-Запрос объектов с помощью DQL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Запрашивание объектов через DQL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Представим, что необходимо запросить продукты, но вернуть только те, что стоят
-дороже чем ``19.99``, отсортированные от дешёвых до самых дорогих. Внутри
-контроллера сделайте следующее::
+Представьте что нужно запросить продукты, но вернуть только те, чья цена больше
+чем ``19.99`` и по порядку от дешёвого до самого дорогого. Внутри контроллера
+сделайте следующее::
 
     $em = $this->getDoctrine()->getEntityManager();
     $query = $em->createQuery(
@@ -585,38 +585,39 @@ Doctrine Query Language (DQL). DQL похож на SQL за исключение
 позже), группами и т. д. Дополнительная информация в документации Doctrine
 `Doctrine Query Language`_.
 
-.. sidebar:: Setting Parameters
+.. sidebar:: Настройка параметров
 
-    Take note of the ``setParameter()`` method. When working with Doctrine,
-    it's always a good idea to set any external values as "placeholders",
-    which was done in the above query:
+    Заметка о методе ``setParameter()``. Работая с Doctrine, хорошим тоном
+    является указание любых внешних значений через "placeholders",
+    что и было сделанов приведённом выше примере:
     
     .. code-block:: text
 
         ... WHERE p.price > :price ...
 
-    You can then set the value of the ``price`` placeholder by calling the
-    ``setParameter()`` method::
+    Позже можно указать значение ``price`` placeholder через метод
+    ``setParameter()``::
 
         ->setParameter('price', '19.99')
 
-    Using parameters instead of placing values directly in the query string
-    is done to prevent SQL injection attacks and should *always* be done.
-    If you're using multiple parameters, you can set their values at once
-    using the ``setParameters()`` method::
+    Использование параметров вместо установки значений непосредственно в строку
+    запроса предотвращает атаки через SQL инъекции и должно использоваться
+    *всегда*. При использовании нескольких параметров, можно указать их за один
+    раз воспользовавшись методом ``setParameters()``::
 
         ->setParameters(array(
             'price' => '19.99',
             'name'  => 'Foo',
         ))
 
-Using Doctrine's Query Builder
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Использование Doctrine's Query Builder (Конструктор запросов Doctrine)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Instead of writing the queries directly, you can alternatively use Doctrine's
-``QueryBuilder`` to do the same job using a nice, object-oriented interface.
-If you use an IDE, you can also take advantage of auto-completion as you
-type the method names. From inside a controller::
+Вместо непосредственного написания запросов, можно также использовать Doctrine
+``QueryBuilder`` чтобы сделать ту же работу используя симпатичный,
+объект-ориентированный интерфейс. Если используется IDE, то можно также получить
+преимущество от авто-подстановки когда будут вводиться имена методов. Внутри
+контроллера::
 
     $repository = $this->getDoctrine()
         ->getRepository('AcmeStoreBundle:Product');
@@ -629,13 +630,12 @@ type the method names. From inside a controller::
     
     $products = $query->getResult();
 
-The ``QueryBuilder`` object contains every method necessary to build your
-query. By calling the ``getQuery()`` method, the query builder returns a
-normal ``Query`` object, which is the same object you built directly in the
-previous section.
+Объект ``QueryBuilder`` содержит все необходимые методы для создания запроса.
+Вызвав метод ``getQuery()``, конструктор запросов вернёт нормальный объект
+``Query``, являющийся таким же объектом, какой создавался в предыдущем разделе.
 
-For more information on Doctrine's Query Builder, consult Doctrine's
-`Query Builder`_ documentation.
+За дополнительной информацией о Doctrine's Query Builder, обращайтесь к
+документации `Query Builder`_.
 
 Custom Repository Classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -643,7 +643,7 @@ Custom Repository Classes
 В предыдущих разделах вы начали создавать и использовать более сложные запросы
 изнутри контроллера. Чтобы изолировать, тестировать и повторно использовать
 их, хорошим тоном будет создать custom repository class для сущности и добавить
-туда методы с запросами.
+в него методы с запросами.
 
 Чтобы сделать это добавьте имя репозиторного класса в отбражение.
 
