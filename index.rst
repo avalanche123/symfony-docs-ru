@@ -50,6 +50,18 @@
 
 .. include:: /reference/map.rst.inc
 
+Пакеты
+-------
+
+Symfony Standard Edition поставляется с несколькими пакетами. Узнайте о них больше:
+
+.. toctree::
+    :hidden:
+
+    bundles/index
+
+.. include:: /bundles/map.rst.inc
+
 Участие в проекте
 -----------------
 
