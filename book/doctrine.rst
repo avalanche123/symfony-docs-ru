@@ -1148,19 +1148,19 @@ Doctrine расширяема, поэтому доступно множеств�
 
 .. _book-doctrine-field-types:
 
-Doctrine Field Types Reference
-------------------------------
+Справка по типам полей в Doctrine
+---------------------------------
 
-Doctrine comes with a large number of field types available. Each of these
-maps a PHP data type to a specific column type in whatever database you're
-using. The following types are supported in Doctrine:
+Doctrine представляет огромное количество типов полей. Каждый из которых
+отображает тип данных из PHP в установленный тип колонки для любой используемой
+базы данных. В Doctrine поддерживаются следующие типы:
 
-* **Strings**
+* **Строки**
 
-  * ``string`` (used for shorter strings)
-  * ``text`` (used for larger strings)
+  * ``string`` (используется для коротких строк)
+  * ``text`` (используется для длинных строк)
 
-* **Numbers**
+* **Числа**
 
   * ``integer``
   * ``smallint``
@@ -1168,40 +1168,40 @@ using. The following types are supported in Doctrine:
   * ``decimal``
   * ``float``
 
-* **Dates and Times** (use a `DateTime`_ object for these fields in PHP)
+* **Дата и время** (используйте объект `DateTime`_ в PHP для этих полей)
 
   * ``date``
   * ``time``
   * ``datetime``
 
-* **Other Types**
+* **Другие типы**
 
   * ``boolean``
-  * ``object`` (serialized and stored in a ``CLOB`` field)
-  * ``array`` (serialized and stored in a ``CLOB`` field)
+  * ``object`` (сериализуется и хранится в поле ``CLOB``)
+  * ``array`` (сериализуется и хранится в поле ``CLOB``)
 
-For more information, see Doctrine's `Mapping Types documentation`_.
+Дополнительная информация содержится в `Отображении типов`_.
 
-Field Options
-~~~~~~~~~~~~~
+Опции полей
+~~~~~~~~~~~
 
-Each field can have a set of options applied to it. The available options
-include ``type`` (defaults to ``string``), ``name``, ``length``, ``unique``
-and ``nullable``. Take a few annotations examples:
+Каждое поле может иметь набор опций, применимых к нему. Доступные опции включают:
+``type`` (стандартный для ``string``), ``name``, ``length``, ``unique`` и
+``nullable``. Несколько примеров таких аннотаций:
 
 .. code-block:: php-annotations
 
     /**
-     * A string field with length 255 that cannot be null
-     * (reflecting the default values for the "type", "length" and *nullable* options)
+     * Строковое поле длиной 255, которое не должно быть null
+     * (это стандартные значения для опций "type", "length" и *nullable*)
      * 
      * @ORM\Column()
      */
     protected $name;
 
     /**
-     * A string field of length 150 that persists to an "email_address" column
-     * and has a unique index.
+     * Строковое поле длиной 150, хранящееся в колонке "email_address"
+     * и имеющее уникальный индекс.
      *
      * @ORM\Column(name="email_address", unique="true", length="150")
      */
@@ -1209,75 +1209,76 @@ and ``nullable``. Take a few annotations examples:
 
 .. note::
 
-    There are a few more options not listed here. For more details, see
-    Doctrine's `Property Mapping documentation`_
+    Существуют ещё опции, о которых здесь не упоминается. За дополнительной
+    информацией обращайтесь к документации Doctrine's `Property Mapping documentation`_
 
 .. index::
    single: Doctrine; ORM Console Commands
    single: CLI; Doctrine ORM
 
-Console Commands
-----------------
+Консольные команды
+------------------
 
-The Doctrine2 ORM integration offers several console commands under the
-``doctrine`` namespace. To view the command list you can run the console
-without any arguments:
+Интеграция Doctrine2 ORM предлагает несколько консольных команд внутри
+пространства имён ``doctrine``. Чтобы вывести список команд запустите консоль
+без аргументов:
 
 .. code-block:: bash
 
     php app/console
 
-A list of available command will print out, many of which start with the
-``doctrine:`` prefix. You can find out more information about any of these
-commands (or any Symfony command) by running the ``help`` command. For example,
-to get details about the ``doctrine:database:create`` task, run:
+В выведенном списке доступных команд многие из них начинаются с префикса
+``doctrine:``. Подробнее о них (или любых других командах для Symfony) можно
+узнать запустив команду ``help``. Например, чтобы получить подробности о
+процессе ``doctrine:database:create``, запустите:
 
 .. code-block:: bash
 
     php app/console help doctrine:database:create
 
-Some notable or interesting tasks include:
+Некоторые интересные или примечательные команды включают:
 
-* ``doctrine:ensure-production-settings`` - checks to see if the current
-  environment is configured efficiently for production. This should always
-  be run in the ``prod`` environment:
+* ``doctrine:ensure-production-settings`` - проверяет текущее окружение,
+  настроено ли оно эффективно для производственных нужд. Она всегда должна
+  запускаться в окружении ``prod``:
   
   .. code-block:: bash
   
     php app/console doctrine:ensure-production-settings --env=prod
 
-* ``doctrine:mapping:import`` - allows Doctrine to introspect an existing
-  database and create mapping information. For more information, see
-  :doc:`/cookbook/doctrine/reverse_engineering`.
+* ``doctrine:mapping:import`` - разрешает Doctrine проанализировать существующую
+  базу данных и создать информацию для её отображения. За дополнительной
+  информацией обращайтесь к :doc:`/cookbook/doctrine/reverse_engineering`.
 
-* ``doctrine:mapping:info`` - tells you all of the entities that Doctrine
-  is aware of and whether or not there are any basic errors with the mapping.
+* ``doctrine:mapping:info`` - расскажет обо всех сущностях, которые знает
+  Doctrine, а также есть ли в отображениях какие-нибудь простые ошибки.
 
-* ``doctrine:query:dql`` and ``doctrine:query:sql`` - allow you to execute
-  DQL or SQL queries directly from the command line.
+* ``doctrine:query:dql`` и ``doctrine:query:sql`` - позволяет выполнять DQL или
+  SQL запросы прямо из командной строки.
 
 .. note::
 
-   To be able to load data fixtures to your database, you will need to have the
-   ``DoctrineFixturesBundle`` bundle installed. To learn how to do it,
-   read the ":doc:`/cookbook/doctrine/doctrine_fixtures`" entry of the Cookbook.
+   Чтобы иметь возможность загружать fixtures с данными в базу данных,
+   необходимо установить бандл ``DoctrineFixturesBundle``. Чтобы узнать как это
+   сделать, прочтите статью ":doc:`/cookbook/doctrine/doctrine_fixtures`" из
+   Книги рецептов.
 
-Summary
--------
+Выводы
+------
 
-With Doctrine, you can focus on your objects and how they're useful in your
-application and worry about database persistence second. This is because
-Doctrine allows you to use any PHP object to hold your data and relies on
-mapping metadata information to map an object's data to a particular database
-table.
+Применяя Doctrine, можно сфокусироваться на объектах и их использовании в
+приложении и только потом заботиться об их сохранении в базу данных. Благодаря
+тому, что Doctrine позволяет использовать любой объект PHP для хранения данных и
+применяет информацию метаданных для отображения чтобы отобразить эти данные об
+объекте в определённую таблицу базы данных.
 
-And even though Doctrine revolves around a simple concept, it's incredibly
-powerful, allowing you to create complex queries and subscribe to events
-that allow you to take different actions as objects go through their persistence
-lifecycle.
+Хотя Doctrine revolves around a simple concept, она необычайно мощна, позволяя
+создавать сложные запросы и подписываться на события, которые дают возможность
+совершать различные действия когда объекты проходят по своим жизненным циклам во
+время сохранения.
 
-For more information about Doctrine, see the *Doctrine* section of the
-:doc:`cookbook</cookbook/index>`, which includes the following articles:
+За дополнительной информацией о Doctrine обращайтесь к разделу *Doctrine* из
+:doc:`Книги рецептов</cookbook/index>`, который включает следующие статьи:
 
 * :doc:`/cookbook/doctrine/doctrine_fixtures`
 * :doc:`/cookbook/doctrine/migrations`
@@ -1289,8 +1290,8 @@ For more information about Doctrine, see the *Doctrine* section of the
 .. _`Basic Mapping Documentation`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/basic-mapping.html
 .. _`Query Builder`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/query-builder.html
 .. _`Doctrine Query Language`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/dql-doctrine-query-language.html
-.. _`Association Mapping Documentation`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/association-mapping.html
+.. _`Отображениям объединений`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/association-mapping.html
 .. _`DateTime`: http://php.net/manual/en/class.datetime.php
-.. _`Mapping Types Documentation`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/basic-mapping.html#doctrine-mapping-types
+.. _`Отображении типов`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/basic-mapping.html#doctrine-mapping-types
 .. _`Property Mapping documentation`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/basic-mapping.html#property-mapping
-.. _`Lifecycle Events documentation`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/events.html#lifecycle-events
+.. _`Документации по Lifecycle Events`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/events.html#lifecycle-events
