@@ -754,7 +754,7 @@ XML или PHP. По умолчанию, основной конфигураци
 
         # app/config/config.yml
         imports:
-            - { resource: parameters.ini }
+            - { resource: parameters.yml }
             - { resource: security.yml }
 
         framework:
@@ -780,7 +780,7 @@ XML или PHP. По умолчанию, основной конфигураци
 
         <!-- app/config/config.xml -->
         <imports>
-            <import resource="parameters.ini" />
+            <import resource="parameters.yml" />
             <import resource="security.yml" />
         </imports>
 
@@ -804,7 +804,7 @@ XML или PHP. По умолчанию, основной конфигураци
 
         <?php
 
-        $this->import('parameters.ini');
+        $this->import('parameters.yml');
         $this->import('security.yml');
 
         $container->loadFromExtension('framework', array(
@@ -1021,3 +1021,9 @@ XML или PHP. По умолчанию, основной конфигураци
 .. _`Twig`: http://twig.sensiolabs.org
 .. _`symfony2bundles.org`: http://symfony2bundles.org/
 .. _`Symfony Standard Edition`: http://symfony.com/download
+
+.. toctree::
+    :hidden:
+
+    Translation source: N/A
+    Corrected from: 2011-09-30 d739c57
