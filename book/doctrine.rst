@@ -33,9 +33,9 @@
 .. sidebar:: Код вместе с примером
 
     Если хотите придерживаться примера из этой главы создайте ``AcmeStoreBundle``:
-    
+
     .. code-block:: bash
-    
+
         php app/console generate:bundle --namespace=Acme/StoreBundle
 
 Конфигурация базы данных
@@ -43,25 +43,25 @@
 
 Перед тем как действительно начать, необходимо настроить соединение с базой
 данных. По соглашению эта информация обычно указывается в файле
-``app/config/parameters.ini``:
+``app/config/parameters.yml``:
 
-.. code-block:: ini
+.. code-block:: yaml
 
-    ;app/config/parameters.ini
-    [parameters]
-        database_driver   = pdo_mysql
-        database_host     = localhost
-        database_name     = test_project
-        database_user     = root
-        database_password = password
+    #app/config/parameters.yml
+    parameters:
+        database_driver:   pdo_mysql
+        database_host:     localhost
+        database_name:     test_project
+        database_user:     root
+        database_password: password
 
 .. note::
 
-    Указание параметров в ``parameters.ini`` всего лишь соглашение. На них
+    Указание параметров в ``parameters.yml`` всего лишь соглашение. На них
     ссылается основной файл конфигурации, когда настраивается Doctrine:
-    
+
     .. code-block:: yaml
-    
+
         doctrine:
             dbal:
                 driver:   %database_driver%
@@ -69,7 +69,7 @@
                 dbname:   %database_name%
                 user:     %database_user%
                 password: %database_password%
-    
+
     Разделяя информацию о базе данных по отдельным файлам, можно легко хранить
     различные версии этих файлов на каждом сервере. Также легко можно хранить
     конфигурацию базы данных (или любую важную информацию) вне проекта, например
@@ -91,7 +91,7 @@
 ``Product`` чтобы представить эти продукты. Создайте его внутри папки ``Entity``
 (``Сущность``) в ``AcmeStoreBundle``::
 
-    // src/Acme/StoreBundle/Entity/Product.php    
+    // src/Acme/StoreBundle/Entity/Product.php
     namespace Acme\StoreBundle\Entity;
 
     class Product
@@ -112,9 +112,9 @@ PHP класс.
 
     Однажды, когда вы изучите Doctrine, то сможете поручить ей создать этот
     класс-сущность:
-    
+
     .. code-block:: bash
-    
+
         php app/console doctrine:generate:entity --entity="AcmeStoreBundle:Product" --fields="name:string(255) price:float description:text"
 
 .. index::
@@ -255,13 +255,13 @@ Doctrine позволяет выбирать из широкого разноо�
     использующая аннотации, необходимо поместить в класс аннотацию
     ``@IgnoreAnnotation``, чтобы указать какие из них Symfony должен
     игнорировать.
-    
+
     Например, чтобы уберечь ``@fn`` аннотацию от выдачи исключения, добавьте
     следующее::
-    
+
         /**
          * @IgnoreAnnotation("fn")
-         * 
+         *
          */
         class Product
 
@@ -304,7 +304,7 @@ Doctrine позволяет выбирать из широкого разноо�
     сеттеры создаются здесь только потому что они понадобятся для взаимодействия
     с PHP объектом.
 
-Создание таблиц/схемы для базы данных 
+Создание таблиц/схемы для базы данных
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Теперь есть удобный класс ``Product`` с информацией для отображения, который
@@ -350,7 +350,7 @@ Doctrine точно знает как сохранить. Конечно, пок
     use Acme\StoreBundle\Entity\Product;
     use Symfony\Component\HttpFoundation\Response;
     // ...
-    
+
     public function createAction()
     {
         $product = new Product();
@@ -420,7 +420,7 @@ Doctrine точно знает как сохранить. Конечно, пок
         $product = $this->getDoctrine()
             ->getRepository('AcmeStoreBundle:Product')
             ->find($id);
-        
+
         if (!$product) {
             throw $this->createNotFoundException('No product found for id '.$id);
         }
@@ -542,7 +542,7 @@ manager::
 какой-либо работы::
 
     $repository->find($id);
-    
+
     $repository->findOneByName('Foo');
 
 Конечно, Doctrine также позволяет писать более сложные запросы, используя
@@ -564,7 +564,7 @@ Doctrine Query Language (DQL). DQL похож на SQL за исключение
     $query = $em->createQuery(
         'SELECT p FROM AcmeStoreBundle:Product p WHERE p.price > :price ORDER BY p.price ASC'
     )->setParameter('price', '19.99');
-    
+
     $products = $query->getResult();
 
 Если вам удобно с SQL, то DQL должен быть также понятен. Наибольшее различие
@@ -583,13 +583,13 @@ Doctrine Query Language (DQL). DQL похож на SQL за исключение
     ``Doctrine\ORM\NoResultException`` если нет результатов и
     ``Doctrine\ORM\NonUniqueResultException`` если возвращается *больше* одного
     результата. Если используется этот метод, возможно придётся обернуть его
-    в try-catch блок и убедиться в том, что возвращается только один результат 
+    в try-catch блок и убедиться в том, что возвращается только один результат
     (если запрашивается что-то, что может вероятно вернуть более одного
     результата)::
-    
+
         $query = $em->createQuery('SELECT ....')
             ->setMaxResults(1);
-        
+
         try {
             $product = $query->getSingleResult();
         } catch (\Doctrine\Orm\NoResultException $e) {
@@ -607,7 +607,7 @@ Doctrine Query Language (DQL). DQL похож на SQL за исключение
     Заметка о методе ``setParameter()``. Работая с Doctrine, хорошим тоном
     является указание любых внешних значений через "placeholders",
     что и было сделанов приведённом выше примере:
-    
+
     .. code-block:: text
 
         ... WHERE p.price > :price ...
@@ -644,7 +644,7 @@ Doctrine Query Language (DQL). DQL похож на SQL за исключение
         ->setParameter('price', '19.99')
         ->orderBy('p.price', 'ASC')
         ->getQuery();
-    
+
     $products = $query->getResult();
 
 Объект ``QueryBuilder`` содержит все необходимые методы для создания запроса.
@@ -773,11 +773,11 @@ getter и setter функциями.
     // src/Acme/StoreBundle/Entity/Category.php
     // ...
     use Doctrine\Common\Collections\ArrayCollection;
-    
+
     class Category
     {
         // ...
-        
+
         /**
          * @ORM\OneToMany(targetEntity="Product", mappedBy="category")
          */
@@ -812,7 +812,7 @@ makes sense in the application for each ``Category`` to hold an array of
     class Product
     {
         // ...
-    
+
         /**
          * @ORM\ManyToOne(targetEntity="Category", inversedBy="products")
          * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
@@ -880,18 +880,18 @@ holds массив объектов ``Product`` и объект ``Product`` мо
         {
             $category = new Category();
             $category->setName('Main Products');
-            
+
             $product = new Product();
             $product->setName('Foo');
             $product->setPrice(19.99);
             // Связывает этот продукт с категорией
             $product->setCategory($category);
-            
+
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($category);
             $em->persist($product);
             $em->flush();
-            
+
             return new Response(
                 'Created product id: '.$product->getId().' and category id: '.$category->getId()
             );
@@ -917,7 +917,7 @@ holds массив объектов ``Product`` и объект ``Product`` мо
             ->find($id);
 
         $categoryName = $product->getCategory()->getName();
-        
+
         // ...
     }
 
@@ -944,7 +944,7 @@ holds массив объектов ``Product`` и объект ``Product`` мо
             ->find($id);
 
         $products = $category->getProducts();
-    
+
         // ...
     }
 
@@ -960,7 +960,7 @@ holds массив объектов ``Product`` и объект ``Product`` мо
     Эта "ленивая загрузка" возможна, когда необходима, потому, что Doctrine
     возвращает "proxy" объект вместо настоящего объекта. Взгляните снова на
     пример, приведённый ранее::
-    
+
         $product = $this->getDoctrine()
             ->getRepository('AcmeStoreBundle:Product')
             ->find($id);
@@ -999,7 +999,7 @@ holds массив объектов ``Product`` и объект ``Product`` мо
 следующий метод к классу ``ProductRepository``::
 
     // src/Acme/StoreBundle/Repository/ProductRepository.php
-    
+
     public function findOneByIdJoinedToCategory($id)
     {
         $query = $this->getEntityManager()
@@ -1008,7 +1008,7 @@ holds массив объектов ``Product`` и объект ``Product`` мо
                 JOIN p.category c
                 WHERE p.id = :id'
             )->setParameter('id', $id);
-        
+
         try {
             return $query->getSingleResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -1026,9 +1026,9 @@ holds массив объектов ``Product`` и объект ``Product`` мо
             ->findOneByIdJoinedToCategory($id);
 
         $category = $product->getCategory();
-    
+
         // ...
-    }    
+    }
 
 Подробнее об объединениях
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1146,7 +1146,7 @@ XML:
     lifecycle callbacks должны быть простыми методами, занимающимися внутренними
     изменениями данных для сущности (напр., установка значений для полей
     created/updated, создание slug).
-    
+
     Если планируется делать более тяжёлую работу - запись логов или отправка
     email - необходимо зарегистрировать внешний класс как event listener
     или subscriber и дать ему доступ к необходимым ресурсам. Дополнительную
@@ -1211,7 +1211,7 @@ Doctrine представляет огромное количество типо
     /**
      * Строковое поле длиной 255, которое не должно быть null
      * (это стандартные значения для опций "type", "length" и *nullable*)
-     * 
+     *
      * @ORM\Column()
      */
     protected $name;
@@ -1258,9 +1258,9 @@ Doctrine представляет огромное количество типо
 * ``doctrine:ensure-production-settings`` - проверяет текущее окружение,
   настроено ли оно эффективно для производственных нужд. Она всегда должна
   запускаться в окружении ``prod``:
-  
+
   .. code-block:: bash
-  
+
     php app/console doctrine:ensure-production-settings --env=prod
 
 * ``doctrine:mapping:import`` - разрешает Doctrine проанализировать существующую
@@ -1311,3 +1311,9 @@ Doctrine представляет огромное количество типо
 .. _`Property Mapping documentation`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/basic-mapping.html#property-mapping
 .. _`Документации по Lifecycle Events`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/events.html#lifecycle-events
 .. _`документации по зарезервированным ключевым словам SQL`: http://www.doctrine-project.org/docs/orm/2.0/en/reference/basic-mapping.html#quoting-reserved-words
+
+.. toctree::
+    :hidden:
+
+    Translation source: N/A
+    Corrected from: 2011-09-30 d739c57

@@ -38,6 +38,7 @@ Cookbook
 
     bundles/best_practices
     bundles/inheritance
+    bundles/override
     bundles/extension
 
     email
@@ -82,3 +83,8 @@ Cookbook
     symfony1
 
 .. include:: /cookbook/map.rst.inc
+
+.. toctree::
+    :hidden:
+
+    Translation source: 2011-09-30 283b2f5
