@@ -17,9 +17,9 @@
 
 * **Формы и валидация**
 
-  * :doc:`Form Field Type Reference</reference/forms/types>`
-  * :doc:`Validation Constraints Reference </reference/constraints>`
-  * :doc:`Twig Template Function Reference</reference/forms/twig_reference>`
+  * :doc:`Формы, справочник типов полей</reference/forms/types>`
+  * :doc:`Валидация, справочник ограничений </reference/constraints>`
+  * :doc:`Twig: справочник функций для работы с формами</reference/forms/twig_reference>`
 
 * **Остальные разделы**
 

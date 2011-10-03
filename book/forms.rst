@@ -21,9 +21,9 @@ Symfony2 включает компонент для работы с Формам
 Создание простой формы
 ----------------------
 
-Предположим вы работаете над простым приложением - списком ToDo, которое
+Предположим, вы работаете над простым приложением - списком ToDo, которое
 будет отображать некоторые "задачи". Поскольку вашим пользователям будет
-необходимо создавать и редактировать задачи, вам потебуется создать форму.
+необходимо создавать и редактировать задачи, вам потребуется создать форму.
 Но, прежде чем начать, давайте создадим базовый класс ``Task``, который
 представляет и хранит данные для одной задачи:
 
@@ -60,7 +60,7 @@ Symfony2 включает компонент для работы с Формам
 
 .. note::
 
-   Если вы будете брать код примеров один в один, вам прежде всего
+   Если вы будете брать код примеров один в один, вам, прежде всего
    необходимо создать пакет ``AcmeTaskBundle``, выполнив следующую команду
    (и принимая все опции интерактивного генератора по умолчанию):
 
@@ -68,11 +68,11 @@ Symfony2 включает компонент для работы с Формам
 
         php app/console generate:bundle --namespace=Acme/TaskBundle
 
-Этот клас представляет собой обычный PHP-объект и не имеет ничего общего с
+Этот класс представляет собой обычный PHP-объект и не имеет ничего общего с
 Symfony или какой-либо другой библиотекой. Это PHP-объект, который выполняет
 задачу непосредственно внутри *вашего* приложение (т.е. является представлением
 задачи в вашем приложении). Конечно же, к концу этой главы вы будете иметь
-возможность возможность отправлять данные для экземпляра ``Task`` (посредством
+возможность отправлять данные для экземпляра ``Task`` (посредством
 HTML-формы), валидировать её данные и сохранять в базу данных.
 
 .. index::
@@ -100,7 +100,7 @@ HTML-формы), валидировать её данные и сохранят
     {
         public function newAction(Request $request)
         {
-            // создаём задачу и приваиваем ей некоторые начальные данные для примера
+            // создаём задачу и присваиваем ей некоторые начальные данные для примера
             $task = new Task();
             $task->setTask('Write a blog post');
             $task->setDueDate(new \DateTime('tomorrow'));
@@ -120,13 +120,13 @@ HTML-формы), валидировать её данные и сохранят
 
    Этот пример показывает, как создать вашу форму непосредственно в коде
    вашего контроллера. Позднее, в секции :ref:`book-form-creating-form-classes`,
-   вы также узнаете как создавать формы в отдельных классах, что является
+   вы также узнаете, как создавать формы в отдельных классах, что является
    более предпочтительным вариантом и сделает ваши формы доступными для
    повторного использования.
 
 Создание формы требует совсем немного кода, так как объекты форм в Symfony2
 создаются при помощи конструктора форм - "form builder". Цель конструктора
-форм - облегчить насколько это возможно создание форм, выполняя всю тяжелую
+форм - облегчить насколько это возможно создание форм, выполняя всю тяжёлую
 работу.
 
 В этом примере вы добавили два поля в вашу форму - ``task`` и ``dueDate``,
@@ -182,12 +182,12 @@ Symfony2 включает много встроенных типов, котор
 
 Вот и всё! Напечатав ``form_widget(form)``, каждое поле формы будет отображено,
 так же как метки полей и ошибки (если они есть). Это очень просто, но не
-очень гибко (пока что). На практике вам скорее всего захочется отобразить
+очень гибко (пока что). На практике вам, скорее всего, захочется отобразить
 каждое поле формы отдельно, чтобы иметь полный контроль над тем как форма
-выглядит. Вы узнаете как сделать это в секции ":ref:`form-rendering-template`".
+выглядит. Вы узнаете, как сделать это в секции ":ref:`form-rendering-template`".
 
-Прежде чем двигаться дальше, обратите внимание на то как было отображено поле
-``task``, содержащее значение поля ``task`` объекта ``$task` ("Write a blog post").
+Прежде чем двигаться дальше, обратите внимание на то, как было отображено поле
+``task``, содержащее значение поля ``task`` объекта ``$task`` ("Write a blog post").
 Это - первая задача форм: получить данные от объекта и перевести их в формат,
 подходящий для их последующего отображения в HTML форме.
 
@@ -229,7 +229,7 @@ Symfony2 включает много встроенных типов, котор
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                // выполняем прочие действие, например сохраняем задачу в базе данных
+                // выполняем прочие действие, например, сохраняем задачу в базе данных
 
                 return $this->redirect($this->generateUrl('task_success'));
             }
@@ -263,7 +263,7 @@ Symfony2 включает много встроенных типов, котор
    привязана к данным и у вас есть возможность для выполнения некоторых
    действий, используя объект ``$task`` (например сохранить его в базе
    данных) перед тем как перенаправить пользователя на другую страницу
-   (например "thank you" или "success").
+   (например, "thank you" или "success").
 
 .. note::
 
@@ -276,8 +276,8 @@ Symfony2 включает много встроенных типов, котор
 Валидация форм
 --------------
 
-В предыдущей секции вы узнали что форма может быть отправлена с валидными
-или не валидными даными. В Symfony2 валидация применяется к объекту, лежащему
+В предыдущей секции вы узнали, что форма может быть отправлена с валидными
+или не валидными данными. В Symfony2 валидация применяется к объекту, лежащему
 в основе формы (например, ``Task``). Другими словами, вопрос не в том, валидна
 ли форма, а валиден ли объект ``$task``, после того как форма передала
 ему отправленные данные. Выполнив метод ``$form->isValid()``, можно узнать
@@ -364,13 +364,13 @@ Symfony2 включает много встроенных типов, котор
 .. sidebar:: HTML5 Валидация
 
    Начиная с HTML5, многие браузеры могут выполнять некоторые валидационные
-   ограничения на строне клиента, без отправки формы. Типичным ограничением
+   ограничения на стороне клиента, без отправки формы. Типичным ограничением
    является указание атрибута ``required`` для полей, которые будут
    обязательными. В браузерах, которые поддерживают HTML5, этот атрибут будет
    позволять отображать браузерное сообщение об ошибке, если пользователь
    попробует отправить форму с пустым соответствующим полем.
 
-   Генерированные формы полностью поддерживают эту фозможность, добавляя
+   Генерированные формы полностью поддерживают эту возможность, добавляя
    соответствующие HTML-атрибуты, которые активируют HTML5 клиентскую
    валидацию. Тем не менее, валидация на стороне клиента может
    быть отключена путём добавления атрибута ``novalidate`` к тагу
@@ -391,7 +391,7 @@ Symfony2 включает много встроенных типов, котор
 
 .. tip::
 
-    Если вы не испольуете :ref:`валидационные группы <book-validation-validation-groups>`,
+    Если вы не используете :ref:`валидационные группы <book-validation-validation-groups>`,
     вы можете пропустить эту секцию.
 
 Если ваш объект использует возможности :ref:`валидационных групп <book-validation-validation-groups>`,
@@ -408,7 +408,7 @@ Symfony2 включает много встроенных типов, котор
     ;
 
 Если вы создаёте :ref:`классы форм<book-form-creating-form-classes>`
-(хорошая практика), тогда вам нужно указать следуюущий код в метод
+(хорошая практика), тогда вам нужно указать следующий код в метод
 ``getDefaultOptions()``:
 
 .. code-block:: php
@@ -423,7 +423,7 @@ Symfony2 включает много встроенных типов, котор
         );
     }
 
-В обоих этих примерах, для валидации объекта, для котрого создана форма, будет
+В обоих этих примерах, для валидации объекта, для которого создана форма, будет
 использована *лишь* группа ``registration``.
 
 .. index::
@@ -450,7 +450,7 @@ Symfony2 включает много встроенных типов, котор
 
 Каждый тип поля имеет некоторое число опций, которые можно использовать для
 их настройки. Например, поле ``dueDate`` сейчас отображает 3 селектбокса.
-Тем не менее, :doc:`поле date</reference/forms/types/date>` можно натроить
+Тем не менее, :doc:`поле date</reference/forms/types/date>` можно настроить
 таким образом, чтобы отображался один текстбокс (где пользователь сможет
 ввести дату в виде строки):
 
@@ -472,11 +472,11 @@ Symfony2 включает много встроенных типов, котор
     Наиболее типичной опцией является опция ``required``, которая может быть
     указана для любого поля. По умолчанию, опция ``required`` установлена в
     ``true``, что даёт возможность браузерам с поддержкой HTML5 использовать
-    втроенную в них клиентскую валидацию, если поле остаётся пустым. Если вам
+    встроенную в них клиентскую валидацию, если поле остаётся пустым. Если вам
     этого не требуется, или же установите опцию ``required`` в ``false`` или
     же :ref:`отключите валидацию HTML5<book-forms-html5-validation-disable>`.
 
-    Отметим также, что устновка опции ``required`` в ``true`` **не влияет**
+    Отметим также, что установка опции ``required`` в ``true`` **не влияет**
     на серверную валидацию. Другими словами, если пользователь отправляет
     пустое значение для этого поля (при помощи старого браузера или веб-сервиса)
     оно будет считаться валидным, если вы не используете ограничения ``NotBlank``
@@ -537,7 +537,7 @@ Symfony2 включает много встроенных типов, котор
 
     Когда эти опции будут установлены, поле будет отображено с
     использованием особых HTML атрибутов, которые позволяют выполнять
-    HTML5 валидацию на стороне клиета (например ``Assert\MaxLength``).
+    HTML5 валидацию на стороне клиента (например ``Assert\MaxLength``).
     И, поскольку вам нужно будет вручную добавлять правила валидации
     на стороне сервера, эти опции могут быть угаданы исходя из ограничений,
     которые вы будете использовать для неё.
@@ -545,13 +545,13 @@ Symfony2 включает много встроенных типов, котор
 * ``required``: Опция ``required`` может быть определена исходя из правил
   валидации (т.е. если поле ``NotBlank`` или ``NotNull``) или же на основании
   метаданных Doctrine (т.е. если поле ``nullable``). Это может быть очень удобно,
-  так как плавила клиентской валидации автоматически соответствуют правилам
+  так как правила клиентской валидации автоматически соответствуют правилам
   серверной валидации.
 
 * ``min_length``: Если поле является одним из видов текстовых полей,
   опция ``min_length`` может быть угадана исходя из правил валидации (
   если используются ограничения ``MinLength`` или ``Min``) или же из
-  метаданых Doctrine (основываясь на длинне поля).
+  метаданных Doctrine (основываясь на длине поля).
 
 * ``max_length``: Аналогично ``min_length`` с той лишь разницей, что определяет
   максимальное значение длины поля.
@@ -576,7 +576,7 @@ Symfony2 включает много встроенных типов, котор
 Отображение формы в шаблоне
 ------------------------------
 
-Ранее вы увидели как форму целиком можно отобразить при помощи лишь одной
+Ранее вы увидели, как форму целиком можно отобразить при помощи лишь одной
 строки кода. Конечно же, на практике вам потребуется большая гибкость при
 отображении:
 
@@ -632,7 +632,7 @@ Symfony2 включает много встроенных типов, котор
 
 Основная часть работы сделана при помощи хелпера ``form_row``, который
 отображает метку, ошибки и виджет для каждого поля внутри тага ``div``.
-В секции :ref:`form-theming` вы узнаете как можно настроить вывод ``form_row``
+В секции :ref:`form-theming` вы узнаете, как можно настроить вывод ``form_row``
 на различных уровнях.
 
 .. tip::
@@ -657,7 +657,7 @@ Symfony2 включает много встроенных типов, котор
 
 Хелпер ``form_row`` очень удобен, так как вы можете быстро отобразить
 каждое поле вашей формы (и разметка, используемая для каждой строки
-может быть настроена). Но, так как жизнь как правило сложнее чем нам
+может быть настроена). Но, так как жизнь как правило сложнее, чем нам
 хотелось бы, вы можете также отобразить каждое поле вручную. В конечном
 итоге вы получите тоже самое что и с хелпером ``form_row``:
 
@@ -715,7 +715,7 @@ Symfony2 включает много встроенных типов, котор
 Наконец, некоторые типы полей имеют дополнительные опции отображения,
 которые можно указывать виджету. Эти опции документированы для каждого
 такого типа, но общей для всех опцией является ``attr``, которая позволяет
-вам модифицировать атрибуты элемента формы. Следущий пример добавит текстовому
+вам модифицировать атрибуты элемента формы. Следующий пример добавит текстовому
 полю CSS класс ``task_field``:
 
 .. configuration-block::
@@ -739,22 +739,22 @@ Symfony2 включает много встроенных типов, котор
 и опциях, которые для них доступны.
 
 .. index::
-   single: Forms; Creating form classes
-
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+   single: Формы; Создание классов форм
 
 .. _book-form-creating-form-classes:
 
-Creating Form Classes
+Создание классов форм
 ---------------------
 
-As you've seen, a form can be created and used directly in a controller.
-However, a better practice is to build the form in a separate, standalone PHP
-class, which can then be reused anywhere in your application. Create a new class
-that will house the logic for building the task form:
+Как вы уже видели ранее, форма может быть создана и использована
+непосредственно в контроллере. Тем не менее, лучшей практикой является
+создание формы в отдельном PHP-классе, который может быть использован повторно
+в любом месте вашего приложения. Создайте новый класс, который будет содержать
+логику создания формы ``task``:
 
 .. code-block:: php
 
+    <?php
     // src/Acme/TaskBundle/Form/Type/TaskType.php
 
     namespace Acme\TaskBundle\Form\Type;
@@ -776,15 +776,17 @@ that will house the logic for building the task form:
         }
     }
 
-This new class contains all the directions needed to create the task form
-(note that the ``getName()`` method should return a unique identifier for this
-form "type"). It can be used to quickly build a form object in the controller:
+Этот новый класс содержит все необходимые указания для создания формы задачи
+(обратите внимание, что метод ``getName()`` должен возвращать уникальный идентификатор
+для данной формы). Теперь, вы можете использовать этот класс для быстрого создания
+объекта формы в контроллере:
 
 .. code-block:: php
 
+    <?php
     // src/Acme/TaskBundle/Controller/DefaultController.php
 
-    // add this new use statement at the top of the class
+    // добавьте use для класса формы в начале файла контроллера
     use Acme\TaskBundle\Form\Type\TaskType;
 
     public function newAction()
@@ -795,22 +797,26 @@ form "type"). It can be used to quickly build a form object in the controller:
         // ...
     }
 
-Placing the form logic into its own class means that the form can be easily
-reused elsewhere in your project. This is the best way to create forms, but
-the choice is ultimately up to you.
+Размещение логики формы в отдельном классе означает, что теперь форма может
+быть легко использована в другом месте приложения. Это наилучший способ для
+создания форм, но выбор конечно же за вами.
 
 .. _book-forms-data-class:
 
-.. sidebar:: Setting the ``data_class``
+.. sidebar:: Настройка ``data_class`` для формы
 
-    Every form needs to know the name of the class that holds the underlying
-    data (e.g. ``Acme\TaskBundle\Entity\Task``). Usually, this is just guessed
-    based off of the object passed to the second argument to ``createForm``
-    (i.e. ``$task``). Later, when you begin embedding forms, this will no
-    longer be sufficient. So, while not always necessary, it's generally a
-    good idea to explicitly specify the ``data_class`` option by add the
-    following to your form type class::
+    Каждая форма должна знать имя класса, который будет содержать данные
+    для неё (например, ``Acme\TaskBundle\Entity\Task``). Как правило,
+    эти данные определяются автоматически по объекту, который передаётся
+    вторым параметром в метод ``createForm`` (т.е. ``$task``). Позднее,
+    когда вы займётесь встраиванием форм, полагаться на автоопреление уже
+    будет нельзя. Таким образом, хоть и не всегда необходимо, но всё же
+    желательно явно указывать опцию ``data_class``, добавив следующие
+    строки в класс формы:
 
+    .. code-block:: php
+
+        <?php
         public function getDefaultOptions(array $options)
         {
             return array(
@@ -819,19 +825,22 @@ the choice is ultimately up to you.
         }
 
 .. index::
-   pair: Forms; Doctrine
+   pair: Формы; Doctrine
 
-Forms and Doctrine
+Формы и Doctrine
 ------------------
 
-The goal of a form is to translate data from an object (e.g. ``Task``) to an
-HTML form and then translate user-submitted data back to the original object. As
-such, the topic of persisting the ``Task`` object to the database is entirely
-unrelated to the topic of forms. But, if you've configured the ``Task`` class
-to be persisted via Doctrine (i.e. you've added
-:ref:`mapping metadata<book-doctrine-adding-mapping>` for it), then persisting
-it after a form submission can be done when the form is valid::
+Цель любой формы - преобразование данных из объекта (в нашем случае ``Task``) в
+HTML форму и наоборот - преобразование данных, отправленных пользователем, обратно
+в объект. По существу, тема по сохранению объекта ``Task`` в базе данных
+совершенно не относится теме, обсуждаемой в главе "Формы". Тем не менее, если вы
+сконфигурировали класс ``Task`` для работы с Doctrine (т.е. вы добавили
+:ref:`метаданные для отображения<book-doctrine-adding-mapping>` (mapping metadata) для него), его
+сохранение после отправки формы можно выполнить в случае, если форма валидна:
 
+.. code-block:: php
+
+    <?php
     if ($form->isValid()) {
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($task);
@@ -840,35 +849,39 @@ it after a form submission can be done when the form is valid::
         return $this->redirect($this->generateUrl('task_success'));
     }
 
-If, for some reason, you don't have access to your original ``$task`` object,
-you can fetch it from the form::
+Если, по каким-то причинам у вас нет изначального объекта ``$task``,
+вы можете получить его из формы::
 
     $task = $form->getData();
 
-For more information, see the :doc:`Doctrine ORM chapter</book/doctrine>`.
+Больше информации по работе с базами данных вы можете получить в главе
+:doc:`Doctrine ORM</book/doctrine>`.
 
-The key thing to understand is that when the form is bound, the submitted
-data is transferred to the underlying object immediately. If you want to
-persist that data, you simply need to persist the object itself (which already
-contains the submitted data).
+Самое главное, что требуется уяснить, когда форма и данные связываются,
+данные тут же передаются в объект, лежащий в основе формы. Если вы хотите
+сохранить эти данные, вам нужно просто сохранить объект (который уже содержит
+отправленные данные).
 
 .. index::
-   single: Forms; Embedded forms
+   single: Формы; Встраивание форм
 
-Embedded Forms
---------------
+Встроенные формы
+----------------
 
-Often, you'll want to build a form that will include fields from many different
-objects. For example, a registration form may contain data belonging to
-a ``User`` object as well as many ``Address`` objects. Fortunately, this
-is easy and natural with the form component.
+Зачастую, когда вы хотите создать форму, вам требуется добавлять в неё
+поля из различных объектов. Например, форма регистрации может содержать
+данные, относящиеся к объекту ``User`` и к нескольким объектам ``Address``.
+К счастью, с использованием компонента форм сделать это легко и естественно.
 
-Embedding a Single Object
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Встраивание одного объекта
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Suppose that each ``Task`` belongs to a simple ``Category`` object. Start,
-of course, by creating the ``Category`` object::
+Предположим, что каждая задача ``Task`` соответствует некоторому объекту
+``Category``. Начнём конечно же с создания класса ``Category``:
 
+.. code-block:: php
+
+    <?php
     // src/Acme/TaskBundle/Entity/Category.php
     namespace Acme\TaskBundle\Entity;
 
@@ -882,8 +895,11 @@ of course, by creating the ``Category`` object::
         public $name;
     }
 
-Next, add a new ``category`` property to the ``Task`` class::
+Затем создадим свойство ``category`` в классе ``Task``:
 
+.. code-block:: php
+
+    <?php
     // ...
 
     class Task
@@ -908,9 +924,12 @@ Next, add a new ``category`` property to the ``Task`` class::
         }
     }
 
-Now that your application has been updated to reflect the new requirements,
-create a form class so that a ``Category`` object can be modified by the user::
+Теперь ваше приложение нужно подправить с учётом новых требований. Создайте
+класс формы для изменения объекта ``Category``:
 
+.. code-block:: php
+
+    <?php
     // src/Acme/TaskBundle/Form/Type/CategoryType.php
     namespace Acme\TaskBundle\Form\Type;
 
@@ -937,13 +956,14 @@ create a form class so that a ``Category`` object can be modified by the user::
         }
     }
 
-The end goal is to allow the ``Category`` of a ``Task`` to be modified right
-inside the task form itself. To accomplish this, add a ``category`` field
-to the ``TaskType`` object whose type is an instance of the new ``CategoryType``
-class:
+Конечно целью же является изменение ``Category`` для ``Task`` непосредственно
+из задачи. Для того чтобы выполнить это, добавьте поле ``category`` в
+форму ``TaskType``, которое будет представлено экземпляром нового класса
+``CategoryType``:
 
 .. code-block:: php
 
+    <?php
     public function buildForm(FormBuilder $builder, array $options)
     {
         // ...
@@ -951,9 +971,8 @@ class:
         $builder->add('category', new CategoryType());
     }
 
-The fields from ``CategoryType`` can now be rendered alongside those from
-the ``TaskType`` class. Render the ``Category`` fields in the same way
-as the original ``Task`` fields:
+Поля формы ``CategoryType`` теперь могут быть отображены прямо в форме ``TaskType``.
+Отобразите поля ``Category`` тем же способом как и поля ``Task``:
 
 .. configuration-block::
 
@@ -981,47 +1000,49 @@ as the original ``Task`` fields:
         <?php echo $view['form']->rest($form) ?>
         <!-- ... -->
 
-When the user submits the form, the submitted data for the ``Category`` fields
-are used to construct an instance of ``Category``, which is then set on the
-``category`` field of the ``Task`` instance.
+Когда пользователь отправляет форму, данные для полей ``Category`` будут
+использованы для создания экземпляра ``Category``, который будет присвоен
+полю ``category`` объекта ``Task``.
 
-The ``Category`` instance is accessible naturally via ``$task->getCategory()``
-and can be persisted to the database or used however you need.
+Объект ``Category`` доступен через метод ``$task->getCategory()`` и может
+быть сохранён в базу данных или использован где требуется.
 
-Embedding a Collection of Forms
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Встраивание коллекций форм
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also embed a collection of forms into one form. This is done by
-using the ``collection`` field type. For more information, see the
-:doc:`collection field type reference</reference/forms/types/collection>`.
+Вы также можете встроить в вашу форму целую коллекцию форм. Этого можно
+достичь при использовании поля ``collection``. Подробнее этот тип поля описан
+в справочнике: :doc:`collection field type</reference/forms/types/collection>`.
 
 .. index::
-   single: Forms; Theming
-   single: Forms; Customizing fields
+   single: Формы; Дизайн
+   single: Формы; Кастомизация полей
 
 .. _form-theming:
 
-Form Theming
-------------
+Дизайн форм
+-----------
 
-Every part of how a form is rendered can be customized. You're free to change
-how each form "row" renders, change the markup used to render errors, or
-even customize how a ``textarea`` tag should be rendered. Nothing is off-limits,
-and different customizations can be used in different places.
+Каждая часть отображения формы может быть настроена в соответствии с вашими
+требованиями. Вы можете изменить как отображается каждая строка формы, изменить
+разметку отображения ошибок и даже настроить как должен отображаться таг
+``textarea``. Вы ничем не ограничены и разные настройки могут быть использованы
+в разных местах.
 
-Symfony uses templates to render each and every part of a form, such as
-``label`` tags, ``input`` tags, error messages and everything else.
+Symfony использует шаблоны для отображения всех частей форм, таких как
+метки, таги, input таги, сообщения об ошибках и многое другое.
 
-In Twig, each form "fragment" is represented by a Twig block. To customize
-any part of how a form renders, you just need to override the appropriate block.
+В Twig каждый такой фрагмент представлен блоком Twig. Для настройки любой части
+отображения формы вам просто надо заменить нужный блок.
 
-In PHP, each form "fragment" is rendered via an individual template file.
-To customize any part of how a form renders, you just need to override the
-existing template by creating a new one.
+В PHP каждый фрагмент формы отображается посредством индивидуального
+файла шаблона. Для настройки отображения любой части формы вам нужно
+заменить существующий шаблон новым.
 
-To understand how this works, let's customize the ``form_row`` fragment and
-add a class attribute to the ``div`` element that surrounds each row. To
-do this, create a new template file that will store the new markup:
+Для того чтобы понять, как это работает, давайте настроим отображение
+фрагмента ``form_row`` и добавим атрибут class для элемента ``div``,
+который содержит каждую строку. Для того чтобы выполнить это, создайте новый файл
+шаблона, который будет содержать новую разметку:
 
 .. configuration-block::
 
@@ -1049,12 +1070,12 @@ do this, create a new template file that will store the new markup:
             <?php echo $view['form']->widget($form, $parameters) ?>
         </div>
 
-The ``field_row`` form fragment is used when rendering most fields via the
-``form_row`` function. To tell the form component to use your new ``field_row``
-fragment defined above, add the following to the top of the template that
-renders the form:
+Фрагмент ``field_row`` используется при отображении большинства полей при
+помощи функции ``form_row``. Для того, чтобы сообщить компоненту форм, чтобы
+он использовал новый фрагмент ``field_row``, определённый выше, добавьте
+следующую строку в начале шаблона, отображающего форму:
 
-.. configuration-block:: php
+.. configuration-block::
 
     .. code-block:: html+jinja
 
@@ -1072,112 +1093,114 @@ renders the form:
 
         <form ...>
 
-The ``form_theme`` tag (in Twig) "imports" the fragments defined in the given
-template and uses them when rendering the form. `In other words, when the
-``form_row`` function is called later in this template, it will use the ``field_row``
-block from your custom theme (instead of the default ``field_row`` block
-that ships with Symfony).
+Таг ``form_theme`` (в Twig) как бы "импортирует" фрагменты, определённые в
+указанном шаблоне и использует их при отображении формы. Другими словами,
+когда вызывается функция ``form_row`` ниже в этом шаблоне, она будет
+использовать блок ``field_row`` из вашей темы (вместо блока ``field_row``
+по умолчанию используемого в Symfony).
 
-To customize any portion of a form, you just need to override the appropriate
-fragment. Knowing exactly which block or file to override is the subject of
-the next section.
+Для того чтобы настроить любую часть формы, вам всего лишь нужно переопределить
+все необходимые фрагменты. О том, какие блоки или файлы могут быть переопределены,
+мы поговорим в следующей секции.
 
-For a more extensive discussion, see :doc:`/cookbook/form/form_customization`.
+Дополнительную информацию о кастомизации форм ищите в книге рецептов:
+:doc:`/cookbook/form/form_customization`.
 
 .. index::
-   single: Forms; Template fragment naming
+   single: Формы; Именование фрагментов форм
 
 .. _form-template-blocks:
 
-Form Fragment Naming
-~~~~~~~~~~~~~~~~~~~~
+Именование фрагментов форм
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In Symfony, every part a form that is rendered - HTML form elements, errors,
-labels, etc - is defined in a base theme, which is a collection of blocks
-in Twig and a collection of template files in PHP.
+В Symfony, каждая отображаемая часть формы - HTML элементы форм, ошибки,
+метки и т.д. - определены в базовой теме, которая представляет из себя
+набор блоков в Twig и набор шаблонов в PHP.
 
-In Twig, every block needed is defined in a single template file (`form_div_layout.html.twig`_)
-that lives inside the `Twig Bridge`_. Inside this file, you can see every block
-needed to render a form and every default field type.
+В Twig все блоки определены в одном файле (`form_div_layout.html.twig`_),
+который располагается внутри `Twig Bridge`_. В этом файле вы можете
+увидеть любой из блоков, необходимых для отображения любого стандартного
+поля.
 
-In PHP, the fragments are individual template files. By default they are located in
-the `Resources/views/Form` directory of the framework bundle (`view on GitHub`_).
+В PHP каждый фрагмент расположен в отдельном файле. По умолчанию, они располагаются
+в директории `Resources/views/Form` в составе пакета framework (`см. на GitHub`_).
 
-Each fragment name follows the same basic pattern and is broken up into two pieces,
-separated by a single underscore character (``_``). A few examples are:
+Наименование каждого фрагмента следует одному базовому правилу и разбито на
+две части, разделённых подчерком (``_``). Несколько примеров:
 
-* ``field_row`` - used by ``form_row`` to render most fields;
-* ``textarea_widget`` - used by ``form_widget`` to render a ``textarea`` field
-  type;
-* ``field_errors`` - used by ``form_errors`` to render errors for a field;
+* ``field_row`` - используется функцией ``form_row`` для отображения большинства полей;
+* ``textarea_widget`` - используется функцией ``form_widget`` для отображения полей типа ``textarea``;
+* ``field_errors`` - используется функцией ``form_errors`` для отображения ошибок.
 
-Each fragment follows the same basic pattern: ``type_part``. The ``type`` portion
-corresponds to the field *type* being rendered (e.g. ``textarea``, ``checkbox``,
-``date``, etc) whereas the ``part`` portion corresponds to *what* is being
-rendered (e.g. ``label``, ``widget``, ``errors``, etc). By default, there
-are 4 possible *parts* of a form that can be rendered:
+Каждый фрагмент подчиняется простому правилу: ``type_part``. Часть ``type`` соответствует
+типу поля, которое будет отображено (например, ``textarea``, ``checkbox``, ``date`` и т.д.),
+часть ``part`` соответствует же тому, что именно будет отображаться
+(``label``, ``widget``, ``errors``, и т.д.). По умолчанию есть четыре возможных типов
+*parts*, которые отображаются:
 
-+-------------+--------------------------+---------------------------------------------------------+
-| ``label``   | (e.g. ``field_label``)   | renders the field's label                               |
-+-------------+--------------------------+---------------------------------------------------------+
-| ``widget``  | (e.g. ``field_widget``)  | renders the field's HTML representation                 |
-+-------------+--------------------------+---------------------------------------------------------+
-| ``errors``  | (e.g. ``field_errors``)  | renders the field's errors                              |
-+-------------+--------------------------+---------------------------------------------------------+
-| ``row``     | (e.g. ``field_row``)     | renders the field's entire row (label, widget & errors) |
-+-------------+--------------------------+---------------------------------------------------------+
++-------------+--------------------------+-------------------------------------------------------------+
+| ``label``   | (``field_label``)        | отображает метку для поля                                   |
++-------------+--------------------------+-------------------------------------------------------------+
+| ``widget``  | (``field_widget``)       | отображает HTML-представление для поля                      |
++-------------+--------------------------+-------------------------------------------------------------+
+| ``errors``  | (``field_errors``)       | отображает ошибки для поля                                  |
++-------------+--------------------------+-------------------------------------------------------------+
+| ``row``     | (``field_row``)          | отображает цельную строку для поля (label, widget & errors) |
++-------------+--------------------------+-------------------------------------------------------------+
 
 .. note::
 
-    There are actually 3 other *parts*  - ``rows``, ``rest``, and ``enctype`` -
-    but you should rarely if ever need to worry about overriding them.
+    Есть также ещё три типа *parts* - ``rows``, ``rest``, и ``enctype`` -
+    но заменять их вам вряд ли потребуется, так что и заботиться этом не стоит.
 
-By knowing the field type (e.g. ``textarea``) and which part you want to
-customize (e.g. ``widget``), you can construct the fragment name that needs
-to be overridden (e.g. ``textarea_widget``).
+Зная тип поля (например ``textarea``), а также какую часть вы хотите изменить
+(например, ``widget``), вы можете составить имя фрагмента, который должен быть
+переопределён (например, ``textarea_widget``).
 
 .. index::
-   single: Forms; Template Fragment Inheritance
+   single: Формы; Наследование фрагментов шаблона
 
-Template Fragment Inheritance
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Наследование фрагментов шаблона форм
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In some cases, the fragment you want to customize will appear to be missing.
-For example, there is no ``textarea_errors`` fragment in the default themes
-provided with Symfony. So how are the errors for a textarea field rendered?
+В некоторых случаях фрагмент, который вам нужно настроить, не будет
+существовать. Например, в базовой теме нет фрагмента ``textarea_errors``.
+Но как же отображаются ошибки для полей textarea?
 
-The answer is: via the ``field_errors`` fragment. When Symfony renders the errors
-for a textarea type, it looks first for a ``textarea_errors`` fragment before
-falling back to the ``field_errors`` fragment. Each field type has a *parent*
-type (the parent type of ``textarea`` is ``field``), and Symfony uses the
-fragment for the parent type if the base fragment doesn't exist.
+Ответ на этот вопрос такой: отображаются они при помощи фрагмента ``field_errors``.
+Когда Symfony отображает ошибки для textarea, он ищет фрагмент
+``textarea_errors``, прежде чем использовать стандартный фрагмент ``field_errors``.
+Любой тип поля имеет *родительский* тип (для ``textarea`` это ``field``) и Symfony
+использует фрагмент от родительского типа, если базовый фрагмент не существует.
 
-So, to override the errors for *only* ``textarea`` fields, copy the
-``field_errors`` fragment, rename it to ``textarea_errors`` and customize it. To
-override the default error rendering for *all* fields, copy and customize the
-``field_errors`` fragment directly.
+Таким образом, чтобы переопределить фрагмент ошибок только для полей
+``textarea``, скопируйте фрагмент ``field_errors``, переименуйте его
+в ``textarea_errors`` и измените его как вам требуется. Для того, чтобы
+изменить отображение ошибок для *всех* полей, скопируйте и измените
+сам фрагмент ``field_errors``.
 
 .. tip::
 
-    The "parent" type of each field type is available in the
-    :doc:`form type reference</reference/forms/types>` for each field type.
+    Родительские типы для всех типов полей можно узнать из справочника:
+    :doc:`типы полей</reference/forms/types>`.
 
 .. index::
    single: Forms; Global Theming
 
-Global Form Theming
-~~~~~~~~~~~~~~~~~~~
+Глобальная тема для форм
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the above example, you used the ``form_theme`` helper (in Twig) to "import"
-the custom form fragments into *just* that form. You can also tell Symfony
-to import form customizations across your entire project.
+В примере выше вы использовали хелпер ``form_theme`` (для Twig), чтобы
+"импортировать" изменённые фрагменты форм *только* в одну форму. Вы также
+можете указать Symfony тему форм для всего проекта в целом.
 
 Twig
 ....
 
-To automatically include the customized blocks from the ``fields.html.twig``
-template created earlier in *all* templates, modify your application configuration
-file:
+Для того, чтобы автоматически подключить переопределённые блоки из ранее
+созданного шаблона ``fields.html.twig``, измените ваш файл конфигурации
+следующим образом:
 
 .. configuration-block::
 
@@ -1204,6 +1227,7 @@ file:
 
     .. code-block:: php
 
+        <?php
         // app/config/config.php
 
         $container->loadFromExtension('twig', array(
@@ -1213,13 +1237,13 @@ file:
             // ...
         ));
 
-Any blocks inside the ``fields.html.twig`` template are now used globally
-to define form output.
+Любой блок внутри шаблона ``fields.html.twig`` будет использован глобально
+в рамках проекта для определения формата отображения форм.
 
-.. sidebar::  Customizing Form Output all in a Single File with Twig
+.. sidebar:: Настройка отображения форм в файле формы при использовании Twig
 
-    In Twig, you can also customize a form block right inside the template
-    where that customization is needed:
+    При использовании Twig, вы также можете изменить блок формы непосредственно
+    внутри шаблона, где требуется изменение стиля отображения:
 
     .. code-block:: html+jinja
 
@@ -1239,17 +1263,17 @@ to define form output.
             {{ form_row(form.task) }}
         {% endblock %}
 
-    The ``{% form_theme form _self %}`` tag allows form blocks to be customized
-    directly inside the template that will use those customizations. Use
-    this method to quickly make form output customizations that will only
-    ever be needed in a single template.
+    Таг ``{% form_theme form _self %}`` позволяет изменять блоки формы
+    непосредственно внутри того шаблона, который требует изменений. Используйте
+    этот метод для быстрой настройки отображения формы, если данное
+    изменение нигде больше не потребуется.
 
 PHP
 ...
 
-To automatically include the customized templates from the ``Acme/TaskBundle/Resources/views/Form``
-directory created earlier in *all* templates, modify your application configuration
-file:
+Для того, чтобы автоматически подключить изменённые шаблоны из директории
+``Acme/TaskBundle/Resources/views/Form``, созданной ранее, для *всех* шаблонов,
+измените конфигурацию вашего приложения следующим образом:
 
 .. configuration-block::
 
@@ -1280,6 +1304,7 @@ file:
 
     .. code-block:: php
 
+        <?php
         // app/config/config.php
 
         $container->loadFromExtension('framework', array(
@@ -1290,38 +1315,43 @@ file:
             // ...
         ));
 
-Any fragments inside the ``Acme/TaskBundle/Resources/views/Form`` directory
-are now used globally to define form output.
+Все фрагменты, определённые в директории ``Acme/TaskBundle/Resources/views/Form``
+теперь будут использованы во всём приложении для изменения стиля отображения
+форм.
 
 .. index::
-   single: Forms; CSRF Protection
+   single: Формы; Защита от CSRF атак
 
 .. _forms-csrf:
 
-CSRF Protection
----------------
+Защита от CSRF атак
+-------------------
 
-CSRF - or `Cross-site request forgery`_ - is a method by which a malicious
-user attempts to make your legitimate users unknowingly submit data that
-they don't intend to submit. Fortunately, CSRF attacks can be prevented by
-using a CSRF token inside your forms.
+CSRF - или же `Подделка межсайтовых запросов`_ это вид атак, позволяющий
+злоумышленнику выполнять запросы от имени пользователей вашего приложения,
+которые они делать не собирались (например перевод средств на счёт хакера).
+К счастью, такие атаки можно предотвратить, используя CSRF токен в ваших формах.
 
-The good news is that, by default, Symfony embeds and validates CSRF tokens
-automatically for you. This means that you can take advantage of the CSRF
-protection without doing anything. In fact, every form in this chapter has
-taken advantage of the CSRF protection!
+Хорошие новости! Заключаются они в том, что Symfony по умолчанию добавляет
+и валидирует CSRF токен для вас. Это означает, что вы получаете защиту от
+CSRF атак не прилагая к этому никаких усилий. Фактически, все формы в этой
+главе были защищены от подобных атак.
 
-CSRF protection works by adding a hidden field to your form - called ``_token``
-by default - that contains a value that only you and your user knows. This
-ensures that the user - not some other entity - is submitting the given data.
-Symfony automatically validates the presence and accuracy of this token.
+Защита от CSRF атак работает за счёт добавления в формы скрытого поля,
+называемого по умолчанию ``_token``, которое содержит значение, которое
+знаете только вы и пользователь вашего приложения. Это гарантирует, что
+пользователь - и никто более - отправил данные, которые пришли к вам.
+Symfony автоматически валидирует наличие и правильность этого токена.
 
-The ``_token`` field is a hidden field and will be automatically rendered
-if you include the ``form_rest()`` function in your template, which ensures
-that all un-rendered fields are output.
+Поле ``_token`` - это скрытое поле и оно автоматически отображается,
+если вы используете функцию ``form_rest()`` в вашем шаблоне, которая
+отображает все поля, которые ещё не были отображены в форме.
 
-The CSRF token can be customized on a form-by-form basis. For example::
+CSRF токен можно настроить уровне формы. Например:
 
+.. code-block:: php
+
+    <?php
     class TaskType extends AbstractType
     {
         // ...
@@ -1332,7 +1362,7 @@ The CSRF token can be customized on a form-by-form basis. For example::
                 'data_class'      => 'Acme\TaskBundle\Entity\Task',
                 'csrf_protection' => true,
                 'csrf_field_name' => '_token',
-                // a unique key to help generate the secret token
+                // уникальный ключ для генерации секретного токена
                 'intention'       => 'task_item',
             );
         }
@@ -1340,30 +1370,32 @@ The CSRF token can be customized on a form-by-form basis. For example::
         // ...
     }
 
-To disable CSRF protection, set the ``csrf_protection`` option to false.
-Customizations can also be made globally in your project. For more information,
-see the :ref:`form configuration reference </reference-frameworkbundle-forms>`
-section.
+Для того, чтобы отключить CSRF защиту, установите опцию ``csrf_protection`` в
+``false``. Настройки также можно выполнить на уровне всего проекта. Дополнительную
+информацию можно найти в :ref:`справочнике по настройке форм</reference-frameworkbundle-forms>`.
 
 .. note::
 
-    The ``intention`` option is optional but greatly enhances the security of
-    the generated token by making it different for each form.
+    Опция ``intention`` (``намерение``) не обязательна, но значительно увеличивает
+    безопасность сгенерированного токена, делая его различным для всех форм.
 
 .. index:
-   single: Forms; With no class
+   single: Формы; Без класса
 
-Using a Form without a Class
-----------------------------
+Использование форм без класса
+-----------------------------
 
-In most cases, a form is tied to an object, and the fields of the form get
-and store their data on the properties of that object. This is exactly what
-you've seen so far in this chapter with the `Task` class.
+В большинстве случаев форма привязывается к объекту и поля формы получают
+и сохраняют данные в поля этого объекта. Это ровно то, с чем вы работали
+ранее в этой главе.
 
-But sometimes, you may just want to use a form without a class, and get back
-an array of the submitted data. This is actually really easy::
+Тем не менее, вам возможно потребуется использовать форму без соответствующего
+класса и получать массив отправленных данных, а не объект. Этого просто достичь:
 
-    // make sure you've imported the Request namespace above the class
+.. code-block:: php
+
+    <?php
+    // удостоверьтесь, что вы добавили use для пространства имён Request:
     use Symfony\Component\HttpFoundation\Request
     // ...
 
@@ -1386,33 +1418,35 @@ an array of the submitted data. This is actually really easy::
         // ... render the form
     }
 
-By default, a form actually assumes that you want to work with arrays of
-data, instead of an object. There are exactly two ways that you can change
-this behavior and tie the form to an object instead:
+По умолчанию, форма полагает, что вы хотите работать с массивами данных, а
+не с объектами. Есть два способа изменить это поведение и связать форму с
+объектом:
 
-1. Pass an object when creating the form (as the first argument to ``createFormBuilder``
-   or the second argument to ``createForm``);
+1. Передать объект при создании формы (первый аргумент ``createFormBuilder``)
+   или второй аргумент ``createForm``);
 
-2. Declare the ``data_class`` option on your form.
+2. Определить опцию ``data_class`` для вашей формы.
 
-If you *don't* do either of these, then the form will return the data as
-an array. In this example, since ``$defaultData`` is not an object (and
-no ``data_class`` option is set), ``$form->getData()`` ultimately returns
-an array.
+Если вы этого *не сделали*, тогда форма будет возвращать данные в виде
+массива. В этом примере, так как ``$defaultData`` не является объектом
+(и не установлена опция ``data_class``), ``$form->getData()`` в конечном
+итоге вернёт массив.
 
-Adding Validation
-~~~~~~~~~~~~~~~~~
+Добавление валидации
+~~~~~~~~~~~~~~~~~~~~
 
-The only missing piece is validation. Usually, when you call ``$form->isValid()``,
-the object is validated by reading the constraints that you applied to that
-class. But without a class, how can you add constraints to the data of your
-form?
+А как же быть с валидацией? Обычно, когда вы используете вызов ``$form->isValid()``,
+объект валидировался на основании ограничений, которые вы добавили в этот класс.
+Но когда класса нет, как добавить ограничения для данных из формы?
 
-The answer is to setup the constraints yourself, and pass them into your
-form. The overall approach is covered a bit more in the :ref:`validation chapter<book-validation-raw-values>`,
-but here's a short example::
+Ответом является настройка ограничений вручную и передача их в форму.
+Полностью этот подход описан в главе о :ref:`Валидации<book-validation-raw-values>`,
+мы же рассмотрим лишь небольшой пример:
 
-    // import the namespaces above your controller class
+.. code-block:: php
+
+    <?php
+    // импорт пространств имён
     use Symfony\Component\Validator\Constraints\Email;
     use Symfony\Component\Validator\Constraints\MinLength;
     use Symfony\Component\Validator\Constraints\Collection;
@@ -1422,17 +1456,20 @@ but here's a short example::
         'email' => new Email(array('message' => 'Invalid email address')),
     ));
 
-    // create a form, no default values, pass in the constraint option
+    // создание формы без значений по умолчанию и с явным указанием ограничений для валидации
     $form = $this->createFormBuilder(null, , array(
         'validation_constraint' => $collectionConstraint,
     ))->add('email', 'email')
         // ...
     ;
 
-Now, when you call `$form->isValid()`, the constraints setup here are run
-against your form's data. If you're using a form class, override the ``getDefaultOptions``
-method to specify the option::
+Теперь, когда вы вызываете `$form->isValid()`, ограничения, указанные выше,
+выполняются для данных формы. Если вы используете класс формы, переопределите
+метод ``getDefaultOptions``:
 
+.. code-block:: php
+
+    <?php
     namespace Acme\TaskBundle\Form\Type;
 
     use Symfony\Component\Form\AbstractType;
@@ -1456,43 +1493,43 @@ method to specify the option::
         }
     }
 
-Now, you have the flexibility to create forms - with validation - that return
-an array of data, instead of an object. In most cases, it's better - and
-certainly more robust - to bind your form to an object. But for simple forms,
-this is a great approach.
+Теперь вы можете создавать формы с валидацией, которые возвращают массив
+данных вместо объекта. В большинстве случаев же лучше - да и более правильно
+- привязывать объекты к вашим формам. Но для простых форм вы можете этого и
+не делать.
 
-Final Thoughts
+Заключение
 --------------
 
-You now know all of the building blocks necessary to build complex and
-functional forms for your application. When building forms, keep in mind that
-the first goal of a form is to translate data from an object (``Task``) to an
-HTML form so that the user can modify that data. The second goal of a form is to
-take the data submitted by the user and to re-apply it to the object.
+Теперь вы знаете всё необходимое для создания сложных форм для вашего
+приложения. При создании форм, не забывайте что первой целью формы
+является транслирование данных из объекта (``Task``) в HTML форму, чтобы
+пользователь мог модифицировать эти данные. Второй целью формы является
+получение отправленных пользователем данных и передача их обратно в
+объект.
 
-There's still much more to learn about the powerful world of forms, such as
-how to handle :doc:`file uploads with Doctrine
-</cookbook/doctrine/file_uploads>` or how to create a form where a dynamic
-number of sub-forms can be added (e.g. a todo list where you can keep adding
-more fields via Javascript before submitting). See the cookbook for these
-topics. Also, be sure to lean on the
-:doc:`field type reference documentation</reference/forms/types>`, which
-includes examples of how to use each field type and its options.
+Есть ещё много вещей, которые стоит узнать о прекрасном мире форм, таких
+как :doc:`загрузка файлов при помощи Doctrine </cookbook/doctrine/file_uploads>`,
+или же как создание формы с динамически меняемым числом вложенных форм (
+например, список todo, где вы можете добавлять новые поля при помощи Javascript
+перед отправкой). Ищите ответы в книге рецептов. Также изучите
+:doc:`справочник по типам полей</reference/forms/types>`, который включает
+примеры использования полей и их опций.
 
-Learn more from the Cookbook
-----------------------------
+Читайте также в книге рецептов
+------------------------------
 
 * :doc:`/cookbook/doctrine/file_uploads`
-* :doc:`File Field Reference </reference/forms/types/file>`
-* :doc:`Creating Custom Field Types </cookbook/form/create_custom_field_type>`
+* :doc:`Работа с полем File</reference/forms/types/file>`
+* :doc:`Создание пользовательского поля </cookbook/form/create_custom_field_type>`
 * :doc:`/cookbook/form/form_customization`
 
 .. _`Symfony2 Form Component`: https://github.com/symfony/Form
 .. _`DateTime`: http://php.net/manual/en/class.datetime.php
 .. _`Twig Bridge`: https://github.com/symfony/symfony/tree/master/src/Symfony/Bridge/Twig
 .. _`form_div_layout.html.twig`: https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/form_div_layout.html.twig
-.. _`Cross-site request forgery`: http://en.wikipedia.org/wiki/Cross-site_request_forgery
-.. _`view on GitHub`: https://github.com/symfony/symfony/tree/master/src/Symfony/Bundle/FrameworkBundle/Resources/views/Form
+.. _`Подделка межсайтовых запросов`: http://ru.wikipedia.org/wiki/CSRF
+.. _`см. на GitHub`: https://github.com/symfony/symfony/tree/master/src/Symfony/Bundle/FrameworkBundle/Resources/views/Form
 
 .. toctree::
     :hidden:
