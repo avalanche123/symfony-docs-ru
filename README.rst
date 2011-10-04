@@ -18,10 +18,10 @@
 
 5.1. При создании нового перевода добавить в конец файла такую конструкцию (не будет отображаться при генерации):
 
-.. toctree::
-    :hidden:
+    .. toctree::
+        :hidden:
 
-    Translation source: YYYY-mm-dd REV
+        Translation source: YYYY-mm-dd REV
 
 где
     YYYY-mm-dd дата когда был взят исходник перевода,
