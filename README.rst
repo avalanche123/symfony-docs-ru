@@ -65,6 +65,5 @@
 Полезные ссылки
 ===============
 
-* Правила форматирования документации: `Symfony2 Documentation Format
-<http://symfony.com/doc/current/contributing/documentation/format.html>`_ и
-`reStructuredText Markup Specification <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_
+* Правила форматирования документации: `Symfony2 Documentation Format <http://symfony.com/doc/current/contributing/documentation/format.html>`_ и `reStructuredText Markup Specification <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_
+
