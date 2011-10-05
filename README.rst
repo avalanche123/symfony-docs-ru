@@ -20,7 +20,7 @@
 
     toctree
       hidden
-      
+
       Translation source: YYYY-mm-dd REV
 
 где
