@@ -640,38 +640,39 @@ Symfony поддерживает много механизмов аутенти�
     различные системы безопасности. Вот почему большинству приложений достаточно
     одного основного брандмауэра.
 
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Авторизация
+-----------
 
-Authorization
--------------
+Первым шагом в обеспечении безопасности всегда является аутентификация: процесс
+идентификации пользователя. В Symfony аутентификацию можно выполнять различными
+способами, начиная с базовой HTTP аутентификации и формы логина и заканчивая
+Facebook.
 
-The first step in security is always authentication: the process of verifying
-who the user is. With Symfony, authentication can be done in any way - via
-a form login, basic HTTP Authentication, or even via Facebook.
+После того как пользователь аутентифицирован, начинается процесс авторизации.
+Авторизация является стандартным путём определения имеет ли пользователь
+право доступа к какому-либо ресурсу (URL, объект модели, вызов метода...).
+В основе этого процесса лежит присвоение некоторых ролей каждому пользователю
+и после этого для различных ресурсов можно требовать наличия различных ролей.
 
-Once the user has been authenticated, authorization begins. Authorization
-provides a standard and powerful way to decide if a user can access any resource
-(a URL, a model object, a method call, ...). This works by assigning specific
-roles to each user, and then requiring different roles for different resources.
+Авторизация имеет две различные грани:
 
-The process of authorization has two different sides:
+#. Пользователю назначен некоторый набор ролей;
+#. Ресурс требует наличия некоторых ролей для получения доступа к нему.
 
-#. The user has a specific set of roles;
-#. A resource requires a specific role in order to be accessed.
+В этой секции вы узнаете о том, как защитить различные ресурсы (например URL,
+вызов метода и т.д.) при помощи различных ролей. Затем, вы узнаете о том, как
+создаются роли и как их можно присвоить пользователю.
 
-In this section, you'll focus on how to secure different resources (e.g. URLs,
-method calls, etc) with different roles. Later, you'll learn more about how
-roles are created and assigned to users.
+Защищаем URL по шаблону
+~~~~~~~~~~~~~~~~~~~~~~~
 
-Securing Specific URL Patterns
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Наиболее простой и понятный способ защиты вашего приложения - защита некоторого
+набора URL по шаблону. Вы уже видели ранее, в первом примере этой главы, где
+все URL, что соответствовали регулярному выражению ``^/admin``, требовали
+роли ``ROLE_ADMIN``.
 
-The most basic way to secure part of your application is to secure an entire
-URL pattern. You've seen this already in the first example of this chapter,
-where anything matching the regular expression pattern ``^/admin`` requires
-the ``ROLE_ADMIN`` role.
-
-You can define as many URL patterns as you need - each is a regular expression.
+Вы можете определить столько URL, сколько вам нужно - каждый при помощи шаблона
+для регулярного выражения:
 
 .. configuration-block::
 
@@ -695,6 +696,7 @@ You can define as many URL patterns as you need - each is a regular expression.
 
     .. code-block:: php
 
+        <?php
         // app/config/config.php
         $container->loadFromExtension('security', array(
             // ...
@@ -706,38 +708,41 @@ You can define as many URL patterns as you need - each is a regular expression.
 
 .. tip::
 
-    Prepending the path with ``^`` ensures that only URLs *beginning* with
-    the pattern are matched. For example, a path of simply ``/admin`` (without
-    the ``^``) would correctly match ``/admin/foo`` but would also match URLs
-    like ``/foo/admin``.
+    Добавление в начало пути символа ``^`` гарантирует, что этому шаблону
+    будут соответствовать лишь URL, которые *начинаются* c него. Например,
+    путь ``/admin`` (без ``^`` в начале) будет соответствовать как URL ``/admin/foo``,
+    так и URL ``/foo/admin``.
 
-For each incoming request, Symfony2 tries to find a matching access control
-rule (the first one wins). If the user isn't authenticated yet, the authentication
-process is initiated (i.e. the user is given a chance to login). However,
-if the user *is* authenticated but doesn't have the required role, an
-:class:`Symfony\\Component\\Security\\Core\\Exception\\AccessDeniedException`
-exception is thrown, which you can handle and turn into a nice "access denied"
-error page for the user. See :doc:`/cookbook/controller/error_pages` for
-more information.
+Для каждого входящего запроса, Symfony2 пытается найти соответствующее правило
+контроля доступа (используется первое найденное правило). Если пользователь
+ещё не прошел аутентификацию, инициируется процесс аутентификации (т.е.
+пользователю предоставляется возможность залогиниться в систему). Если же
+пользователь уже прошел аутентификацию, но не имеет требуемой роли, будет
+брошено исключение :class:`Symfony\\Component\\Security\\Core\\Exception\\AccessDeniedException`,
+которое вы можете обработать и показать пользователю красивую страничку
+"access denied". Подробнее читайте в книге рецептов: :doc:`/cookbook/controller/error_pages`
 
-Since Symfony uses the first access control rule it matches, a URL like ``/admin/users/new``
-will match the first rule and require only the ``ROLE_SUPER_ADMIN`` role.
-Any URL like ``/admin/blog`` will match the second rule and require ``ROLE_ADMIN``.
+Так как Symfony использует первое найденное правило, URL вида ``/admin/users/new``
+будет соответствовать первому правилу и требовать наличия роли ``ROLE_SUPER_ADMIN``.
+Любой URL вида ``/admin/blog`` будет соответствовать второму правилу и требовать
+наличия роли ``ROLE_ADMIN``.
 
 .. _book-security-securing-ip:
 
-Securing by IP
-~~~~~~~~~~~~~~
+Защита по IP
+~~~~~~~~~~~~
 
-Certain situations may arise when you may need to restrict access to a given
-route based on IP. This is particularly relevant in the case of :ref:`Edge Side Includes<edge-side-includes>`
-(ESI), for example, which utilize a route named "_internal". When
-ESI is used, the _internal route is required by the gateway cache to enable
-different caching options for subsections within a given page. This route
-comes with the ^/_internal prefix by default in the standard edition (assuming
-you've uncommented those lines from the routing file).
+В жизни могут возникать различные ситуации, в которых вам будет необходимо
+ограничить доступ для некоего маршрута по IP. Это особенно важно в случае
+использования :ref:`Edge Side Includes<edge-side-includes>` (ESI), которые,
+например, используют маршрут под названием "_internal". Когда используются
+ESI, маршрут _internal необходим кэширующему шлюзу для подключения различных
+опций кэширования субсекций внутри указанной страницы. Этот маршрут по умолчанию
+использует префикс ^/_internal в Symfony Standard Edition (предполагается
+также что вы раскомментировали эти строки в файле маршрутов).
 
-Here is an example of how you might secure this route from outside access:
+Ниже приводится пример того, как вы можете защитить этот маршрут от
+доступа извне:
 
 .. configuration-block::
 
@@ -763,11 +768,11 @@ Here is an example of how you might secure this route from outside access:
 
 .. _book-security-securing-channel:
 
-Securing by Channel
-~~~~~~~~~~~~~~~~~~~
+Использование защищенного канала
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Much like securing based on IP, requiring the use of SSL is as simple as
-adding a new access_control entry:
+Как и защита на основании IP, требование использования SSL добавляется очень
+просто:
 
 .. configuration-block::
 
@@ -793,15 +798,16 @@ adding a new access_control entry:
 
 .. _book-security-securing-controller:
 
-Securing a Controller
-~~~~~~~~~~~~~~~~~~~~~
+Защита Контроллера
+~~~~~~~~~~~~~~~~~~
 
-Protecting your application based on URL patterns is easy, but may not be
-fine-grained enough in certain cases. When necessary, you can easily force
-authorization from inside a controller:
+Защищать ваше приложение на основании шаблонов URL легко, но в некоторых случаях
+может быть не слишком удобным. При необходимости, вы также можете легко
+форсировать авторизацию внутри контроллера:
 
 .. code-block:: php
 
+    <?php
     use Symfony\Component\Security\Core\Exception\AccessDeniedException
     // ...
 
@@ -816,11 +822,12 @@ authorization from inside a controller:
 
 .. _book-security-securing-controller-annotations:
 
-You can also choose to install and use the optional ``JMSSecurityExtraBundle``,
-which can secure your controller using annotations:
+Вы также можете использовать опциональный пакет ``JMSSecurityExtraBundle``,
+который поможет вам защитить контроллер с использованием аннотаций:
 
 .. code-block:: php
 
+    <?php
     use JMS\SecurityExtraBundle\Annotation\Secure;
 
     /**
@@ -831,64 +838,69 @@ which can secure your controller using annotations:
         // ...
     }
 
-For more information, see the `JMSSecurityExtraBundle`_ documentation. If you're
-using Symfony's Standard Distribution, this bundle is available by default.
-If not, you can easily download and install it.
+Дополнительную информацию об этом пакете вы можете получить из документации
+`JMSSecurityExtraBundle`_. Если вы используете дистрибутив Symfony Standard Edition,
+этот пакет уже доступен вам по умолчанию. В противном случае вам необходимо
+загрузить и установить его.
 
-Securing other Services
-~~~~~~~~~~~~~~~~~~~~~~~
+Защита прочих сервисов
+~~~~~~~~~~~~~~~~~~~~~~
 
-In fact, anything in Symfony can be protected using a strategy similar to
-the one seen in the previous section. For example, suppose you have a service
-(i.e. a PHP class) whose job is to send emails from one user to another.
-You can restrict use of this class - no matter where it's being used from -
-to users that have a specific role.
+Фактически, всё что угодно в Symfony может быть защищено при помощи стратегии,
+описанной в предыдущей секции. Например, предположим у вас есть сервис (т.е.
+PHP класс), который отсылает email-сообщения от одного пользователя другому.
+Вы можете ограничить использование этого класса - не важно где он будет использован -
+для пользователей с определённой ролью.
 
-For more information on how you can use the security component to secure
-different services and methods in your application, see :doc:`/cookbook/security/securing_services`.
+Подробнее о том как вы можете использовать компонент безопасности для
+защиты различных сервисов и методов в вашем приложении, смотрите статью
+в книге рецептов: :doc:`/cookbook/security/securing_services`.
 
-Access Control Lists (ACLs): Securing Individual Database Objects
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Списки контроля доступа (ACL): Защита отдельных объектов базы данных
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Imagine you are designing a blog system where your users can comment on your
-posts. Now, you want a user to be able to edit his own comments, but not
-those of other users. Also, as the admin user, you yourself want to be able
-to edit *all* comments.
+Представьте, что вы проектируете блог, где пользователи могут создавать
+комментарии к вашим постам. Теперь вы хотите, чтобы пользователь имел возможность
+редактировать его собственный комментарий, но не мог редактировать комментарии
+других пользователей. Также, в качестве администратора, вы хотите иметь возможнось
+редактировать комментарии *всех* пользователей.
 
-The security component comes with an optional access control list (ACL) system
-that you can use when you need to control access to individual instances
-of an object in your system. *Without* ACL, you can secure your system so that
-only certain users can edit blog comments in general. But *with* ACL, you
-can restrict or allow access on a comment-by-comment basis.
+Компонент безопасности содержит опциональную систему "списков контроля доступа"
+(ACL), которую вы можете использовать при необходимости контроля доступа к
+отдельным экземплярам объектов в вашей системе. *Без* использования ACL,
+вы можете защитить свою систему таким образом, что лишь некоторые пользователи
+смогут иметь возможность редактирования комментариев. Но с помощью ACL,
+вы можете ограничить ли разрешить доступ к каждому конкретному комментарию.
 
-For more information, see the cookbook article: :doc:`/cookbook/security/acl`.
+Подробнее читайте в книге рецептов: :doc:`/cookbook/security/acl`.
 
-Users
------
+Пользователи
+------------
 
-In the previous sections, you learned how you can protect different resources
-by requiring a set of *roles* for a resource. In this section we'll explore
-the other side of authorization: users.
+В предыдущей секции вы узнали как можно защитить различные ресурсы, требуя
+для них наличия одной или нескольких *ролей*. В этой секции вы узнаете о другой
+грани авторизации: пользователях.
 
-Where do Users come from? (*User Providers*)
+Откуда берутся пользователи? (*Провайдеры Пользователей*)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-During authentication, the user submits a set of credentials (usually a username
-and password). The job of the authentication system is to match those credentials
-against some pool of users. So where does this list of users come from?
+Во время аутентификации, пользователь отправляет некоторые данные (как правило
+имя и пароль). Работа системы аутентификации заключается в том, чтобы проверить
+эти данные на некотором наборе пользователей. Эткуда же берутся эти пользователи?
 
-In Symfony2, users can come from anywhere - a configuration file, a database
-table, a web service, or anything else you can dream up. Anything that provides
-one or more users to the authentication system is known as a "user provider".
-Symfony2 comes standard with the two most common user providers: one that
-loads users from a configuration file and one that loads users from a database
-table.
+В Symfony2 пользователи могут повляться отовсюду - из файла конфигурации,
+базы данных, веб сервиса или откуда вашей душе угодно будет. Всё, что предоставляет
+одного или более пользователей системе аутентификации называется "провайдером пользователя"
+(user provider). Symfony2 поставляется с двумя, наиболее простыми провайдерами:
+один из них загружает пользователей из конфигурационного файла, другой загружает
+пользователей из таблицы в базе данных.
 
-Specifying Users in a Configuration File
-........................................
+Определение пользователей в файле конфигурации
+..............................................
 
-The easiest way to specify your users is directly in a configuration file.
-In fact, you've seen this already in the example in this chapter.
+Наиболее простой способ создать пользователей - определить их прямо
+в файле конфигурации. Фактически вы уже видели этот способ ранее в
+одном из примеров этой главы.
 
 .. configuration-block::
 
@@ -916,6 +928,7 @@ In fact, you've seen this already in the example in this chapter.
 
     .. code-block:: php
 
+        <?php
         // app/config/config.php
         $container->loadFromExtension('security', array(
             // ...
@@ -929,19 +942,21 @@ In fact, you've seen this already in the example in this chapter.
             ),
         ));
 
-This user provider is called the "in-memory" user provider, since the users
-aren't stored anywhere in a database. The actual user object is provided
-by Symfony (:class:`Symfony\\Component\\Security\\Core\\User\\User`).
+Такой провайдер называется провайдером "в памяти" (in-memory), так как
+пользователи не сохранены где-либо в базе данных. В итоге предоставляется
+объект класса :class:`Symfony\\Component\\Security\\Core\\User\\User`.
 
 .. tip::
-    Any user provider can load users directly from configuration by specifying
-    the ``users`` configuration parameter and listing the users beneath it.
+
+    Любой провайдер пользователей может загружать пользователей непосредственно
+    из конфигурации, если для него указан параметр ``users`` и определены
+    пользователи.
 
 .. caution::
 
-    If your username is completely numeric (e.g. ``77``) or contains a dash
-    (e.g. ``user-name``), you should use that alternative syntax when specifying
-    users in YAML:
+    Если имя вашего пользователя полностью цифровое (например, ``77``) или
+    содержит тире (например, ``user-name``), вы должны использовать
+    альтернативный синтаксис при создании пользователей в YAML файле:
 
     .. code-block:: yaml
 
@@ -949,28 +964,29 @@ by Symfony (:class:`Symfony\\Component\\Security\\Core\\User\\User`).
             - { name: 77, password: pass, roles: 'ROLE_USER' }
             - { name: user-name, password: pass, roles: 'ROLE_USER' }
 
-For smaller sites, this method is quick and easy to setup. For more complex
-systems, you'll want to load your users from the database.
+Для небольших сайтов этот метод быстр и прост в настройке. Для более сложных
+систем вы вероятно захотите загружать пользователей из базы данных.
 
 .. _book-security-user-entity:
 
-Loading Users from the Database
-...............................
+Загрузка пользователей из базы данных
+.....................................
 
-If you'd like to load your users via the Doctrine ORM, you can easily do
-this by creating a ``User`` class and configuring the ``entity`` provider.
+Если вы хотите загружать пользователей из базы данных при помощи Doctrine ORM,
+вы можете этого легко достичь, создав класс ``User`` и настроив провайдер ``entity``.
 
 .. tip:
 
-    A high-quality open source bundle is available that allows your users
-    to be stored via the Doctrine ORM or ODM. Read more about the `FOSUserBundle`_
-    on GitHub.
+    Существует очень хороший и удобный сторонний пакет, который позволяет
+    хранить пользователей в базе данных при помощи Doctrine ORM или ODM.
+    Подробнее о нём можно узнать на GitHub: `FOSUserBundle`_.
 
-With this approach, you'll first create your own ``User`` class, which will
-be stored in the database.
+При таком подходе вы сначала создаёте свой собственный класс ``User``,
+который будет сохраняться в базе данных:
 
 .. code-block:: php
 
+    <?php
     // src/Acme/UserBundle/Entity/User.php
     namespace Acme\UserBundle\Entity;
 
@@ -990,20 +1006,20 @@ be stored in the database.
         // ...
     }
 
-As far as the security system is concerned, the only requirement for your
-custom user class is that it implements the :class:`Symfony\\Component\\Security\\Core\\User\\UserInterface`
-interface. This means that your concept of a "user" can be anything, as long
-as it implements this interface.
+Что же качается системы безопасности, единственным её требованием к вашему
+классу пользователя является имплементация им интерфейса
+:class:`Symfony\\Component\\Security\\Core\\User\\UserInterface`. Это означает,
+что ваша концепция пользователя может быть какой угодно, коль скоро класс
+имплементирует этот интерфейс.
 
 .. note::
 
-    The user object will be serialized and saved in the session during requests,
-    therefore it is recommended that you `implement the \Serializable interface`_
-    in your user object. This is especially important if your ``User`` class
-    has a parent class with private properties.
+    Объект пользователя будет сериализован и сохранён в сессии во время
+    обработки запроса, поэтому рекомендуется также имплементировать интерфейс
+    `\Serializable`_ для вашего пользователя. Это особенно важно, если
+    ваш класс ``User`` имеет родителя с приватными свойствами.
 
-Next, configure an ``entity`` user provider, and point it to your ``User``
-class:
+Далее, настроим провайдер ``entity`` и укажем для него класс ``User``:
 
 .. configuration-block::
 
@@ -1026,6 +1042,7 @@ class:
 
     .. code-block:: php
 
+        <?php
         // app/config/security.php
         $container->loadFromExtension('security', array(
             'providers' => array(
@@ -1035,27 +1052,29 @@ class:
             ),
         ));
 
-With the introduction of this new provider, the authentication system will
-attempt to load a ``User`` object from the database by using the ``username``
-field of that class.
+Добавив этот новый провайдер, система аутентификации будет пытаться
+загрузить объект ``User`` из базы данных используя его поле ``username``.
 
 .. note::
-    This example is just meant to show you the basic idea behind the ``entity``
-    provider. For a full working example, see :doc:`/cookbook/security/entity_provider`.
 
-For more information on creating your own custom provider (e.g. if you needed
-to load users via a web service), see :doc:`/cookbook/security/custom_provider`.
+    Этот пример предназначен чтобы показать вам основную идею провайдера
+    ``entity``. Полный рабочий пример приводится в книге рецептов:
+    :doc:`/cookbook/security/entity_provider`.
 
-Encoding the User's Password
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Больше информации о создании вашего собственного провайдера (например, если вам
+нужно загружать пользователей из веб-сервиса), смотрите статью
+:doc:`/cookbook/security/custom_provider`.
 
-So far, for simplicity, all the examples have stored the users' passwords
-in plain text (whether those users are stored in a configuration file or in
-a database somewhere). Of course, in a real application, you'll want to encode
-your users' passwords for security reasons. This is easily accomplished by
-mapping your User class to one of several built-in "encoders". For example,
-to store your users in memory, but obscure their passwords via ``sha1``,
-do the following:
+Шифрование пароля пользователя
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ранее, для упрощения, все примеры хранили пароли пользователей в виде
+текста (вне зависимости от того где эти пользователи были определены
+- в файле настроек или в базе данных). Конечно, в настощем приложении
+вы захотите шифровать пароли пользователей из соображений безопасности.
+Этого легко достичь связав ваш класс User с одним из нескольких встроенных
+"процедур шифрования". Например, при хранении ваших пользователей в памяти, чтобы
+скрывать их пароли при помощи функции ``sha1``, выполните следующие настройки:
 
 .. configuration-block::
 
@@ -1091,6 +1110,7 @@ do the following:
 
     .. code-block:: php
 
+        <?php
         // app/config/config.php
         $container->loadFromExtension('security', array(
             // ...
@@ -1111,16 +1131,16 @@ do the following:
             ),
         ));
 
-By setting the ``iterations`` to ``1`` and the ``encode_as_base64`` to false,
-the password is simply run through the ``sha1`` algorithm one time and without
-any extra encoding. You can now calculate the hashed password either programmatically
-(e.g. ``hash('sha1', 'ryanpass')``) or via some online tool like `functions-online.com`_
+Присвоив параметру ``iterations`` значение 1 и параметру ``encode_as_base64`` - false,
+пароль будет просто прогоняться один раз через алгоритм шифрования ``sha1``
+без дополнительного шифрования. Теперь вы можете вычислить хэш пароля программно
+(``hash('sha1', 'ryanpass')``) или же при помощи онлайн-инструментов типа `functions-online.com`_.
 
-If you're creating your users dynamically (and storing them in a database),
-you can use even tougher hashing algorithms and then rely on an actual password
-encoder object to help you encode passwords. For example, suppose your User
-object is ``Acme\UserBundle\Entity\User`` (like in the above example). First,
-configure the encoder for that user:
+Если вы создаёте ваших пользователей динамически (и храните их в базе данных),
+вы можете использовать более сложные алгоритмы шифрования, а затем
+передавать оригинал пароля объекту-шифровальщику для хэширования паролей. Например,
+предположим что ваш объект User - это экземпляр класса ``Acme\UserBundle\Entity\User``
+(как в примере выше). Сначала настройте шифрование для этого класса пользователя:
 
 .. configuration-block::
 
@@ -1144,6 +1164,7 @@ configure the encoder for that user:
 
     .. code-block:: php
 
+        <?php
         // app/config/config.php
         $container->loadFromExtension('security', array(
             // ...
@@ -1153,19 +1174,21 @@ configure the encoder for that user:
             ),
         ));
 
-In this case, you're using the stronger ``sha512`` algorithm. Also, since
-you've simply specified the algorithm (``sha512``) as a string, the system
-will default to hashing your password 5000 times in a row and then encoding
-it as base64. In other words, the password has been greatly obfuscated so
-that the hashed password can't be decoded (i.e. you can't determine the password
-from the hashed password).
+В этом случае вы используете более стойкий алгоритм ``sha512``. Также, поскольку
+вы просто указали алгоритм шифрования в виде строки (``sha512``), система
+будет по умолчанию хэшировать ваш пароль 5000 раз подряд и затем шифровать его
+в base64. Другими словами, пароль будет многократно зашифрован и пароль не сможет
+быть декодирован (т.е. будет невозможно определить оригинал пароля по его хэшу).
 
-If you have some sort of registration form for users, you'll need to be able
-to determine the hashed password so that you can set it on your user. No
-matter what algorithm you configure for your user object, the hashed password
-can always be determined in the following way from a controller:
+Если у вас предусмотрена некая регистрация для пользователей, вам потребуется
+определить хэш пароля, чтобы присвоить его пользователю. Вне зависимости от алгоритма
+шифрования, который вы настроили для объекта пользователя, в контроллере получить хэш
+пароля можно следующим образом:
 
 .. code-block:: php
+
+    <?php
+    // ...
 
     $factory = $this->get('security.encoder_factory');
     $user = new Acme\UserBundle\Entity\User();
@@ -1174,15 +1197,16 @@ can always be determined in the following way from a controller:
     $password = $encoder->encodePassword('ryanpass', $user->getSalt());
     $user->setPassword($password);
 
-Retrieving the User Object
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Получение объекта пользователя
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-After authentication, the ``User`` object of the current user can be accessed
-via the ``security.context`` service. From inside a controller, this will
-look like:
+После аутентификации, объект ``User`` для текущего юзера можно получить
+через сервис ``security.context``. В контроллере это будет выглядеть следующим
+образом:
 
 .. code-block:: php
 
+    <?php
     public function indexAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
@@ -1190,10 +1214,12 @@ look like:
 
 .. note::
 
-    Anonymous users are technically authenticated, meaning that the ``isAuthenticated()``
-    method of an anonymous user object will return true. To check if your
-    user is actually authenticated, check for the ``IS_AUTHENTICATED_FULLY``
-    role.
+    Анонимные пользователи технически считаются также аутентифицированными, т.е. метод
+    ``isAuthenticated()`` анонимного пользователя будет возвращать ``true``. Для того,
+    чтобы действительно убедиться, что ваш пользователь прошёл аутентификацию, необходимо
+    проверить наличие роли ``IS_AUTHENTICATED_FULLY``.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 Using Multiple User Providers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1732,7 +1758,7 @@ Learn more from the Cookbook
 .. _`security component`: https://github.com/symfony/Security
 .. _`JMSSecurityExtraBundle`: https://github.com/schmittjoh/JMSSecurityExtraBundle
 .. _`FOSUserBundle`: https://github.com/FriendsOfSymfony/FOSUserBundle
-.. _`implement the \Serializable interface`: http://php.net/manual/en/class.serializable.php
+.. _`\Serializable`: http://php.net/manual/en/class.serializable.php
 .. _`functions-online.com`: http://www.functions-online.com/sha1.html
 
 .. toctree::
