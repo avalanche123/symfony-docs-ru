@@ -18,10 +18,10 @@
 
 5.1. При создании нового перевода добавить в конец файла такую конструкцию (не будет отображаться при генерации):
 
-.. toctree::
-    :hidden:
+    toctree
+      hidden
 
-    Translation source: YYYY-mm-dd REV
+      Translation source: YYYY-mm-dd REV
 
 где
     YYYY-mm-dd дата когда был взят исходник перевода,
@@ -30,6 +30,8 @@
 5.2. При обновлении перевода добавить в историю правок строку
 
     Corrected from: YYYY-mm-dd REV
+
+5.3. Пример этой конструкции можно подсмотреть в конце этого файла, так как он не виден в распарсеном документе.
 
 где
     YYYY-mm-dd - дата когда был взят исходник для коррекции
@@ -65,5 +67,12 @@
 Полезные ссылки
 ===============
 
-* Правила форматирования документации: `Symfony2 Documentation Format <http://symfony.com/doc/current/contributing/documentation/format.html>`_ и `reStructuredText Markup Specification <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_
+* Правила форматирования документации: `Symfony2 Documentation Format
+<http://symfony.com/doc/current/contributing/documentation/format.html>`_ и
+`reStructuredText Markup Specification <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_
 
+.. toctree::
+    :hidden:
+
+    Translation source: 2011-01-01 [REV]
+    Corrected from:
