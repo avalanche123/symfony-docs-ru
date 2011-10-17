@@ -753,6 +753,8 @@ Symfony2 предоставляет специализированные таг�
 
     {% trans with {'%name%': 'Fabien'} from "app" %}Hello %name%{% endtrans %}
 
+    {% trans with {'%name%': 'Fabien'} from "app" into "fr" %}Hello %name%{% endtrans %}
+
     {% transchoice count with {'%name%': 'Fabien'} from "app" %}
         {0} There is no apples|{1} There is one apple|]1,Inf] There are %count% apples
     {% endtranschoice %}
@@ -864,4 +866,4 @@ PHP Шаблоны
     :hidden:
 
     Translation source: 2011-10-07 ef68b50
-    Corrected from:
+    Corrected from: 2011-10-16 3fd0e21

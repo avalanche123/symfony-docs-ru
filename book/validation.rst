@@ -676,7 +676,7 @@ Symfony2 позволяет вам добавлять ограничения к 
         // src/Acme/BlogBundle/Entity/User.php
         namespace Acme\BlogBundle\Entity;
 
-        use Symfony\Component\Security\Core\User\UserInterface
+        use Symfony\Component\Security\Core\User\UserInterface;
         use Symfony\Component\Validator\Constraints as Assert;
 
         class User implements UserInterface
@@ -845,4 +845,4 @@ Symfony2 позволяет вам добавлять ограничения к 
     :hidden:
 
     Translation source: 2011-09-30 243с069
-    Corrected from:
+    Corrected from: 2011-10-16 350aff1

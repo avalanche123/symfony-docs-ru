@@ -1432,6 +1432,19 @@ CSRF токен можно настроить уровне формы. Напр�
 (и не установлена опция ``data_class``), ``$form->getData()`` в конечном
 итоге вернёт массив.
 
+.. tip::
+
+    Вы также можете получить доступ к значениям POST (в данном случае "name")
+    напрямую через объект запроса, например так:
+
+    .. code-block:: php
+
+        $this->get('request')->request->get('name');
+
+    Тем не менее, в большинстве случаев рекомендуется использовать метод
+    getData(), так как он возвращает данные (как правило объект) после того
+    как он был преобразован фреймворком форм.
+
 Добавление валидации
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -1452,12 +1465,12 @@ CSRF токен можно настроить уровне формы. Напр�
     use Symfony\Component\Validator\Constraints\Collection;
 
     $collectionConstraint = new Collection(array(
-        'name' => new MinLength(5)
+        'name' => new MinLength(5),
         'email' => new Email(array('message' => 'Invalid email address')),
     ));
 
     // создание формы без значений по умолчанию и с явным указанием ограничений для валидации
-    $form = $this->createFormBuilder(null, , array(
+    $form = $this->createFormBuilder(null, array(
         'validation_constraint' => $collectionConstraint,
     ))->add('email', 'email')
         // ...
@@ -1485,7 +1498,7 @@ CSRF токен можно настроить уровне формы. Напр�
         public function getDefaultOptions(array $options)
         {
             $collectionConstraint = new Collection(array(
-                'name' => new MinLength(5)
+                'name' => new MinLength(5),
                 'email' => new Email(array('message' => 'Invalid email address')),
             ));
 
@@ -1535,4 +1548,4 @@ CSRF токен можно настроить уровне формы. Напр�
     :hidden:
 
     Translation source: 2011-10-02 8892b24
-    Corrected from:
+    Corrected from: 2011-10-16 2d0a37a

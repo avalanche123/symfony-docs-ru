@@ -1128,4 +1128,4 @@ Symfony2 и примеры кода, вы получаете доступ к ц�
     :hidden:
 
     Translation source: 2011-10-10 5a77337
-    Corrected from:
+    Corrected from: 2011-10-16 a52c4c1

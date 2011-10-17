@@ -1256,12 +1256,12 @@ HTML, XML или любом другом формате. И, не смотря �
 .. _`Symfony2Bundles.org`: http://symfony2bundles.org
 .. _`Cross Site Scripting`: http://en.wikipedia.org/wiki/Cross-site_scripting
 .. _`Output Escaping`: http://twig.sensiolabs.org
-.. _`tags`: http://twig.sensiolabs.org/doc/templates.html#list-of-control-structures
-.. _`filters`: http://twig.sensiolabs.org/doc/templates.html#list-of-built-in-filters
+.. _`tags`: http://twig.sensiolabs.org/doc/tags/index.html
+.. _`filters`: http://twig.sensiolabs.org/doc/templates.html#filters
 .. _`создавать свои собственные расширения`: http://twig.sensiolabs.org/doc/advanced.html
 
 .. toctree::
     :hidden:
 
     Translation source: 2011-09-29 9367dc0
-    Corrected from:
+    Corrected from: 2011-10-16 a9e1ed7
