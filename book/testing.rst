@@ -26,7 +26,7 @@
 
     <!-- app/phpunit.xml.dist -->
 
-    <phpunit bootstrap="../src/autoload.php">
+    <phpunit bootstrap="bootstrap.php.cache">
         <testsuites>
             <testsuite name="Project Test Suite">
                 <directory>../src/*/*Bundle/Tests</directory>
@@ -63,7 +63,7 @@
 ``Acme\HelloBundle\Model\Article`` в файле
 ``Acme/HelloBundle/Tests/Model/ArticleTest.php``.
 
-В модульном тесте автозагрузка уже включена через файл ``src/autoload.php``
+В модульном тесте автозагрузка уже включена через файл ``bootstrap.php.cache``
 (это настроено по умолчанию в файле ``phpunit.xml.dist``).
 
 Выполнить тесты для заданного файла или папки также просто:
@@ -697,7 +697,7 @@ Vendor\\*Bundle\\Tests). Хотя легко можно добавить ещё 
                     type="stream"
                     path="%kernel.logs_dir%/%kernel.environment%.log"
                     level="debug"
-                 />               
+                 />
             </monolog:config>
         </container>
 
@@ -721,7 +721,7 @@ Vendor\\*Bundle\\Tests). Хотя легко можно добавить ещё 
                 'main' => array('type' => 'stream',
                                 'path' => '%kernel.logs_dir%/%kernel.environment%.log'
                                 'level' => 'debug')
-           
+
         )));
 
 Также можно изменить среду (``test``) и режим отладки (``true``), заданные по
@@ -758,3 +758,9 @@ Vendor\\*Bundle\\Tests). Хотя легко можно добавить ещё 
 * :doc:`/cookbook/testing/http_authentication`
 * :doc:`/cookbook/testing/insulating_clients`
 * :doc:`/cookbook/testing/profiling`
+
+.. toctree::
+    :hidden:
+
+    Translation source: n/a
+    Corrected from: 2011-10-16 a591960
