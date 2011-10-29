@@ -808,7 +808,7 @@ ESI, маршрут _internal необходим кэширующему шлюз
 .. code-block:: php
 
     <?php
-    use Symfony\Component\Security\Core\Exception\AccessDeniedException
+    use Symfony\Component\Security\Core\Exception\AccessDeniedException;
     // ...
 
     public function helloAction($name)
@@ -1592,7 +1592,7 @@ PHP класс), который отсылает email-сообщения от �
     public function indexAction()
     {
         // show different content to admin users
-        if($this->get('security.context')->isGranted('ADMIN')) {
+        if ($this->get('security.context')->isGranted('ADMIN')) {
             // Загружаем админ-контент
         }
         // Загружаем прочий контент
@@ -1777,4 +1777,4 @@ PHP класс), который отсылает email-сообщения от �
     :hidden:
 
     Translation source: 2011-10-04 e6bc8ed
-    Corrected from:
+    Corrected from: 2011-10-29 f3462fd

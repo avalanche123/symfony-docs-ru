@@ -502,7 +502,7 @@ Symfony2 содержит много специализированных таг
     .. code-block:: html+jinja
 
         {# src/Acme/ArticleBundle/Resources/views/Article/articleDetails.html.twig #}
-        <h1>{{ article.title }}</h1>
+        <h2>{{ article.title }}</h2>
         <h3 class="byline">by {{ article.authorName }}</h3>
 
         <p>
@@ -1265,3 +1265,4 @@ HTML, XML или любом другом формате. И, не смотря �
 
     Translation source: 2011-09-29 9367dc0
     Corrected from: 2011-10-16 a9e1ed7
+    Corrected from: 2011-10-29 6c49f2a
