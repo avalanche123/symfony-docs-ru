@@ -250,6 +250,63 @@ Symfony2 при помощи вспомогательного метода ``get
 тем не менее, вам может и не потребоваться та гибкость, которую даёт использование
 параметров.
 
+Массивы параметров
+~~~~~~~~~~~~~~~~~~
+
+Параметры - это не обязательно строки, это также могут быть и массивы. В формате XML
+вы должны использовать атрибут type="collection" для параметров-массивов.
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # app/config/config.yml
+        parameters:
+            my_mailer.gateways:
+                - mail1
+                - mail2
+                - mail3
+            my_multilang.language_fallback:
+                en:
+                    - en
+                    - fr
+                fr:
+                    - fr
+                    - en
+
+    .. code-block:: xml
+
+        <!-- app/config/config.xml -->
+        <parameters>
+            <parameter key="my_mailer.gateways" type="collection">
+                <parameter>mail1</parameter>
+                <parameter>mail2</parameter>
+                <parameter>mail3</parameter>
+            </parameter>
+            <parameter key="my_multilang.language_fallback" type="collection">
+                <parameter key="en" type="collection">
+                    <parameter>en</parameter>
+                    <parameter>fr</parameter>
+                </parameter>
+                <parameter key="fr" type="collection">
+                    <parameter>fr</parameter>
+                    <parameter>en</parameter>
+                </parameter>
+            </parameter>
+        </parameters>
+
+    .. code-block:: php
+
+        <?php
+        // app/config/config.php
+        use Symfony\Component\DependencyInjection\Definition;
+
+        $container->setParameter('my_mailer.gateways', array('mail1', 'mail2', 'mail3'));
+        $container->setParameter('my_multilang.language_fallback',
+                                 array('en' => array('en', 'fr'),
+                                       'fr' => array('fr', 'en'),
+                                ));
+
 Импорт конфигураций контейнера
 ------------------------------
 
@@ -1046,4 +1103,4 @@ Symfony2 при помощи вспомогательного метода ``get
     :hidden:
 
     Translation source: 2011-10-16 7e2d2b2
-    Corrected from:
+    Corrected from: 2011-10-29 cc7fef0

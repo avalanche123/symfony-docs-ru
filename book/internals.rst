@@ -4,12 +4,12 @@
 Составные части
 ===============
 
-Похоже что вы хотите понять как работает Symfony2 и как его расширить.
-Это меня радует! Этот раздел подробно объясняет внутренности Symfony2.
+Похоже, что вы хотите понять, как работает Symfony2 и как его расширить.
+Это радует! Этот раздел подробно объясняет внутренности Symfony2.
 
 .. note::
 
-    Чтение этого раздела необходимо только если вы хотите понять как работает
+    Чтение этого раздела необходимо, только если вы хотите понять, как работает
     Symfony2 за кулисами или если хотите расширять Symfony2.
 
 Обзор
@@ -26,10 +26,10 @@
     и файла ``src/autoload.php``. За дополнительной информацией обращайтесь к
     :doc:`разделу </cookbook/tools/autoloader>`, посвящённому этой теме.
 
-``HttpFoundation`` компонент
+Компонент ``HttpFoundation``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-На самом глубоком уровене находится компонент :namespace:`Symfony\\Component\\HttpFoundation`.
+На самом глубоком уровне находится компонент :namespace:`Symfony\\Component\\HttpFoundation`.
 HttpFoundation предоставляет основные объекты, необходимые для работы с HTTP.
 Это объектно-ориентированная абстракция некоторых встроенных PHP функций и
 переменных:
@@ -45,7 +45,7 @@ HttpFoundation предоставляет основные объекты, не�
   :class:`Symfony\\Component\\HttpFoundation\\SessionStorage\\SessionStorageInterface`
   абстрагируют функции ``session_*()`` для управления сессией.
 
-``HttpKernel`` компонент
+Компонент ``HttpKernel``
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Поверх HttpFoundation располагается компонент :namespace:`Symfony\\Component\\HttpKernel`.
@@ -55,27 +55,27 @@ Request и Response, которая приводит способы обрабо
 его идеальной стартовой площадкой для создания Web фреймворка без лишних проблем.
 
 Также, дополнительно, он добавляет настраиваемость и расширяемость благодаря
-компоненту Dependency Injection и мощной системе плагинов (бандлов).
+компоненту Dependency Injection и мощной системе пакетов (Bundles).
 
 .. seealso::
 
     Узнайте больше о компоненте :doc:`HttpKernel <kernel>`. Узнайте больше о
-    :doc:`Dependency Injection </book/service_container>` и :doc:`Бандлах
+    :doc:`Dependency Injection </book/service_container>` и :doc:`Пакетах
     </cookbook/bundles/best_practices>`.
 
-``FrameworkBundle`` бандл
+Пакет ``FrameworkBundle``
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:namespace:`Symfony\\Bundle\\FrameworkBundle` это бандл, связывающий
+:namespace:`Symfony\\Bundle\\FrameworkBundle` это пакет, связывающий
 основные компоненты и библиотеки вместе, что создаёт лёгкий и быстрый MVC
 фреймворк. Он поставляется с правильной первоначальной конфигурацией и
-соглашениями для облегчения обучения.
+соглашениями для облегчения изучения.
 
 .. index::
    single: Internals; Kernel
 
-Kernel
-------
+Ядро (Kernel)
+-------------
 
 Класс :class:`Symfony\\Component\\HttpKernel\\HttpKernel` - это центральный
 класс в Symfony2 и он в ответе за обработку клиентских запросов. Его главная
@@ -90,49 +90,47 @@ Kernel
 .. index::
    single: Internals; Controller Resolver
 
-Controllers
-~~~~~~~~~~~
+Контроллеры (Controllers)
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To convert a Request to a Response, the Kernel relies on a "Controller". A
-Controller can be any valid PHP callable.
+При преобразования запроса в ответ, Kernel полагается на "Controller". Контроллер
+может быть любой валидной PHP-сущностью, которую можно вызвать тем или иным образом.
 
-The Kernel delegates the selection of what Controller should be executed
-to an implementation of
+Ядро делегирует право выбора запустить тот или иной контроллер классу,
+реализующему интерфейс
 :class:`Symfony\\Component\\HttpKernel\\Controller\\ControllerResolverInterface`::
 
     public function getController(Request $request);
 
     public function getArguments(Request $request, $controller);
 
-The
+Метод
 :method:`Symfony\\Component\\HttpKernel\\Controller\\ControllerResolverInterface::getController`
-method returns the Controller (a PHP callable) associated with the given
-Request. The default implementation
+возвращает контроллер (PHP callable - функцию, метод, замыкание...), ассоциированный
+с данным запросом. Каноническая реализация
 (:class:`Symfony\\Component\\HttpKernel\\Controller\\ControllerResolver`)
-looks for a ``_controller`` request attribute that represents the controller
-name (a "class::method" string, like
-``Bundle\BlogBundle\PostController:indexAction``).
+ищет атрибут запроса ``_controller``, который хранит наименование контроллера
+(строку "class::method", например ``Bundle\BlogBundle\PostController:indexAction``).
 
 .. tip::
 
-    The default implementation uses the
+    Реализация по умолчанию использует
     :class:`Symfony\\Bundle\\FrameworkBundle\\EventListener\\RouterListener`
-    to define the ``_controller`` Request attribute (see :ref:`kernel-core-request`).
+    для определения атрибута ``_controller`` из запроса (see :ref:`kernel-core-request`).
 
-The
+Метод
 :method:`Symfony\\Component\\HttpKernel\\Controller\\ControllerResolverInterface::getArguments`
-method returns an array of arguments to pass to the Controller callable. The
-default implementation automatically resolves the method arguments, based on
-the Request attributes.
+возвращает массив аргументов для передачи их в контроллер. Реализация по умолчанию
+автоматически определяет аргументы, основываясь на атрибутах запроса.
 
-.. sidebar:: Matching Controller method arguments from Request attributes
+.. sidebar:: Сопоставление аргументов метода контроллера по атрибутам запроса
 
-    For each method argument, Symfony2 tries to get the value of a Request
-    attribute with the same name. If it is not defined, the argument default
-    value is used if defined::
+    Для каждого аргумента метода Symfony2 пытается получить из запроса значение
+    атрибута с таким же именем. Если он не определён, используется значение по
+    умолчанию (если оно также определено)::
 
-        // Symfony2 will look for an 'id' attribute (mandatory)
-        // and an 'admin' one (optional)
+        // Symfony2 будет искать обязательный атрибут 'id'
+        // и опциональный атрибут 'admin'
         public function showAction($id, $admin = true)
         {
             // ...
@@ -141,132 +139,140 @@ the Request attributes.
 .. index::
   single: Internals; Request Handling
 
-Handling Requests
-~~~~~~~~~~~~~~~~~
+Обработка запросов
+~~~~~~~~~~~~~~~~~~
 
-The ``handle()`` method takes a ``Request`` and *always* returns a ``Response``.
-To convert the ``Request``, ``handle()`` relies on the Resolver and an ordered
-chain of Event notifications (see the next section for more information about
-each Event):
+Метод ``handle()`` принимает ``Request`` и *всегда* возвращает ``Response``.
+При конвертации объекта ``Request``, ``handle()`` полагается на Resolver и
+упорядоченную цепь нотификаций о событиях (Event notifications, см. следующую
+секцию для более подробной информации о каждом событии из этой цепи):
 
-1. Before doing anything else, the ``kernel.request`` event is notified -- if
-   one of the listeners returns a ``Response``, it jumps to step 8 directly;
+1. Перед тем как что-либо делать, срабатывает нотификация о событии ``kernel.request`` --
+   если один из слушателей (listeners) возвращает объект ``Response``, процесс
+   сразу переходит к шагу 8;
 
-2. The Resolver is called to determine the Controller to execute;
+2. Вызывается Resolver для определения Контроллера, который необходимо выполнить;
 
-3. Listeners of the ``kernel.controller`` event can now manipulate the
-   Controller callable the way they want (change it, wrap it, ...);
+3. Слушатели события ``kernel.controller`` теперь могут манипулировать
+   методом Контроллера (изменить, обернуть...);
 
-4. The Kernel checks that the Controller is actually a valid PHP callable;
+4. Kernel проверяет, что Контроллер представляет собой валидный PHP callable;
 
-5. The Resolver is called to determine the arguments to pass to the Controller;
+5. Для определения аргументов Контроллера вызывается Resolver;
 
-6. The Kernel calls the Controller;
+6. Kernel выполняет Контроллер;
 
-7. If the Controller does not return a ``Response``, listeners of the
-   ``kernel.view`` event can convert the Controller return value to a ``Response``;
+7. Если Контроллер не возвращает объект ``Response``, слушатели события
+   ``kernel.view`` могут конвертировать данные, которые вернул Контроллер
+   в объект ``Response``;
 
-8. Listeners of the ``kernel.response`` event can manipulate the ``Response``
-   (content and headers);
+8. Слушатели события ``kernel.response`` могут манипулировать объектом ``Response`` (
+   контент и заголовки);
 
-9. The Response is returned.
+9. Возвращается Ответ.
 
-If an Exception is thrown during processing, the ``kernel.exception`` is
-notified and listeners are given a chance to convert the Exception to a
-Response. If that works, the ``kernel.response`` event is notified; if not, the
-Exception is re-thrown.
+Если во время этого процесса возникает исключительная ситуация, срабатывает
+событие ``kernel.exception`` и его слушатели получают возможность конвертировать
+исключение (Exception) в Ответ. Если это удаётся, событие уведомляется, если нет,
+исключение вызывается повторно.
 
-If you don't want Exceptions to be caught (for embedded requests for
-instance), disable the ``kernel.exception`` event by passing ``false`` as the
-third argument to the ``handle()`` method.
+Если вы не хотите, чтобы возникали исключения (для вложенных запросов, к примеру),
+отключите событие ``kernel.exception`` передав ``false`` в качестве третьего аргумента
+метода ``handle()``.
 
 .. index::
   single: Internals; Internal Requests
 
-Internal Requests
-~~~~~~~~~~~~~~~~~
+Внутренние Запросы
+~~~~~~~~~~~~~~~~~~
 
-At any time during the handling of a request (the 'master' one), a sub-request
-can be handled. You can pass the request type to the ``handle()`` method (its
-second argument):
+В любой момент во время обработки запроса (назовём его 'мастер'), может быть обработан
+подзапрос. Вы можете передать тип запроса в метод ``handle()`` его вторым
+параметром:
 
 * ``HttpKernelInterface::MASTER_REQUEST``;
 * ``HttpKernelInterface::SUB_REQUEST``.
 
-The type is passed to all events and listeners can act accordingly (some
-processing must only occur on the master request).
+Тип также передаётся во все события, и их слушатели могут действовать в
+соответствии с переданным типом (некоторые действия могут соответствовать
+только мастер-запросу).
 
 .. index::
    pair: Kernel; Event
 
-Events
-~~~~~~
+События
+~~~~~~~
 
-Each event thrown by the Kernel is a subclass of
-:class:`Symfony\\Component\\HttpKernel\\Event\\KernelEvent`. This means that
-each event has access to the same basic information:
+Каждое событие, создаваемое в Kernel, это дочерний класс
+:class:`Symfony\\Component\\HttpKernel\\Event\\KernelEvent`. Это означает, что
+каждое событие имеет доступ к одной и той же базовой информации:
 
-* ``getRequestType()`` - returns the *type* of the request
-  (``HttpKernelInterface::MASTER_REQUEST`` or ``HttpKernelInterface::SUB_REQUEST``);
+* ``getRequestType()`` - возвращает *тип* запроса
+  (``HttpKernelInterface::MASTER_REQUEST`` или ``HttpKernelInterface::SUB_REQUEST``);
 
-* ``getKernel()`` - returns the Kernel handling the request;
+* ``getKernel()`` - возвращает экземпляр Kernel, обрабатывающий этот запрос;
 
-* ``getRequest()`` - returns the current ``Request`` being handled.
+* ``getRequest()`` - возвращает объект ``Request``, соответствующий обрабатываемому запросу;
 
 ``getRequestType()``
 ....................
 
-The ``getRequestType()`` method allows listeners to know the type of the
-request. For instance, if a listener must only be active for master requests,
-add the following code at the beginning of your listener method::
+Метод ``getRequestType()`` позволяет слушателям узнавать тип запроса.
+Например, если слушатель должен быть активен только для мастер-запроса,
+добавьте следующий код в начало вашего "слушающего" метода:
 
+.. code-block:: php
+
+    <?php
     use Symfony\Component\HttpKernel\HttpKernelInterface;
 
     if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
-        // return immediately
+        // немедленно возвращаемся
         return;
     }
 
 .. tip::
 
-    If you are not yet familiar with the Symfony2 Event Dispatcher, read the
-    :ref:`event_dispatcher` section first.
+    Если вы ещё не знакомы с Диспетчером Событий Symfony2 (Event Dispatcher),
+    прочитайте сначала секцию :ref:`event_dispatcher`.
 
 .. index::
    single: Event; kernel.request
 
 .. _kernel-core-request:
 
-``kernel.request`` Event
+Событие ``kernel.request``
 ........................
 
-*Event Class*: :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseEvent`
+*Класс события*: :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseEvent`
 
-The goal of this event is to either return a ``Response`` object immediately
-or setup variables so that a Controller can be called after the event. Any
-listener can return a ``Response`` object via the ``setResponse()`` method on
-the event. In this case, all other listeners won't be called.
+Цель этого события - либо незамедлительно вернуть объект ``Response``,
+или же подготовить переменные, чтобы можно было вызвать контроллер после
+события. Любой слушатель может вернуть объект ``Response`` при помощи
+метода события ``setResponse()``. В этом случае, все остальные слушатели
+не будут вызываться.
 
-This event is used by ``FrameworkBundle`` to populate the ``_controller``
-``Request`` attribute, via the
+Это событие используется в ``FrameworkBundle`` для заполнения атрибута ``_controller``
+в объекте ``Request`` при помощи класса
 :class:`Symfony\\Bundle\\FrameworkBundle\\EventListener\\RouterListener`. RequestListener
-uses a :class:`Symfony\\Component\\Routing\\RouterInterface` object to match
-the ``Request`` and determine the Controller name (stored in the
-``_controller`` ``Request`` attribute).
+использует объект, реализующий интерфейс :class:`Symfony\\Component\\Routing\\RouterInterface`
+для согласования объекта ``Request`` и определения наименования Контроллера (которое хранится
+в атрибуте ``_controller`` объекта ``Request``).
 
 .. index::
    single: Event; kernel.controller
 
-``kernel.controller`` Event
+Событие ``kernel.controller``
 ...........................
 
-*Event Class*: :class:`Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent`
+*Класс события*: :class:`Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent`
 
-This event is not used by ``FrameworkBundle``, but can be an entry point used
-to modify the controller that should be executed:
+Это событие не используется в ``FrameworkBundle``, но оно может быть точкой входа,
+используемой для модификации исполняемого контроллера:
 
 .. code-block:: php
 
+    <?php
     use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
     public function onKernelController(FilterControllerEvent $event)
@@ -281,19 +287,21 @@ to modify the controller that should be executed:
 .. index::
    single: Event; kernel.view
 
-``kernel.view`` Event
+Событие ``kernel.view``
 .....................
 
-*Event Class*: :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForControllerResultEvent`
+*Класс события*: :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForControllerResultEvent`
 
-This event is not used by ``FrameworkBundle``, but it can be used to implement
-a view sub-system. This event is called *only* if the Controller does *not*
-return a ``Response`` object. The purpose of the event is to allow some other
-return value to be converted into a ``Response``.
+Это событие не используется в ``FrameworkBundle``, но оно может быть использовано
+для реализации подсистемы view. Это событие вызывается *только* если Контроллер
+*не* возвращает объект ``Response``. Назначение этого события - разрешить конвертацию
+возвращаемых значений в объект ``Response``.
 
-The value returned by the Controller is accessible via the
-``getControllerResult`` method::
+Значение, возвращаемое Контроллером доступно при помощи метода ``getControllerResult``:
 
+.. code-block:: php
+
+    <?php
     use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
     use Symfony\Component\HttpFoundation\Response;
 
@@ -301,7 +309,7 @@ The value returned by the Controller is accessible via the
     {
         $val = $event->getReturnValue();
         $response = new Response();
-        // some how customize the Response from the return value
+        // код получения объекта Response из полученного значения
 
         $event->setResponse($response);
     }
@@ -309,58 +317,58 @@ The value returned by the Controller is accessible via the
 .. index::
    single: Event; kernel.response
 
-``kernel.response`` Event
+Событие ``kernel.response``
 .........................
 
-*Event Class*: :class:`Symfony\\Component\\HttpKernel\\Event\\FilterResponseEvent`
+*Класс события*: :class:`Symfony\\Component\\HttpKernel\\Event\\FilterResponseEvent`
 
-The purpose of this event is to allow other systems to modify or replace the
-``Response`` object after its creation:
+Назначение этого события - позволить другим системам модифицировать или
+заменять объект ``Response`` после его создания:
 
 .. code-block:: php
 
+    <?php
     public function onKernelResponse(FilterResponseEvent $event)
     {
         $response = $event->getResponse();
         // .. modify the response object
     }
 
-The ``FrameworkBundle`` registers several listeners:
+``FrameworkBundle`` регистрирует несколько слушателей:
 
 * :class:`Symfony\\Component\\HttpKernel\\EventListener\\ProfilerListener`:
-  collects data for the current request;
+  собирает данные для текущего запроса;
 
 * :class:`Symfony\\Bundle\\WebProfilerBundle\\EventListener\\WebDebugToolbarListener`:
-  injects the Web Debug Toolbar;
+  внедряет Web Debug Toolbar;
 
-* :class:`Symfony\\Component\\HttpKernel\\EventListener\\ResponseListener`: fixes the
-  Response ``Content-Type`` based on the request format;
+* :class:`Symfony\\Component\\HttpKernel\\EventListener\\ResponseListener`:
+  устанавливает ``Content-Type`` ответа, основываясь на формате запроса;
 
-* :class:`Symfony\\Component\\HttpKernel\\EventListener\\EsiListener`: adds a
-  ``Surrogate-Control`` HTTP header when the Response needs to be parsed for
-  ESI tags.
+* :class:`Symfony\\Component\\HttpKernel\\EventListener\\EsiListener`:
+  добавляет заголовок ``Surrogate-Control``, в случае если ответ необходимо
+  парсить на предмет наличия ESI тагов.
 
 .. index::
    single: Event; kernel.exception
 
 .. _kernel-kernel.exception:
 
-``kernel.exception`` Event
+Событие ``kernel.exception``
 ..........................
 
-*Event Class*: :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent`
+*Класс события*: :class:`Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent`
 
-``FrameworkBundle`` registers an
-:class:`Symfony\\Component\\HttpKernel\\EventListener\\ExceptionListener` that
-forwards the ``Request`` to a given Controller (the value of the
-``exception_listener.controller`` parameter -- must be in the
-``class::method`` notation).
+``FrameworkBundle`` регистрирует :class:`Symfony\\Component\\HttpKernel\\EventListener\\ExceptionListener`,
+который перенаправляет ``Request`` в указанные Контроллер (определяется
+значением параметра ``exception_listener.controller``, указывается в нотации ``class::method``).
 
-A listener on this event can create and set a ``Response`` object, create
-and set a new ``Exception`` object, or do nothing:
+Слушатель этого события может создавать объект ``Response``, создавать новый объект
+``Exception`` или же ничего не делать:
 
 .. code-block:: php
 
+    <?php
     use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
     use Symfony\Component\HttpFoundation\Response;
 
@@ -368,10 +376,10 @@ and set a new ``Exception`` object, or do nothing:
     {
         $exception = $event->getException();
         $response = new Response();
-        // setup the Response object based on the caught exception
+        // Настраиваем объект Response, основываясь на перехваченном исключении
         $event->setResponse($response);
 
-        // you can alternatively set a new Exception
+        // как вариант - вы можете создать новое исключение
         // $exception = new \Exception('Some special exception');
         // $event->setException($exception);
     }
@@ -379,73 +387,74 @@ and set a new ``Exception`` object, or do nothing:
 .. index::
    single: Event Dispatcher
 
-The Event Dispatcher
---------------------
+Диспетчер событий (Event Dispatcher)
+------------------------------------
 
-Objected Oriented code has gone a long way to ensuring code extensibility. By
-creating classes that have well defined responsibilities, your code becomes
-more flexible and a developer can extend them with subclasses to modify their
-behaviors. But if he wants to share his changes with other developers who have
-also made their own subclasses, code inheritance is moot.
+Объектно-ориентированный код прошёл длинный путь по обеспечению расширяемости
+кода. Путём создания узкоспециализированных классов, ваш код становится более
+гибким и разработчик может расширять его при помощи дочерних классов, чтобы
+изменять их поведение. Но что, если требуется использовать его изменения
+совместно с другими разработчиками, которые также создают свои дочерние классы?
+Здесь использование наследования уже не столь удобно.
 
-Consider the real-world example where you want to provide a plugin system for
-your project. A plugin should be able to add methods, or do something before
-or after a method is executed, without interfering with other plugins. This is
-not an easy problem to solve with single inheritance, and multiple inheritance
-(were it possible with PHP) has its own drawbacks.
+Рассмотрим реальный пример, в котором вам нужно создать систему плагинов для
+вашего проекта. Плагин должен иметь возможность добавлять методы или же делать
+что-то до или после выполнения некоторого метода, не пересекаясь с прочими
+плагинами. Эту задачу непросто решить при помощи одиночного наследования,
+да и множественное наследование (если бы оно было возможно в PHP) имеет
+свои недостатки.
 
-The Symfony2 Event Dispatcher implements the `Observer`_ pattern in a simple
-and effective way to make all these things possible and to make your projects
-truly extensible.
+Диспетчер событий Symfony2 реализует шаблон проектирования `Observer`_ простым
+и эффективным способом, позволяя создавать, например, что-то вроде системы плагинов,
+которую упоминали выше, и делая ваш проект действительно расширяемым.
 
-Take a simple example from the `Symfony2 HttpKernel component`_. Once a
-``Response`` object has been created, it may be useful to allow other elements
-in the system to modify it (e.g. add some cache headers) before it's actually
-used. To make this possible, the Symfony2 kernel throws an event -
-``kernel.response``. Here's how it work:
+Рассмотрим ещё один простой пример из `Symfony2 HttpKernel component`_.
+Когда создаётся объект ``Response``, было бы здорово позволить другим
+системам проекта модифицировать его (например, добавить заголовки для
+кэширования) перед последующим использованием. Для того, чтобы достичь этого,
+ядро Symfony2 создаёт событие - ``kernel.response``. Вот как это работает:
 
-* A *listener* (PHP object) tells a central *dispatcher* object that it wants
-  to listen to the ``kernel.response`` event;
+* *Слушатель* (listener, PHP объект) сообщает центральному *диспетчеру*, что
+  он собирается слушать (ожидать) событие ``kernel.response``;
 
-* At some point, the Symfony2 kernel tells the *dispatcher* object to dispatch
-  the ``kernel.response`` event, passing with it an ``Event`` object that has
-  access to the ``Response`` object;
+* В какой-то момент ядро Symfony2 просит объект *диспетчера* отправить событие
+  ``kernel.response``, и вместе с ним - объект ``Response``;
 
-* The dispatcher notifies (i.e. calls a method on) all listeners of the
-  ``kernel.response`` event, allowing each of them to make modifications to
-  the ``Response`` object.
+* Диспетчер уведомляет (фактически вызывает метод) всех слушателей события
+  ``kernel.response``, позволяя каждому из них выполнить модификацию объекта
+  ``Response``.
 
 .. index::
    single: Event Dispatcher; Events
 
 .. _event_dispatcher:
 
-Events
-~~~~~~
+События
+~~~~~~~
 
-When an event is dispatched, it's identified by a unique name (e.g.
-``kernel.response``), which any number of listeners might be listening to. An
-:class:`Symfony\\Component\\EventDispatcher\\Event` instance is also created
-and passed to all of the listeners. As you'll see later, the ``Event`` object
-itself often contains data about the event being dispatched.
+Когда сообщение отправлено, оно идентифицируется по уникальному имени
+(например, ``kernel.response``), которое могут ожидать некоторое число
+слушателей. Также создаётся экземпляр класса
+:class:`Symfony\\Component\\EventDispatcher\\Event`, который затем передаётся
+всем слушателям. Как вы увидите чуть позже, объект ``Event`` часто содержит
+данные о направляемом событии.
 
 .. index::
    pair: Event Dispatcher; Naming conventions
 
-Naming Conventions
-..................
+Соглашения по именованию
+........................
 
-The unique event name can be any string, but optionally follows a few simple
-naming conventions:
+Уникальным именем для события может быть любая строка, но желательно следование
+нескольким простым правилам:
 
-* use only lowercase letters, numbers, dots (``.``), and underscores (``_``);
+* Допустимые символы: буквы в нижнем регистре, цифры, точка (``.``), подчерк (``_``);
 
-* prefix names with a namespace followed by a dot (e.g. ``kernel.``);
+* Добавляйте префикс пространства имён с точкой на конце (например, ``kernel.``);
 
-* end names with a verb that indicates what action is being taken (e.g.
-  ``request``).
+* Оканчивайте имя глаголом, который обозначает действие (например, ``request``).
 
-Here are some examples of good event names:
+Вот пара примеров хороших имён для событий:
 
 * ``kernel.response``
 * ``form.pre_set_data``
@@ -453,38 +462,37 @@ Here are some examples of good event names:
 .. index::
    single: Event Dispatcher; Event Subclasses
 
-Event Names and Event Objects
-.............................
+Объекты событий
+...............
 
-When the dispatcher notifies listeners, it passes an actual ``Event`` object
-to those listeners. The base ``Event`` class is very simple: it contains a
-method for stopping :ref:`event
-propagation<event_dispatcher-event-propagation>`, but not much else.
+Когда диспетчер уведомляет слушателей, он передаёт им объект ``Event``. Базовый
+класс ``Event`` очень прост: он содержит метод для прекращения воспроизведения
+(:ref:`event propagation<event_dispatcher-event-propagation>`) и ничего более.
 
-Often times, data about a specific event needs to be passed along with the
-``Event`` object so that the listeners have needed information. In the case of
-the ``kernel.response`` event, the ``Event`` object that's created and passed to
-each listener is actually of type
-:class:`Symfony\\Component\\HttpKernel\\Event\\FilterResponseEvent`, a
-subclass of the base ``Event`` object. This class contains methods such as
-``getResponse`` and ``setResponse``, allowing listeners to get or even replace
-the ``Response`` object.
+Зачастую, необходимо передавать в объекте ``Event`` также данные о событии,
+чтобы слушатели могли их обработать тем или иным образом. В случае события
+``kernel.response``, объект ``Event``, передаваемый каждому слушателю, фактически
+имеет тип :class:`Symfony\\Component\\HttpKernel\\Event\\FilterResponseEvent`,
+дочерний по отношению к ``Event`` класс. Этот класс содержит методы, такие
+как ``getResponse`` и ``setResponse``, позволяющие слушателям получать и даже
+заменять объект ``Response``.
 
-The moral of the story is this: when creating a listener to an event, the
-``Event`` object that's passed to the listener may be a special subclass that
-has additional methods for retrieving information from and responding to the
-event.
+Мораль этой истории в следующем: при создании слушателя некоторого события,
+объект ``Event``, который будет передан этому слушателю, может быть
+специализированным дочерним классом и иметь дополнительные методы для получения
+данных события и их обработки.
 
-The Dispatcher
+Диспетчер
 ~~~~~~~~~~~~~~
 
-The dispatcher is the central object of the event dispatcher system. In
-general, a single dispatcher is created, which maintains a registry of
-listeners. When an event is dispatched via the dispatcher, it notifies all
-listeners registered with that event.
+Диспетчер - это центральный объект системы обработки событий. Как правило,
+создаётся единственный диспетчер, который обслуживает реестр слушателей. Когда
+событие поступает к диспетчеру - он уведомляет всех слушателей, подписанных
+на это событие.
 
 .. code-block:: php
 
+    <?php
     use Symfony\Component\EventDispatcher\EventDispatcher;
 
     $dispatcher = new EventDispatcher();
@@ -492,57 +500,58 @@ listeners registered with that event.
 .. index::
    single: Event Dispatcher; Listeners
 
-Connecting Listeners
-~~~~~~~~~~~~~~~~~~~~
+Подключаем Слушателей
+~~~~~~~~~~~~~~~~~~~~~
 
-To take advantage of an existing event, you need to connect a listener to the
-dispatcher so that it can be notified when the event is dispatched. A call to
-the dispatcher ``addListener()`` method associates any valid PHP callable to
-an event:
+Для того, чтобы отреагировать на некое существующее событие, вам необходимо
+подключить слушателя к диспетчеру, чтобы последний имел возможность сообщить
+о появлении нужного события. Вызов метода диспетчера ``addListener()`` ассоциирует
+любую исполнимую функцию/метод с событием:
 
 .. code-block:: php
 
+    <?php
     $listener = new AcmeListener();
     $dispatcher->addListener('foo.action', array($listener, 'onFooAction'));
 
-The ``addListener()`` method takes up to three arguments:
+Метод ``addListener()`` получает три аргумента:
 
-* The event name (string) that this listener wants to listen to;
+* Наименование события, которое слушатель будет ожидать;
 
-* A PHP callable that will be notified when an event is thrown that it listens
-  to;
+* Некий объект (функцию, в общем же случае PHP callable), который будет вызван
+  при наступлении события;
 
-* An optional priority integer (higher equals more important) that determines
-  when a listener is triggered versus other listeners (defaults to ``0``). If
-  two listeners have the same priority, they are executed in the order that
-  they were added to the dispatcher.
+* Опциональный приоритет (чем больше - тем более важный), который определяет
+  очерёдность вызова слушателей (по умолчанию ``0``). Если два слушателя имеют
+  одинаковый приоритет, они выполняются в порядке их добавления.
 
 .. note::
 
-    A `PHP callable`_ is a PHP variable that can be used by the
-    ``call_user_func()`` function and returns ``true`` when passed to the
-    ``is_callable()`` function. It can be a ``\Closure`` instance, a string
-    representing a function, or an array representing an object method or a
-    class method.
+    `PHP callable`_ - это переменная, которая может быть использована в функции
+    ``call_user_func()`` и возвращает ``true`` при проверке с помощью функции
+    ``is_callable()``. Это может быть, в том числе, и экземпляр замыкания (``\Closure``),
+    строка с именем функции или массив, представляющий собой метод объекта или же
+    метод класса.
 
-    So far, you've seen how PHP objects can be registered as listeners. You
-    can also register PHP `Closures`_ as event listeners:
+    Ранее вы уже видели как PHP объект может быть зарегистрирован в качестве слушателя.
+    Вы также можете регистрировать Замыкания (`Closures`_) в качестве слушателей:
 
     .. code-block:: php
 
+        <?php
         use Symfony\Component\EventDispatcher\Event;
 
         $dispatcher->addListener('foo.action', function (Event $event) {
-            // will be executed when the foo.action event is dispatched
+            // этот код будет вызван при обработке события foo.action
         });
 
-Once a listener is registered with the dispatcher, it waits until the event is
-notified. In the above example, when the ``foo.action`` event is dispatched,
-the dispatcher calls the ``AcmeListener::onFooAction`` method and passes the
-``Event`` object as the single argument:
+Когда слушатель зарегистрирован диспетчером, он ожидает наступления события.
+В примере выше, когда появляется событие ``foo.action``, диспетчер вызывает
+метод ``AcmeListener::onFooAction`` и передаёт объекту ``Event`` один аргумент:
 
 .. code-block:: php
 
+    <?php
     use Symfony\Component\EventDispatcher\Event;
 
     class AcmeListener
@@ -557,19 +566,19 @@ the dispatcher calls the ``AcmeListener::onFooAction`` method and passes the
 
 .. tip::
 
-    If you use the Symfony2 MVC framework, listeners can be registered via
-    your :ref:`configuration <dic-tags-kernel-event-listener>`. As an added
-    bonus, the listener objects are instantiated only when needed.
+    Если вы используете Symfony2 MVC framework, слушатели могут быть зарегистрированы
+    при помощи :ref:`конфигурации <dic-tags-kernel-event-listener>`. В качестве бонуса,
+    объект слушателя будет создан лишь когда будет нужен.
 
-In many cases, a special ``Event`` subclass that's specific to the given event
-is passed to the listener. This gives the listener access to special
-information about the event. Check the documentation or implementation of each
-event to determine the exact ``Symfony\Component\EventDispatcher\Event``
-instance that's being passed. For example, the ``kernel.event`` event passes an
-instance of ``Symfony\Component\HttpKernel\Event\FilterResponseEvent``:
+Во многих случаях, слушателю передаётся специализированный дочерний класс ``Event``.
+Это даёт слушателю доступ к информации о событии. Сверяйтесь с документацией или
+реализацией каждого конкретного события для определения какой именно экземпляр
+``Symfony\Component\EventDispatcher\Event`` будет передан. Например, событие
+``kernel.event`` передаёт экземпляр класса ``Symfony\Component\HttpKernel\Event\FilterResponseEvent``:
 
 .. code-block:: php
 
+    <?php
     use Symfony\Component\HttpKernel\Event\FilterResponseEvent
 
     public function onKernelResponse(FilterResponseEvent $event)
@@ -585,62 +594,60 @@ instance of ``Symfony\Component\HttpKernel\Event\FilterResponseEvent``:
 .. index::
    single: Event Dispatcher; Creating and Dispatching an Event
 
-Creating and Dispatching an Event
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Создание и обработка события
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to registering listeners with existing events, you can create and
-throw your own events. This is useful when creating third-party libraries and
-also when you want to keep different components of your own system flexible
-and decoupled.
+В дополнение к регистрации слушателей для уже существующих событий, вы можете
+создавать и вызывать свои собственные события. Это может быть удобно при создании
+сторонних библиотек и если вы хотите чтобы различные компоненты вашей системы
+были гибкими и независимыми.
 
-The Static ``Events`` Class
-...........................
+Статический класс ``Events``
+............................
 
-Suppose you want to create a new Event - ``store.order`` - that is dispatched
-each time an order is created inside your application. To keep things
-organized, start by creating a ``StoreEvents`` class inside your application
-that serves to define and document your event:
+Предположим, вы хотите создать новое событие - ``store.order`` - которое
+создаётся всякий раз, когда в вашем приложении создаётся заказ. Для того,
+чтобы поддерживать порядок в приложении, начнём с создания класса ``StoreEvents``,
+который будет определять ваше событие:
 
 .. code-block:: php
 
+    <?php
     namespace Acme\StoreBundle;
 
     final class StoreEvents
     {
         /**
-         * The store.order event is thrown each time an order is created
-         * in the system.
+         * Событие store.order создаётся всякий раз, когда в системе создаётся заказ.
          *
-         * The event listener receives an Acme\StoreBundle\Event\FilterOrderEvent
-         * instance.
+         * Слушатель получит экземпляр Acme\StoreBundle\Event\FilterOrderEvent
          *
          * @var string
          */
         const onStoreOrder = 'store.order';
     }
 
-Notice that this class doesn't actually *do* anything. The purpose of the
-``StoreEvents`` class is just to be a location where information about common
-events can be centralized. Notice also that a special ``FilterOrderEvent``
-class will be passed to each listener of this event.
+Отметим также, что этот класс по сути свой ничего *не делает*. Назначение
+класса ``StoreEvents`` - централизация данных о событии. Слушателям этого события
+будет передаваться специализированный класс ``FilterOrderEvent``.
 
-Creating an Event object
+Создание объекта события
 ........................
 
-Later, when you dispatch this new event, you'll create an ``Event`` instance
-and pass it to the dispatcher. The dispatcher then passes this same instance
-to each of the listeners of the event. If you don't need to pass any
-information to your listeners, you can use the default
-``Symfony\Component\EventDispatcher\Event`` class. Most of the time, however,
-you *will* need to pass information about the event to each listener. To
-accomplish this, you'll create a new class that extends
-``Symfony\Component\EventDispatcher\Event``.
+Позднее, когда вы будете отправлять это событие, вы создадите экземпляр
+класса ``Event`` и передадите этот экземпляр всем слушателям события. Если
+вы не хотите передавать никакой дополнительной информации слушателям, вы
+можете использовать класс ``Symfony\Component\EventDispatcher\Event``.
+В большинстве же случаев, вы *будете* передавать информацию о событии слушателям.
+Для этого необходимо создать новый класс, который будет наследоваться от
+класса ``Symfony\Component\EventDispatcher\Event``.
 
-In this example, each listener will need access to some pretend ``Order``
-object. Create an ``Event`` class that makes this possible:
+В этом примере, каждый слушатель будет должен получить доступ к некоторому объекту
+``Order``. Создадим класс ``Event``, который реализует такое поведение:
 
 .. code-block:: php
 
+    <?php
     namespace Acme\StoreBundle\Event;
 
     use Symfony\Component\EventDispatcher\Event;
@@ -661,60 +668,62 @@ object. Create an ``Event`` class that makes this possible:
         }
     }
 
-Each listener now has access to the ``Order`` object via the ``getOrder`` 
-method.
+Каждый слушатель теперь имеет доступ к объекту ``Order`` при помощи метода
+``getOrder``.
 
-Dispatch the Event
-..................
+Отправка события
+...............
 
-The :method:`Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch`
-method notifies all listeners of the given event. It takes two arguments: the
-name of the event to dispatch and the ``Event`` instance to pass to each
-listener of that event:
+Метод :method:`Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch`
+уведомляет всех слушателей о событии. Он принимает два аргумента:
+наименование события для отправки и экземпляр ``Event`` для передачи
+каждому слушателю этого события:
 
 .. code-block:: php
 
+    <?php
     use Acme\StoreBundle\StoreEvents;
     use Acme\StoreBundle\Order;
     use Acme\StoreBundle\Event\FilterOrderEvent;
 
-    // the order is somehow created or retrieved
+    // заказ как-то создаётся или получается
     $order = new Order();
     // ...
 
-    // create the FilterOrderEvent and dispatch it
+    // создаём FilterOrderEvent и его отправка
     $event = new FilterOrderEvent($order);
     $dispatcher->dispatch(StoreEvents::onStoreOrder, $event);
 
-Notice that the special ``FilterOrderEvent`` object is created and passed to
-the ``dispatch`` method. Now, any listener to the ``store.order`` event will
-receive the ``FilterOrderEvent`` and have access to the ``Order`` object via
-the ``getOrder`` method:
+Объект ``FilterOrderEvent`` создаётся и передаётся в метод ``dispatch``.
+Теперь, любой слушатель события ``store.order`` будет получать ``FilterOrderEvent``
+и соответственно иметь доступ к объекту ``Order`` при помощи метода ``getOrder``:
 
 .. code-block:: php
 
-    // some listener class that's been registered for onStoreOrder
+    <?php
+    // какой-то слушатель, подписанный на событие store.order методом onStoreOrder
     use Acme\StoreBundle\Event\FilterOrderEvent;
 
     public function onStoreOrder(FilterOrderEvent $event)
     {
         $order = $event->getOrder();
-        // do something to or with the order
+        // далее выполняются какие-то действия с заказом
     }
 
-Passing along the Event Dispatcher Object
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Внутри объекта Диспетчера событий
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have a look at the ``EventDispatcher`` class, you will notice that the
-class does not act as a Singleton (there is no ``getInstance()`` static method).
-That is intentional, as you might want to have several concurrent event
-dispatchers in a single PHP request. But it also means that you need a way to
-pass the dispatcher to the objects that need to connect or notify events.
+Если вы взглянете на класс ``EventDispatcher``, вы увидите, что этот класс
+работает не как Singleton (нет статического метода ``getInstance()``). Это
+сделано преднамеренно, так как вам, возможно, потребуется иметь несколько
+конкурирующих диспетчеров в рамках одного запроса. Но это также означает, что
+вам нужен способ для передачи диспетчеру объектов, которые нужно подключить или
+которые надо уведомить о событии.
 
-The best practice is to inject the event dispatcher object into your objects,
-aka dependency injection.
+Общепринятой практикой является внедрение объекта диспетчера в ваши объекты,
+т.е. внедрение зависимости.
 
-You can use constructor injection::
+Вы можете использовать внедрение в конструктор::
 
     class Foo
     {
@@ -726,7 +735,7 @@ You can use constructor injection::
         }
     }
 
-Or setter injection::
+Или же внедрение через метод (setter injection)::
 
     class Foo
     {
@@ -738,37 +747,47 @@ Or setter injection::
         }
     }
 
-Choosing between the two is really a matter of taste. Many tend to prefer the
-constructor injection as the objects are fully initialized at construction
-time. But when you have a long list of dependencies, using setter injection
-can be the way to go, especially for optional dependencies.
+Выбор того или иного метода - это дело вкуса. Многие предпочитают метод с
+конструктором, так как объекты полностью инициализируются во время создания.
+Но когда у вас имеется длинный список зависимостей, использовать метод-сеттер
+это тоже вариант, особенно для опциональных зависимостей.
 
 .. tip::
 
-    If you use dependency injection like we did in the two examples above, you
-    can then use the `Symfony2 Dependency Injection component`_ to elegantly
-    manage these objects.
+    Если вы используете внедрение зависимости как мы делали в двух примерах выше,
+    вы можете использовать `Symfony2 Dependency Injection component`_ для
+    того чтобы управлять внедрением службы ``event_dispatcher`` для этих
+    объектов.
+
+        .. code-block:: yaml
+
+            # src/Acme/HelloBundle/Resources/config/services.yml
+            services:
+                foo_service:
+                    class: Acme/HelloBundle/Foo/FooService
+                    arguments: [@event_dispatcher]
 
 .. index::
    single: Event Dispatcher; Event subscribers
 
-Using Event Subscribers
-~~~~~~~~~~~~~~~~~~~~~~~
+Подписка на события
+~~~~~~~~~~~~~~~~~~~
 
-The most common way to listen to an event is to register an *event listener*
-with the dispatcher. This listener can listen to one or more events and is
-notified each time those events are dispatched.
+Типичный способ ожидать возникновение события - зарегистрировать *слушателя события*
+при помощи диспетчера. Этот слушатель может слушать одно или несколько событий и
+уведомляется каждый раз при отправке нужного события.
 
-Another way to listen to events is via an *event subscriber*. An event
-subscriber is a PHP class that's able to tell the dispatcher exactly which
-events it should subscribe to. It implements the
-:class:`Symfony\\Component\\EventDispatcher\\EventSubscriberInterface`
-interface, which requires a single static method called
-``getSubscribedEvents``. Take the following example of a subscriber that
-subscribes to the ``kernel.response`` and ``store.order`` events:
+Альтернативным способом для ожидания событий - использование *подписчика события*.
+Подписчик - это PHP класс, который имеет возможность сообщить диспетчеру
+на какие события он подписывается. Подписчик должен реализовывать
+интерфейс :class:`Symfony\\Component\\EventDispatcher\\EventSubscriberInterface`,
+который требует наличие одного статического метода ``getSubscribedEvents``.
+Рассмотрим пример подписчика, который подписывается на события
+``kernel.response`` и ``store.order``:
 
 .. code-block:: php
 
+    <?php
     namespace Acme\StoreBundle\Event;
 
     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -795,41 +814,42 @@ subscribes to the ``kernel.response`` and ``store.order`` events:
         }
     }
 
-This is very similar to a listener class, except that the class itself can
-tell the dispatcher which events it should listen to. To register a subscriber
-with the dispatcher, use the
-:method:`Symfony\\Component\\EventDispatcher\\EventDispatcher::addSubscriber`
-method:
+Этот класс похож на класс слушателя, за исключением того, что он сам может
+сообщить диспетчеру, на какие именно события он подписывается (будет слушать).
+Для регистрации подписчика в диспетчере необходимо использовать метод
+:method:`Symfony\\Component\\EventDispatcher\\EventDispatcher::addSubscriber`:
 
 .. code-block:: php
 
+    <?php
     use Acme\StoreBundle\Event\StoreSubscriber;
 
     $subscriber = new StoreSubscriber();
     $dispatcher->addSubscriber($subscriber);
 
-The dispatcher will automatically register the subscriber for each event
-returned by the ``getSubscribedEvents`` method. This method returns an array
-indexed by event names and whose values are either the method name to call or
-an array composed of the method name to call and a priority.
+Диспетчер автоматически зарегистрирует подписчика для каждого события,
+возвращаемого методом ``getSubscribedEvents``. Этот метод возвращает массив,
+индексами которого служат наименования событий, а значениями служат либо
+наименования методов, которые будут вызваны, либо массивы с именем метода и
+его приоритетом при обработке события.
 
 .. index::
    single: Event Dispatcher; Stopping event flow
 
 .. _event_dispatcher-event-propagation:
 
-Stopping Event Flow/Propagation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Прекращение обработки событий
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In some cases, it may make sense for a listener to prevent any other listeners
-from being called. In other words, the listener needs to be able to tell the
-dispatcher to stop all propagation of the event to future listeners (i.e. to
-not notify any more listeners). This can be accomplished from inside a
-listener via the
-:method:`Symfony\\Component\\EventDispatcher\\Event::stopPropagation` method:
+В некоторых случаях, один из слушателей может затребовать прекращение обработки
+события другими слушателями. Другими словами, слушатель должен иметь возможность
+сообщить диспетчеру, что он должен остановить обработку события всеми оставшимися
+слушателями (не уведомлять их о событии). Этого можно достигнуть внутри слушателя
+при помощи метода :method:`Symfony\\Component\\EventDispatcher\\Event::stopPropagation`:
 
 .. code-block:: php
 
+   <?php
    use Acme\StoreBundle\Event\FilterOrderEvent;
 
    public function onStoreOrder(FilterOrderEvent $event)
@@ -839,75 +859,75 @@ listener via the
        $event->stopPropagation();
    }
 
-Now, any listeners to ``store.order`` that have not yet been called will *not*
-be called.
+Теперь, все слушатели ``store.order``, которые ещё не были уведомлены о событии,
+уведомляться уже *не* будут.
 
 .. index::
    single: Profiler
 
-Profiler
---------
+Профайлер
+---------
 
-When enabled, the Symfony2 profiler collects useful information about each
-request made to your application and store them for later analysis. Use the
-profiler in the development environment to help you to debug your code and
-enhance performance; use it in the production environment to explore problems
-after the fact.
+Профайлер Symfony2, если он активирован, собирает полезную информацию о каждом
+запросе, выполненном к вашему приложение и сохраняет его для последующего анализа.
+Использование профайлера в девелоперском окружении поможет вам в отладке
+кода и увеличении быстродействия; используйте его в продуктовой среде для
+обнаружения проблем "по факту".
 
-You rarely have to deal with the profiler directly as Symfony2 provides
-visualizer tools like the Web Debug Toolbar and the Web Profiler. If you use
-the Symfony2 Standard Edition, the profiler, the web debug toolbar, and the
-web profiler are all already configured with sensible settings.
+Вам вряд ли придётся часто взаимодействовать с профайлером непосредственно,
+так как Symfony2 предоставляет визуализатор по типу Web Debug Toolbar и
+Web Profiler. Если вы используете Symfony2 Standard Edition, профайлер,
+дебаг-панель и веб-профайлер уже настроены и подключены.
 
 .. note::
 
-    The profiler collects information for all requests (simple requests,
-    redirects, exceptions, Ajax requests, ESI requests; and for all HTTP
-    methods and all formats). It means that for a single URL, you can have
-    several associated profiling data (one per external request/response
-    pair).
+    Профайлер собирает информацию обо всех запросах (простые запросы,
+    перенаправления, исключения, Ajax запросы, ESI запросы; а также
+    о всех HTTP методах и обо всех форматах). Это означает, что для
+    одного URL вы можете иметь много профилированных данных (по одному
+    на каждую пару запрос/ответ).
 
 .. index::
    single: Profiler; Visualizing
 
-Visualizing Profiling Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Визуализация данных профайлера
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Using the Web Debug Toolbar
-...........................
+Использование Web Debug Toolbar
+...............................
 
-In the development environment, the web debug toolbar is available at the
-bottom of all pages. It displays a good summary of the profiling data that
-gives you instant access to a lot of useful information when something does
-not work as expected.
+В dev окружении web debug toolbar расположен в низу каждой страницы. Он отображает
+обобщённые данные профайлера и предоставляет доступ к полезной информации,
+когда что-либо работает не так как ожидалось.
 
-If the summary provided by the Web Debug Toolbar is not enough, click on the
-token link (a string made of 13 random characters) to access the Web Profiler.
+Если обобщённых данных не хватает, вы можете кликнуть на ссылку с токеном (
+строка из 13 случайных символов) и перейти на страницу Web Profiler.
 
 .. note::
 
-    If the token is not clickable, it means that the profiler routes are not
-    registered (see below for configuration information).
+    Если токен не кликается, это означает, что маршруты профайлера не
+    зарегистрированы (см. ниже информацию о конфигурировании).
 
-Analyzing Profiling data with the Web Profiler
-..............................................
+Анализ данных в Web Profiler
+............................
 
-The Web Profiler is a visualization tool for profiling data that you can use
-in development to debug your code and enhance performance; but it can also be
-used to explore problems that occur in production. It exposes all information
-collected by the profiler in a web interface.
+Web Profiler - это инструмент визуализации данных профилирования, который
+вы можете использовать в разработке для отладки вашего кода и увеличения
+его быстродействия; но его также можно использовать для отслеживания проблем
+в продуктовой среде. Он предоставляет всю информацию, собранную профайлером,
+в своём веб-интерфейсе.
 
 .. index::
    single: Profiler; Using the profiler service
 
-Accessing the Profiling information
-...................................
+Доступ к данным профайлера
+..........................
 
-You don't need to use the default visualizer to access the profiling
-information. But how can you retrieve profiling information for a specific
-request after the fact? When the profiler stores data about a Request, it also
-associates a token with it; this token is available in the ``X-Debug-Token``
-HTTP header of the Response::
+Вам не обязательно использовать визуализатор для доступа к данным
+профайлера. Как же вам получить доступ к информации профайлера
+для некоторого запроса по факту его выполнения? Когда профайлер сохраняет
+данные о запросе, он также ассоциирует с ними некоторый токен; этот
+токен доступен в заголовке ответа ``X-Debug-Token``::
 
     $profile = $container->get('profiler')->loadProfileFromResponse($response);
 
@@ -915,51 +935,51 @@ HTTP header of the Response::
 
 .. tip::
 
-    When the profiler is enabled but not the web debug toolbar, or when you
-    want to get the token for an Ajax request, use a tool like Firebug to get
-    the value of the ``X-Debug-Token`` HTTP header.
+    Когда профайлер активирован, но нет web debug toolbar, или же когда
+    вы хотите получить токен для Ajax запроса, используйте, например,
+    Firebug для того, чтобы получить заголовок ``X-Debug-Token``.
 
-Use the ``find()`` method to access tokens based on some criteria::
+Используйте метод ``find()``, для получения доступа к токенам по какому-либо
+критерию::
 
-    // get the latest 10 tokens
+    // получить 10 последних токенов
     $tokens = $container->get('profiler')->find('', '', 10);
 
-    // get the latest 10 tokens for all URL containing /admin/
+    // получить последние 10 токенов для всех URL, содержащих /admin/
     $tokens = $container->get('profiler')->find('', '/admin/', 10);
 
-    // get the latest 10 tokens for local requests
+    // получить последние 10 токенов для локальных запросов
     $tokens = $container->get('profiler')->find('127.0.0.1', '', 10);
 
-If you want to manipulate profiling data on a different machine than the one
-where the information were generated, use the ``export()`` and ``import()``
-methods::
+Если вы хотите манипулировать данными профайлера на другой машине, используйте
+методы ``export()`` и ``import()``::
 
-    // on the production machine
+    // в prod окружении
     $profile = $container->get('profiler')->loadProfile($token);
     $data = $profiler->export($profile);
 
-    // on the development machine
+    // в dev окружении
     $profiler->import($data);
 
 .. index::
    single: Profiler; Visualizing
 
-Configuration
-.............
+Конфигурирование
+................
 
-The default Symfony2 configuration comes with sensible settings for the
-profiler, the web debug toolbar, and the web profiler. Here is for instance
-the configuration for the development environment:
+Конфигурация по умолчанию содержит разумные настройки профайлера, дебаг-панели
+(web debug toolbar) и веб-профайлера (web profiler). Ниже приведён пример
+конфигурации для dev окружения:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # load the profiler
+        # загрузка профайлера
         framework:
             profiler: { only_exceptions: false }
 
-        # enable the web profiler
+        # активация веб-профайлера
         web_profiler:
             toolbar: true
             intercept_redirects: true
@@ -970,12 +990,12 @@ the configuration for the development environment:
         <!-- xmlns:webprofiler="http://symfony.com/schema/dic/webprofiler" -->
         <!-- xsi:schemaLocation="http://symfony.com/schema/dic/webprofiler http://symfony.com/schema/dic/webprofiler/webprofiler-1.0.xsd"> -->
 
-        <!-- load the profiler -->
+        <!-- загрузка профайлера -->
         <framework:config>
             <framework:profiler only-exceptions="false" />
         </framework:config>
 
-        <!-- enable the web profiler -->
+        <!-- активация веб-профайлера -->
         <webprofiler:config
             toolbar="true"
             intercept-redirects="true"
@@ -984,30 +1004,31 @@ the configuration for the development environment:
 
     .. code-block:: php
 
-        // load the profiler
+        <?php
+        // загрузка профайлера
         $container->loadFromExtension('framework', array(
             'profiler' => array('only-exceptions' => false),
         ));
 
-        // enable the web profiler
+        // активация веб-профайлера
         $container->loadFromExtension('web_profiler', array(
             'toolbar' => true,
             'intercept-redirects' => true,
             'verbose' => true,
         ));
 
-When ``only-exceptions`` is set to ``true``, the profiler only collects data
-when an exception is thrown by the application.
+Если ``only-exceptions`` имеет значение ``true``, профайлер собирает данные
+только при возникновении исключений.
 
-When ``intercept-redirects`` is set to ``true``, the web profiler intercepts
-the redirects and gives you the opportunity to look at the collected data
-before following the redirect.
+Если ``intercept-redirects`` имеет значение ``true``, профайлер перехватывает
+перенаправления и предоставляет вам возможность наблюдать собранные данные
+перед перенаправлением.
 
-When ``verbose`` is set to ``true``, the Web Debug Toolbar displays a lot of
-information. Setting ``verbose`` to ``false`` hides some secondary information
-to make the toolbar shorter.
+Если ``verbose`` имеет значение ``true``, Web Debug Toolbar отображает большое
+количество данных. Если присвоить ``verbose`` значение ``false``, вторичная
+информация не будет отображаться.
 
-If you enable the web profiler, you also need to mount the profiler routes:
+Если вы активировали web profiler, вам также необходимо подключить его маршруты:
 
 .. configuration-block::
 
@@ -1025,60 +1046,61 @@ If you enable the web profiler, you also need to mount the profiler routes:
 
         $collection->addCollection($loader->import("@WebProfilerBundle/Resources/config/routing/profiler.xml"), '/_profiler');
 
-As the profiler adds some overhead, you might want to enable it only under
-certain circumstances in the production environment. The ``only-exceptions``
-settings limits profiling to 500 pages, but what if you want to get
-information when the client IP comes from a specific address, or for a limited
-portion of the website? You can use a request matcher:
+Так как профайлер выполняет дополнительную работу для каждого запроса, вы,
+возможно, захотите активировать его в продуктовой среде лишь в некоторых случаях.
+Опция ``only-exceptions`` устанавливает лимит профилирования в 500 страниц, но
+что, если вы захотите получить информацию, когда IP клиента имеет некоторое
+определённое значение или если запрашивается строго определённая часть сайта?
+Вы можете использовать request matcher:
 
 .. configuration-block::
 
     .. code-block:: yaml
 
-        # enables the profiler only for request coming for the 192.168.0.0 network
+        # активирует профайлер для запросов из подсети 192.168.0.0/24
         framework:
             profiler:
                 matcher: { ip: 192.168.0.0/24 }
 
-        # enables the profiler only for the /admin URLs
+        # активирует профайлер только для URL /admin
         framework:
             profiler:
                 matcher: { path: "^/admin/" }
 
-        # combine rules
+        # комбинирование правил
         framework:
             profiler:
                 matcher: { ip: 192.168.0.0/24, path: "^/admin/" }
 
-        # use a custom matcher instance defined in the "custom_matcher" service
+        # использование пользовательской службы matcher
         framework:
             profiler:
                 matcher: { service: custom_matcher }
 
     .. code-block:: xml
 
-        <!-- enables the profiler only for request coming for the 192.168.0.0 network -->
+        <!-- активирует профайлер для запросов из подсети 192.168.0.0/24 -->
         <framework:config>
             <framework:profiler>
                 <framework:matcher ip="192.168.0.0/24" />
             </framework:profiler>
         </framework:config>
 
-        <!-- enables the profiler only for the /admin URLs -->
+        <!-- активирует профайлер только для URL /admin -->
         <framework:config>
             <framework:profiler>
                 <framework:matcher path="^/admin/" />
             </framework:profiler>
         </framework:config>
 
-        <!-- combine rules -->
+        <!-- комбинирование правил -->
         <framework:config>
             <framework:profiler>
                 <framework:matcher ip="192.168.0.0/24" path="^/admin/" />
             </framework:profiler>
         </framework:config>
 
-        <!-- use a custom matcher instance defined in the "custom_matcher" service -->
+        <!-- использование пользовательской службы matcher -->
         <framework:config>
             <framework:profiler>
                 <framework:matcher service="custom_matcher" />
@@ -1087,44 +1109,51 @@ portion of the website? You can use a request matcher:
 
     .. code-block:: php
 
-        // enables the profiler only for request coming for the 192.168.0.0 network
+        <?php
+        // активирует профайлер для запросов из подсети 192.168.0.0/24
         $container->loadFromExtension('framework', array(
             'profiler' => array(
                 'matcher' => array('ip' => '192.168.0.0/24'),
             ),
         ));
 
-        // enables the profiler only for the /admin URLs
+        // активирует профайлер только для URL /admin
         $container->loadFromExtension('framework', array(
             'profiler' => array(
                 'matcher' => array('path' => '^/admin/'),
             ),
         ));
 
-        // combine rules
+        // комбинирование правил
         $container->loadFromExtension('framework', array(
             'profiler' => array(
                 'matcher' => array('ip' => '192.168.0.0/24', 'path' => '^/admin/'),
             ),
         ));
 
-        # use a custom matcher instance defined in the "custom_matcher" service
+        # использование пользовательской службы matcher
         $container->loadFromExtension('framework', array(
             'profiler' => array(
                 'matcher' => array('service' => 'custom_matcher'),
             ),
         ));
 
-Learn more from the Cookbook
-----------------------------
+Читайте в книге рецептов
+------------------------
 
 * :doc:`/cookbook/testing/profiling`
 * :doc:`/cookbook/profiler/data_collector`
 * :doc:`/cookbook/event_dispatcher/class_extension`
 * :doc:`/cookbook/event_dispatcher/method_behavior`
 
-.. _Observer: http://en.wikipedia.org/wiki/Observer_pattern
+.. _Observer: http://ru.wikipedia.org/wiki/Наблюдатель_(шаблон_проектирования)
 .. _`Symfony2 HttpKernel component`: https://github.com/symfony/HttpKernel
 .. _Closures: http://php.net/manual/en/functions.anonymous.php
 .. _`Symfony2 Dependency Injection component`: https://github.com/symfony/DependencyInjection
 .. _PHP callable: http://www.php.net/manual/en/language.pseudo-types.php#language.types.callback
+
+.. toctree::
+    :hidden:
+
+    Translation source: 2011-09-27 676d511
+    Corrected from: 2011-10-27 6935901

@@ -861,7 +861,7 @@ holds массив объектов ``Product`` и объект ``Product`` мо
 
     Эта задача должна выполняться только во время разработки. Более надёжный
     способ систематических обновлений производственной базы данных описан в
-    :doc:`Миграциях Doctrine</bundles/DoctrineFixturesBundle/index>`.
+    :doc:`Миграциях Doctrine</bundles/DoctrineMigrationsBundle/index>`.
 
 Сохранение связанных сущностей
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1317,3 +1317,4 @@ Doctrine представляет огромное количество типо
 
     Translation source: N/A
     Corrected from: 2011-09-30 d739c57
+    Corrected from: 2011-10-29 4459652
