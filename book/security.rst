@@ -787,7 +787,7 @@ ESI, маршрут _internal необходим кэширующему шлюз
     .. code-block:: xml
 
             <access-control>
-                <rule path="^/cart/checkout" role="IS_AUTHENTICATED_ANONYMOUSLY" requires_channel: https />
+                <rule path="^/cart/checkout" role="IS_AUTHENTICATED_ANONYMOUSLY" requires_channel="https" />
             </access-control>
 
     .. code-block:: php
@@ -1210,6 +1210,16 @@ PHP класс), который отсылает email-сообщения от �
     public function indexAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
+    }
+
+В контроллере можно использвать шорткат:
+
+.. code-block:: php
+
+    <?php
+    public function indexAction()
+    {
+        $user = $this->getUser();
     }
 
 .. note::
@@ -1778,3 +1788,4 @@ PHP класс), который отсылает email-сообщения от �
 
     Translation source: 2011-10-04 e6bc8ed
     Corrected from: 2011-10-29 f3462fd
+    Corrected from: 2011-12-06 26d17e3
