@@ -86,6 +86,7 @@
 
 * **Шаблоны**
 
+  * :doc:`/cookbook/templating/global_variables`
   * :doc:`/cookbook/templating/PHP`
 
 * **Инструменты, Логгирование внутренние компоненты**
