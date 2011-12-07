@@ -387,6 +387,8 @@ Request и Response, которая приводит способы обрабо
 .. index::
    single: Event Dispatcher
 
+.. _`book-internals-event-dispatcher`:
+
 Диспетчер событий (Event Dispatcher)
 ------------------------------------
 
