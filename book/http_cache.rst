@@ -1084,7 +1084,7 @@ HTTP метода ``PURGE``:
             }
 
             $response = new Response();
-            if (!$this->store->purge($request->getUri())) {
+            if (!$this->getStore()->purge($request->getUri())) {
                 $response->setStatusCode(404, 'Not purged');
             } else {
                 $response->setStatusCode(200, 'Purged');
@@ -1132,3 +1132,4 @@ Symfony2 и примеры кода, вы получаете доступ к ц�
     Translation source: 2011-10-10 5a77337
     Corrected from: 2011-10-16 a52c4c1
     Corrected from: 2011-10-29 379482a
+    Corrected from: 2011-10-28 cab2926

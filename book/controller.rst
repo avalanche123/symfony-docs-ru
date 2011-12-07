@@ -338,6 +338,8 @@
     не используется, но, тем не менее, этот параметр также доступен в качестве
     аргумента контроллера.
 
+.. _book-controller-request-argument:
+
 ``Request`` как аргумент Контроллера
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -800,3 +802,10 @@ PHP-абстракцию HTTP-ответа - текстового сообщен
 
 * :doc:`/cookbook/controller/error_pages`
 * :doc:`/cookbook/controller/service`
+
+.. toctree::
+    :hidden:
+
+    Translation source: n/a
+    Corrected from: 2011-11-28 5cee7a0
+    Corrected from:
