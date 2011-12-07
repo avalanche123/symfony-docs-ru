@@ -154,7 +154,7 @@ PHP класс, который расположен в поддиректори�
 
             $this->assertTrue($crawler->filter('html:contains("Hello Fabien")')->count() > 0);
         }
-    }            <!-- ... -->
+    }
 
 .. tip::
 
