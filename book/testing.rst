@@ -546,7 +546,7 @@ Crawler
         ->filter('h1')
         ->reduce(function ($node, $i)
         {
-            if (!$node->attr('class')) {
+            if (!$node->getAttribute('class')) {
                 return false;
             }
         })

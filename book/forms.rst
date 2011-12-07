@@ -426,6 +426,48 @@ Symfony2 включает много встроенных типов, котор
 В обоих этих примерах, для валидации объекта, для которого создана форма, будет
 использована *лишь* группа ``registration``.
 
+Groups based on Submitted Data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.1
+   The ability to specify a callback or Closure in ``validation_groups``
+   is new to version 2.1
+
+Если вам требуется дополнительная логика для определения валидационных групп,
+например, на совновании данных, отправленных пользователем, вы можете установить
+значением опции validation_groups в массив с callback или замыкание (``Closure``).
+
+.. code-block:: php
+
+    <?php
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'validation_groups' => array('Acme\\AcmeBundle\\Entity\\Client', 'determineValidationGroups'),
+        );
+    }
+
+Этот код вызовет статический метод ``determineValidationGroups()`` класса Client с текущей формой в качестве
+аргумента, после того как данные будут привязаны (bind) к форме, но перед запуском процесса валидации.
+Вы также можете определить логику в замыкании ``Closure``, например:
+
+.. code-block:: php
+
+    <?php
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'validation_groups' => function(FormInterface $form) {
+                $data = $form->getData();
+                if (Entity\Client::TYPE_PERSON == $data->getType()) {
+                    return array('person')
+                } else {
+                    return array('company');
+                }
+            },
+        );
+    }
+
 .. index::
    single: Формы; Встроенные типы полей
 
@@ -1539,6 +1581,7 @@ CSRF токен можно настроить уровне формы. Напр�
 * :doc:`Создание пользовательского поля </cookbook/form/create_custom_field_type>`
 * :doc:`/cookbook/form/form_customization`
 * :doc:`/cookbook/form/dynamic_form_generation`
+* :doc:`/cookbook/form/data_transformers`
 
 .. _`Symfony2 Form Component`: https://github.com/symfony/Form
 .. _`DateTime`: http://php.net/manual/en/class.datetime.php
@@ -1552,5 +1595,5 @@ CSRF токен можно настроить уровне формы. Напр�
 
     Translation source: 2011-10-02 8892b24
     Corrected from: 2011-10-16 2d0a37a
-    Corrected from: 2011-12-06 26d17e3
+    Corrected from: 2011-12-06 53a7621
 
