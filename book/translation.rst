@@ -500,12 +500,18 @@ Symfony2 будет теперь искать сообщение в домене
 
 .. code-block:: php
 
-    $locale = $this->get('session')->getLocale();
+    $locale = $this->get('request')->getLocale();
 
-    $this->get('session')->setLocale('en_US');
+    $this->get('request')->setLocale('en_US');
 
 .. index::
    single: Translations; Fallback and default locale
+
+Также возможно хранить локаль в сессии:
+
+.. code-block:: php
+
+    $this->get('session')->set('_locale', 'en_US');
 
 Локаль по умолчанию и Локаль для отката
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -523,13 +529,13 @@ Symfony2 будет теперь искать сообщение в домене
 
         # app/config/config.yml
         framework:
-            session: { default_locale: en }
+            default_locale: en
 
     .. code-block:: xml
 
         <!-- app/config/config.xml -->
         <framework:config>
-            <framework:session default-locale="en" />
+            <framework:default-locale>en</framework:default-locale>
         </framework:config>
 
     .. code-block:: php
@@ -537,8 +543,15 @@ Symfony2 будет теперь искать сообщение в домене
         <?php
         // app/config/config.php
         $container->loadFromExtension('framework', array(
-            'session' => array('default_locale' => 'en'),
+            'default_locale' => 'en',
         ));
+
+
+.. versionadded:: 2.1
+
+     Параметр ``default_locale`` был ранее определён в сессии, но начиная
+     с версии 2.1 он был перемещён. Это вызвано тем, что локаль теперь
+     устанавливается в запросе, а не в сессии.
 
 .. _book-translation-locale-url:
 
@@ -685,7 +698,7 @@ Symfony2 будет теперь искать сообщение в домене
 (для числа ``0`` или же для отрицательных чисел, к примеру). Для таких случаев
 вы можете использовать интервалы::
 
-    '{0} There is no apples|{1} There is one apple|]1,19] There are %count% apples|[20,Inf] There are many apples'
+    '{0} There are no apples|{1} There is one apple|]1,19] There are %count% apples|[20,Inf] There are many apples'
 
 Эти интервалы следуют нотации `ISO 31-11`_. Строка выше определяет
 четыре различных интервала: точно ``0``, точно ``1``, ``2-19``, а также ``20``
@@ -695,7 +708,7 @@ Symfony2 будет теперь искать сообщение в домене
 если число не соответствует указанным интервалам, будет использовано
 стандартное правило::
 
-    '{0} There is no apples|[20,Inf] There are many apples|There is one apple|a_few: There are %count% apples'
+    '{0} There are no apples|[20,Inf] There are many apples|There is one apple|a_few: There are %count% apples'
 
 Например, для одного яблока будет использовано стандартное правило ``There is one apple``.
 Для ``2-19`` - будет использовано второе стандартное правило ``There are %count% apples``.
@@ -734,7 +747,7 @@ Symfony2 предоставляет специализированные таг�
     {% trans %}Hello %name%{% endtrans %}
 
     {% transchoice count %}
-        {0} There is no apples|{1} There is one apple|]1,Inf] There are %count% apples
+        {0} There are no apples|{1} There is one apple|]1,Inf] There are %count% apples
     {% endtranschoice %}
 
 Таг ``transchoice`` автоматически получает переменную ``%count%``
@@ -756,7 +769,7 @@ Symfony2 предоставляет специализированные таг�
     {% trans with {'%name%': 'Fabien'} from "app" into "fr" %}Hello %name%{% endtrans %}
 
     {% transchoice count with {'%name%': 'Fabien'} from "app" %}
-        {0} There is no apples|{1} There is one apple|]1,Inf] There are %count% apples
+        {0} There are no apples|{1} There is one apple|]1,Inf] There are %count% apples
     {% endtranschoice %}
 
 Фильтры ``trans`` и ``transchoice`` могут быть использованы для перевода
@@ -805,7 +818,7 @@ PHP Шаблоны
     <?php echo $view['translator']->trans('Symfony2 is great') ?>
 
     <?php echo $view['translator']->transChoice(
-        '{0} There is no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
+        '{0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
         10,
         array('%count%' => 10)
     ) ?>
@@ -827,7 +840,7 @@ PHP Шаблоны
     );
 
     $this->get('translator')->trans(
-        '{0} There is no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
+        '{0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
         10,
         array('%count%' => 10),
         'messages',
@@ -867,3 +880,4 @@ PHP Шаблоны
 
     Translation source: 2011-10-07 ef68b50
     Corrected from: 2011-10-16 3fd0e21
+    Corrected from: 2011-12-06 2ab4214

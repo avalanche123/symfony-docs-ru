@@ -26,6 +26,9 @@ Cookbook
     doctrine/custom_dql_functions
 
     form/form_customization
+    form/data_transformers
+    form/dynamic_form_generation
+    form/form_collections
     form/create_custom_field_type
     validation/custom_constraint
 
@@ -65,13 +68,16 @@ Cookbook
 
     cache/varnish
 
+    templating/global_variables
     templating/PHP
+
+    logging/monolog
+    logging/monolog_email
 
     tools/autoloader
     tools/finder
     console
     debugging
-    logging/monolog
 
     event_dispatcher/class_extension
     event_dispatcher/method_behavior
@@ -83,8 +89,3 @@ Cookbook
     symfony1
 
 .. include:: /cookbook/map.rst.inc
-
-.. toctree::
-    :hidden:
-
-    Translation source: 2011-09-30 283b2f5

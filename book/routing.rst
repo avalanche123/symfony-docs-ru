@@ -1114,6 +1114,18 @@ PHP метод и класс. Шаблон состоит из трёх част
 
 В следующей секции вы узнаете как генерировать URL в шаблоне.
 
+.. tip::
+
+    Если фронтэнд вашего приложения использует AJAX, вы возможно захотите
+    иметь возможность генерировать URL в JavaScript при помощи вашей конфигурации
+    маршрутизатора. И вы таки можете это делать при помощи пакета `FOSJsRoutingBundle`_:
+
+    .. code-block:: javascript
+
+        var url = Routing.generate('blog_show', { "slug": 'my-blog-post});
+
+    Подробнее читайте в документации пакета.
+
 .. index::
    single: Маршрутизация; Абсолютные URL
 
@@ -1203,3 +1215,12 @@ PHP метод и класс. Шаблон состоит из трёх част
 -------------------------------------------
 
 * :doc:`/cookbook/routing/scheme`
+
+.. _`FOSJsRoutingBundle`: https://github.com/FriendsOfSymfony/FOSJsRoutingBundle
+
+.. toctree::
+    :hidden:
+
+    Translation source: n/a
+    Corrected from: 2011-11-28 f1a3e5a
+

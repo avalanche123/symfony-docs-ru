@@ -387,6 +387,8 @@ Request и Response, которая приводит способы обрабо
 .. index::
    single: Event Dispatcher
 
+.. _`book-internals-event-dispatcher`:
+
 Диспетчер событий (Event Dispatcher)
 ------------------------------------
 
@@ -833,6 +835,13 @@ Request и Response, которая приводит способы обрабо
 наименования методов, которые будут вызваны, либо массивы с именем метода и
 его приоритетом при обработке события.
 
+.. tip::
+
+    Если вы используете Symfony2 MVC framework, подписчики можно регистрировать
+    при помощи :ref:`конфигурации <dic-tags-kernel-event-subscriber>`. В
+    качестве приятного бонуса, экземпляр подписчика будет создан лишь
+    когда будет нужен.
+
 .. index::
    single: Event Dispatcher; Stopping event flow
 
@@ -1157,3 +1166,4 @@ Web Profiler - это инструмент визуализации данных
 
     Translation source: 2011-09-27 676d511
     Corrected from: 2011-10-27 6935901
+    Corrected from: 2011-11-28 26d17e3
