@@ -2,7 +2,6 @@
 =====
 
 .. toctree::
-    :hidden:
 
     http_fundamentals
     from_flat_php_to_symfony2
